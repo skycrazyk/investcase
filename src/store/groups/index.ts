@@ -3,11 +3,17 @@ import { State } from '../';
 
 type TGroup = {
   id: string;
-  title: string;
-  fields: {
+  name: string;
+  // Возможные значения
+  values: {
     id: string;
-    title: string;
-    type: 'string' | 'number';
+    name: string;
+    // Дополнительные поля для значения
+    fields?: {
+      id: string;
+      name: string;
+      type: 'string' | 'number';
+    }[];
   }[];
 };
 
@@ -18,6 +24,7 @@ const slice = createSlice({
   initialState: groupsAdapter.getInitialState(),
   reducers: {
     addOne: groupsAdapter.addOne,
+    setAll: groupsAdapter.setAll,
   },
 });
 
