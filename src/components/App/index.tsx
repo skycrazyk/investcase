@@ -1,31 +1,54 @@
 import { hot } from 'react-hot-loader/root';
+import { Layout, Menu } from 'antd';
+const { Header, Footer, Sider, Content } = Layout;
 import React, { FC } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, Link } from 'react-router-dom';
 import routes from '../../routes';
 
 const App: FC = () => (
-  <Switch>
-    <Route path={routes.word.path} component={routes.word.component} exact />
-    <Route path={routes.words.path} component={routes.words.component} exact />
-    <Route path={routes.story.path} component={routes.story.component} exact />
-    <Route
-      path={routes.stories.path}
-      component={routes.stories.component}
-      exact
-    />
-    <Route
-      path={routes.settings.path}
-      component={routes.settings.component}
-      exact
-    />
-    <Route
-      path={routes.feedback.path}
-      component={routes.feedback.component}
-      exact
-    />
-    <Redirect from="/" to={routes.stories.path} exact />
-    <Route path={routes.notFound.path} component={routes.notFound.component} />
-  </Switch>
+  <Layout>
+    <Sider>
+      <Menu>
+        <Menu.Item>
+          <Link to={routes.reports.path}>{routes.reports.name}</Link>
+        </Menu.Item>
+        <Menu.Item>
+          <Link to={routes.groups.path}>{routes.groups.name}</Link>
+        </Menu.Item>
+        <Menu.Item>
+          <Link to={routes.settings.path}>{routes.settings.name}</Link>
+        </Menu.Item>
+      </Menu>
+    </Sider>
+    <Layout>
+      <Header>Header</Header>
+      <Content>
+        <Switch>
+          <Route
+            path={routes.reports.path}
+            component={routes.reports.component}
+            exact
+          />
+          <Route
+            path={routes.groups.path}
+            component={routes.groups.component}
+            exact
+          />
+          <Route
+            path={routes.settings.path}
+            component={routes.settings.component}
+            exact
+          />
+          <Redirect from="/" to={routes.reports.path} exact />
+          <Route
+            path={routes.notFound.path}
+            component={routes.notFound.component}
+          />
+        </Switch>
+      </Content>
+      <Footer>Investcase 2020</Footer>
+    </Layout>
+  </Layout>
 );
 
 export default hot(App);

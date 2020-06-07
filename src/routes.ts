@@ -1,7 +1,5 @@
-import Stories from './components/Stories';
-import Story from './components/Story';
-import Words from './components/Words';
-import Word from './components/Word';
+import Reports from './components/Reports';
+import Groups from './components/Groups';
 import Settings from './components/Settings';
 import Feedback from './components/Feedback';
 import NotFound from './components/NotFound';
@@ -14,36 +12,20 @@ type Routes = {
 };
 
 export default {
-  word: {
-    path: '/stories/:id/words/study',
-    component: Word,
+  reports: {
+    path: '/reports',
+    component: Reports,
+    name: 'Отчеты',
   },
-  words: {
-    path: '/stories/:id/words',
-    component: Words,
-    name: 'Cлова',
-  },
-  story: {
-    path: '/stories/:id',
-    component: Story,
-  },
-  stories: {
-    path: '/stories',
-    component: Stories,
-    name: 'Истории',
+  groups: {
+    path: '/groups',
+    component: Groups,
+    name: 'Группы',
   },
   settings: {
     path: '/settings',
     component: Settings,
     name: 'Настройки',
-  },
-  feedback: {
-    path: '/feedback',
-    component: Feedback,
-    name: 'Обратная связь',
-  },
-  main: {
-    path: '/',
   },
   notFound: {
     path: '*',
