@@ -1,4 +1,5 @@
 import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
+import { State } from '../';
 
 type TGroup = {
   id: string;
@@ -22,4 +23,10 @@ const slice = createSlice({
 
 const { actions, reducer } = slice;
 
-export { reducer as default, actions as groupsActions };
+const selectors = groupsAdapter.getSelectors((state: State) => state.groups);
+
+export {
+  reducer as default,
+  actions as groupsActions,
+  selectors as groupsSelectors,
+};

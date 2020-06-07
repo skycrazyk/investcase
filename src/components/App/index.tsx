@@ -4,6 +4,7 @@ const { Header, Footer, Sider, Content } = Layout;
 import React, { FC } from 'react';
 import { Switch, Route, Redirect, Link } from 'react-router-dom';
 import routes from '../../routes';
+import style from './style.module.css';
 
 const App: FC = () => (
   <Layout>
@@ -22,7 +23,7 @@ const App: FC = () => (
     </Sider>
     <Layout>
       <Header>Header</Header>
-      <Content>
+      <Content className={style.content}>
         <Switch>
           <Route
             path={routes.reports.path}
