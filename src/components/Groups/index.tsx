@@ -50,7 +50,7 @@ const Groups: FC = () => {
                   >
                     <Input placeholder="Название группы" />
 
-                    <Form.List name="fields">
+                    <Form.List name={[group.name, 'fields']}>
                       {(
                         groupValues,
                         { add: addGroupValue, remove: removeGroupValue }
