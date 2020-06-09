@@ -49,54 +49,54 @@ const Groups: FC = () => {
                     rules={[rules.reuired]}
                   >
                     <Input placeholder="Название группы" />
-
-                    <Form.List name={[group.name, 'fields']}>
-                      {(
-                        groupValues,
-                        { add: addGroupValue, remove: removeGroupValue }
-                      ) => {
-                        return (
-                          <div>
-                            {groupValues.map((groupValue) => (
-                              <Space
-                                key={groupValue.key}
-                                style={{ display: 'flex', marginBottom: 8 }}
-                                align="start"
-                              >
-                                <Form.Item
-                                  {...groupValue}
-                                  name={[groupValue.name, 'name']}
-                                  fieldKey={[groupValue.fieldKey, 'name']}
-                                  rules={[rules.reuired]}
-                                >
-                                  <Input placeholder="Значение" />
-                                </Form.Item>
-
-                                <MinusCircleOutlined
-                                  className={style.deleteButton}
-                                  onClick={() => {
-                                    removeGroupValue(groupValue.name);
-                                  }}
-                                />
-                              </Space>
-                            ))}
-
-                            <Form.Item>
-                              <Button
-                                type="dashed"
-                                onClick={() => {
-                                  addGroupValue();
-                                }}
-                                block
-                              >
-                                <PlusOutlined /> Добавить значение
-                              </Button>
-                            </Form.Item>
-                          </div>
-                        );
-                      }}
-                    </Form.List>
                   </Form.Item>
+
+                  <Form.List name={[group.name, 'fields']}>
+                    {(
+                      groupValues,
+                      { add: addGroupValue, remove: removeGroupValue }
+                    ) => {
+                      return (
+                        <div>
+                          {groupValues.map((groupValue) => (
+                            <Space
+                              key={groupValue.key}
+                              style={{ display: 'flex', marginBottom: 8 }}
+                              align="start"
+                            >
+                              <Form.Item
+                                {...groupValue}
+                                name={[groupValue.name, 'name']}
+                                fieldKey={[groupValue.fieldKey, 'name']}
+                                rules={[rules.reuired]}
+                              >
+                                <Input placeholder="Значение" />
+                              </Form.Item>
+
+                              <MinusCircleOutlined
+                                className={style.deleteButton}
+                                onClick={() => {
+                                  removeGroupValue(groupValue.name);
+                                }}
+                              />
+                            </Space>
+                          ))}
+
+                          <Form.Item>
+                            <Button
+                              type="dashed"
+                              onClick={() => {
+                                addGroupValue();
+                              }}
+                              block
+                            >
+                              <PlusOutlined /> Добавить значение
+                            </Button>
+                          </Form.Item>
+                        </div>
+                      );
+                    }}
+                  </Form.List>
 
                   <MinusCircleOutlined
                     className={style.deleteButton}
