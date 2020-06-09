@@ -1,5 +1,5 @@
-import React, { FC, useState } from 'react';
-import { Button, Input, Form, Select, Space } from 'antd';
+import React, { FC, useState, useRef, useEffect } from 'react';
+import { Button, Input, Form, Select, Space, Divider } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { nanoid } from '@reduxjs/toolkit';
@@ -11,6 +11,7 @@ const rules = {
 };
 
 const Groups: FC = () => {
+  const [form] = Form.useForm();
   const dispatch = useDispatch();
   const groups = useSelector(groupsSelectors.selectAll);
 
@@ -24,6 +25,7 @@ const Groups: FC = () => {
 
   return (
     <Form
+      form={form}
       name="groups"
       initialValues={{
         groups: [{ name: 'Валюта' }, { name: 'Уровень риска' }],
@@ -36,28 +38,46 @@ const Groups: FC = () => {
         {(groups, { add, remove }) => {
           return (
             <div>
-              {groups.map((group) => (
-                <Space
-                  key={group.key}
-                  style={{ display: 'flex', marginBottom: 8 }}
-                  align="start"
-                >
-                  <Form.Item
-                    {...group}
-                    name={[group.name, 'name']}
-                    fieldKey={[group.fieldKey, 'name']}
-                    rules={[rules.reuired]}
-                  >
-                    <Input placeholder="Название группы" />
-                  </Form.Item>
+              {groups.map((group, groupIndex) => (
+                <div key={group.key}>
+                  {groupIndex > 0 && (
+                    <Divider
+                      orientation="left"
+                      style={{ marginBottom: 40, marginTop: 40 }}
+                    />
+                  )}
 
-                  <Form.List name={[group.name, 'fields']}>
+                  <Space
+                    style={{
+                      display: 'flex',
+                      marginBottom: 2,
+                    }}
+                    align="start"
+                  >
+                    <Form.Item
+                      {...group}
+                      name={[group.name, 'name']}
+                      fieldKey={[group.fieldKey, 'name']}
+                      rules={[rules.reuired]}
+                    >
+                      <Input placeholder="Название группы" />
+                    </Form.Item>
+
+                    <MinusCircleOutlined
+                      className={style.deleteButton}
+                      onClick={() => {
+                        remove(group.name);
+                      }}
+                    />
+                  </Space>
+
+                  <Form.List name={[group.name, 'values']}>
                     {(
                       groupValues,
                       { add: addGroupValue, remove: removeGroupValue }
                     ) => {
                       return (
-                        <div>
+                        <div style={{ marginLeft: 30 }}>
                           {groupValues.map((groupValue) => (
                             <Space
                               key={groupValue.key}
@@ -97,14 +117,7 @@ const Groups: FC = () => {
                       );
                     }}
                   </Form.List>
-
-                  <MinusCircleOutlined
-                    className={style.deleteButton}
-                    onClick={() => {
-                      remove(group.name);
-                    }}
-                  />
-                </Space>
+                </div>
               ))}
 
               <Form.Item>
