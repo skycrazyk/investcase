@@ -14,6 +14,9 @@ const App: FC = () => (
           <Link to={routes.reports.path}>{routes.reports.name}</Link>
         </Menu.Item>
         <Menu.Item>
+          <Link to={routes.products.path}>{routes.products.name}</Link>
+        </Menu.Item>
+        <Menu.Item>
           <Link to={routes.groups.path}>{routes.groups.name}</Link>
         </Menu.Item>
         <Menu.Item>
@@ -22,12 +25,17 @@ const App: FC = () => (
       </Menu>
     </Sider>
     <Layout>
-      <Header>Header</Header>
+      {/* <Header>Header</Header> */}
       <Content className={style.content}>
         <Switch>
           <Route
             path={routes.reports.path}
             component={routes.reports.component}
+            exact
+          />
+          <Route
+            path={routes.products.path}
+            component={routes.products.component}
             exact
           />
           <Route

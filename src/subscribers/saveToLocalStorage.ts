@@ -1,6 +1,6 @@
 import { observeStore } from '../utils';
 import { Store } from '../store';
-import { getGroups, getReports } from '../selectors';
+import { getGroups, getReports, getProducts } from '../selectors';
 
 function saveToLocalStorage(store: Store) {
   // Группы
@@ -11,6 +11,11 @@ function saveToLocalStorage(store: Store) {
   // Отчеты
   observeStore(store, getReports, (reports) => {
     localStorage.setItem('reports', JSON.stringify(reports));
+  });
+
+  // Продукты
+  observeStore(store, getProducts, (products) => {
+    localStorage.setItem('products', JSON.stringify(products));
   });
 }
 
