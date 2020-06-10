@@ -5,6 +5,9 @@ const store = configureStore({
   reducer: {
     groups,
   },
+  preloadedState: {
+    groups: JSON.parse(localStorage.getItem('groups') || '') || {},
+  },
 });
 
 type Store = typeof store;

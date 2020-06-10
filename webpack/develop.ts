@@ -48,7 +48,7 @@ const config: webpack.Configuration = {
             plugins: [
               'react-hot-loader/babel',
               ['import', { libraryName: 'antd', style: 'css' }, 'antd'],
-              ['import', { libraryName: 'lodash' }, 'lodash'],
+              // ['import', { libraryName: 'lodash' }, 'lodash'],
             ],
           },
         },

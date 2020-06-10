@@ -5,6 +5,9 @@ import { HashRouter } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import App from './components/App';
 import store from './store';
+import { saveToLocalStorage } from './subscribers';
+
+saveToLocalStorage(store);
 
 render(
   <HashRouter>

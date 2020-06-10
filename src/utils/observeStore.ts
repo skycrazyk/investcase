@@ -4,7 +4,7 @@ import { isEqual } from 'lodash';
 function observeStore(
   store: Store,
   select: (store: State) => any,
-  onChange: (store: State) => never
+  onChange: (store: State) => void
 ) {
   let currentState: any;
 
