@@ -170,7 +170,7 @@ const Reports: FC = () => {
                   }}
                   block
                 >
-                  <PlusOutlined /> Добавить группу
+                  <PlusOutlined /> Добавить отчет
                 </Button>
               </Form.Item>
             </div>
