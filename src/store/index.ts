@@ -3,6 +3,7 @@ import groups from './groups';
 import reports from './reports';
 
 const groupsPreloaded = JSON.parse(localStorage.getItem('groups') || '');
+const reportsPreloaded = JSON.parse(localStorage.getItem('reports') || '');
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
   },
   preloadedState: {
     ...(groupsPreloaded && { groups: groupsPreloaded }),
+    ...(reportsPreloaded && { reports: reportsPreloaded }),
   },
 });
 

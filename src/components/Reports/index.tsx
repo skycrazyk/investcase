@@ -3,6 +3,7 @@ import { Button, Input, Form, Select, Space, Divider, DatePicker } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { nanoid } from '@reduxjs/toolkit';
 import { useSelector, useDispatch } from 'react-redux';
+import moment from 'moment';
 import {
   reportsSelectors,
   reportsActions,
@@ -14,13 +15,34 @@ const rules = {
   reuired: { required: true, message: 'Обязательное поле' },
 };
 
+const prepareReport = {
+  hidrate: (reports: ReturnType<typeof reportsSelectors.selectAll>) => {
+    return reports.map((report) => {
+      return {
+        ...report,
+        date: moment(report.date, 'YYYY-MM-DD'),
+      };
+    });
+  },
+  serialize: (values: any) =>
+    values.reports.map((report: any) => ({
+      ...report,
+      date: report.date.format('YYYY-MM-DD'),
+    })),
+};
+
 const Reports: FC = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const reports = useSelector(reportsSelectors.selectAll);
 
   const onFinish = (values: any) => {
-    // dispatch(reportsActions.addOne(values.groups));
+    const resolvedValues = values.reports.map((report: any) => ({
+      ...report,
+      date: report.date.format('YYYY-MM-DD'),
+    }));
+
+    dispatch(reportsActions.setAll(resolvedValues));
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -31,6 +53,7 @@ const Reports: FC = () => {
     <Form
       form={form}
       name="reports"
+      initialValues={{ reports }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
@@ -68,8 +91,8 @@ const Reports: FC = () => {
                       return (
                         <Form.Item
                           {...report}
-                          name={[report.name, `rate.${currencyKey}`]}
-                          fieldKey={[report.fieldKey, `rate.${currencyKey}`]}
+                          name={[report.name, 'rate', currencyKey]}
+                          fieldKey={[report.fieldKey, 'rate', currencyKey]}
                           rules={[rules.reuired]}
                         >
                           <Input placeholder={`Курс ${currencyKey}`} />
