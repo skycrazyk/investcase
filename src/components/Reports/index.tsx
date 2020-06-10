@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import { Button, Input, Form, Select, Space, Divider, DatePicker } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { nanoid } from '@reduxjs/toolkit';
@@ -49,6 +49,10 @@ const Reports: FC = () => {
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
   };
+
+  const getLastReport = useCallback(() => form.getFieldValue('reports')[0], [
+    form,
+  ]);
 
   return (
     <Form
@@ -201,6 +205,7 @@ const Reports: FC = () => {
                               type="dashed"
                               onClick={() => {
                                 addProduct({
+                                  ...getLastReport(),
                                   id: nanoid(),
                                 });
                               }}
@@ -220,7 +225,9 @@ const Reports: FC = () => {
                 <Button
                   type="dashed"
                   onClick={() => {
+                    console.log(getLastReport());
                     add({
+                      ...getLastReport(),
                       id: nanoid(),
                     });
                   }}
