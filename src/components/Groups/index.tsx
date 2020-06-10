@@ -75,7 +75,7 @@ const Groups: FC = () => {
                       { add: addGroupValue, remove: removeGroupValue }
                     ) => {
                       return (
-                        <div style={{ marginLeft: 30 }}>
+                        <div style={{ marginLeft: 32 }}>
                           {groupValues.map((groupValue) => (
                             <Space
                               key={groupValue.key}
