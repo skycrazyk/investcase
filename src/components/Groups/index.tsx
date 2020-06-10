@@ -16,7 +16,7 @@ const Groups: FC = () => {
   const groups = useSelector(groupsSelectors.selectAll);
 
   const onFinish = (values: any) => {
-    console.log('Success:', values);
+    dispatch(groupsActions.setAll(values.groups));
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -27,9 +27,7 @@ const Groups: FC = () => {
     <Form
       form={form}
       name="groups"
-      initialValues={{
-        groups: [{ name: 'Валюта' }, { name: 'Уровень риска' }],
-      }}
+      initialValues={groups}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
@@ -106,7 +104,10 @@ const Groups: FC = () => {
                             <Button
                               type="dashed"
                               onClick={() => {
-                                addGroupValue();
+                                addGroupValue({
+                                  name: '',
+                                  id: nanoid(),
+                                });
                               }}
                               block
                             >
@@ -124,7 +125,10 @@ const Groups: FC = () => {
                 <Button
                   type="dashed"
                   onClick={() => {
-                    add();
+                    add({
+                      name: '',
+                      id: nanoid(),
+                    });
                   }}
                   block
                 >
