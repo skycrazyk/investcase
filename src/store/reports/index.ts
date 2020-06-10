@@ -32,7 +32,7 @@ type TReport = {
 const reportsAdapter = createEntityAdapter<TReport>();
 
 const slice = createSlice({
-  name: 'groups',
+  name: 'reports',
   initialState: reportsAdapter.getInitialState(),
   reducers: {
     addOne: reportsAdapter.addOne,
