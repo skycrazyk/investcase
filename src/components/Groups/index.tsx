@@ -27,7 +27,7 @@ const Groups: FC = () => {
     <Form
       form={form}
       name="groups"
-      initialValues={groups}
+      initialValues={{ groups }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
