@@ -1,7 +1,7 @@
 import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
 import { getReports } from '../../selectors';
 
-const currency = {
+export const currency = {
   usd: 'usd',
 } as const;
 
