@@ -15,7 +15,7 @@ const rules = {
   reuired: { required: true, message: 'Обязательное поле' },
 };
 
-const prepareReport = {
+const prepareReports = {
   hidrate: (reports: ReturnType<typeof reportsSelectors.selectAll>) => {
     return reports.map((report) => {
       return {
@@ -53,7 +53,7 @@ const Reports: FC = () => {
     <Form
       form={form}
       name="reports"
-      initialValues={{ reports }}
+      initialValues={{ reports: prepareReports.hidrate(reports) }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"

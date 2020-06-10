@@ -2,8 +2,11 @@ import { configureStore } from '@reduxjs/toolkit';
 import groups from './groups';
 import reports from './reports';
 
-const groupsPreloaded = JSON.parse(localStorage.getItem('groups') || '');
-const reportsPreloaded = JSON.parse(localStorage.getItem('reports') || '');
+const localStorageGroups = localStorage.getItem('groups');
+const localStorageReports = localStorage.getItem('reports');
+
+const groupsPreloaded = localStorageGroups && JSON.parse(localStorageGroups);
+const reportsPreloaded = localStorageReports && JSON.parse(localStorageReports);
 
 const store = configureStore({
   reducer: {
