@@ -7,7 +7,8 @@ import moment from 'moment';
 import {
   reportsSelectors,
   reportsActions,
-  currency,
+  exchangeCurrencies,
+  productCurrencies,
 } from '../../store/reports';
 import style from './style.module.css';
 
@@ -87,7 +88,7 @@ const Reports: FC = () => {
                       <DatePicker />
                     </Form.Item>
 
-                    {Object.keys(currency).map((currencyKey) => {
+                    {Object.keys(exchangeCurrencies).map((currencyKey) => {
                       return (
                         <Form.Item
                           {...report}
@@ -172,7 +173,18 @@ const Reports: FC = () => {
                                 fieldKey={[product.fieldKey, 'currency']}
                                 rules={[rules.reuired]}
                               >
-                                <Input placeholder="Валюта приобретения" />
+                                <Select style={{ minWidth: 90 }}>
+                                  {Object.keys(productCurrencies).map(
+                                    (currencyKey) => (
+                                      <Select.Option
+                                        key={currencyKey}
+                                        value={currencyKey}
+                                      >
+                                        {currencyKey.toUpperCase()}
+                                      </Select.Option>
+                                    )
+                                  )}
+                                </Select>
                               </Form.Item>
 
                               <MinusCircleOutlined

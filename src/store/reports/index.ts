@@ -1,9 +1,13 @@
 import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
 import { getReports } from '../../selectors';
 
-export const currency = {
-  rub: 'rub',
+export const exchangeCurrencies = {
   usd: 'usd',
+} as const;
+
+export const productCurrencies = {
+  rub: 'rub',
+  ...exchangeCurrencies,
 } as const;
 
 type TProduct = {
@@ -13,7 +17,7 @@ type TProduct = {
   count: number;
   liquidationPrice: number;
   dividend: number;
-  currency: keyof typeof currency;
+  currency: keyof typeof exchangeCurrencies;
   groups: {
     id: string;
     valueId: string;
@@ -21,7 +25,7 @@ type TProduct = {
 };
 
 type TRate = {
-  [key in keyof typeof currency]: number;
+  [key in keyof typeof exchangeCurrencies]: number;
 };
 
 type TReport = {
