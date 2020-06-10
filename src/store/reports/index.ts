@@ -1,9 +1,50 @@
 import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
-import { State } from '../';
+import { getReports } from '../../selectors';
+
+const currency = {
+  usd: 'usd',
+} as const;
 
 type TProduct = {
-  name: string;
   id: string;
+  name: string;
+  count: number;
+  liquidationPrice: number;
+  dividend: number;
+  currency: keyof typeof currency;
+  groups: {
+    id: string;
+    valueId: string;
+  }[];
 };
 
-type TReport = {};
+type TRate = {
+  [key in keyof typeof currency]: number;
+};
+
+type TReport = {
+  id: string;
+  date: string;
+  products: TProduct[];
+  rate: TRate;
+};
+
+const reportsAdapter = createEntityAdapter<TReport>();
+
+const slice = createSlice({
+  name: 'groups',
+  initialState: reportsAdapter.getInitialState(),
+  reducers: {
+    addOne: reportsAdapter.addOne,
+  },
+});
+
+const { actions, reducer } = slice;
+
+const selectors = reportsAdapter.getSelectors(getReports);
+
+export {
+  reducer as default,
+  actions as reportsActions,
+  selectors as reportsSelectors,
+};

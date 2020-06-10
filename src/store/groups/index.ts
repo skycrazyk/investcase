@@ -1,5 +1,5 @@
 import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
-import { State } from '../';
+import { getGroups } from '../../selectors';
 
 type TGroup = {
   id: string;
@@ -9,11 +9,11 @@ type TGroup = {
     id: string;
     name: string;
     // Дополнительные поля для значения
-    fields?: {
-      id: string;
-      name: string;
-      type: 'string' | 'number';
-    }[];
+    // fields?: {
+    //   id: string;
+    //   name: string;
+    //   type: 'string' | 'number';
+    // }[];
   }[];
 };
 
@@ -30,7 +30,7 @@ const slice = createSlice({
 
 const { actions, reducer } = slice;
 
-const selectors = groupsAdapter.getSelectors((state: State) => state.groups);
+const selectors = groupsAdapter.getSelectors(getGroups);
 
 export {
   reducer as default,

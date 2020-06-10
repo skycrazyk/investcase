@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import groups from './groups';
+import reports from './reports';
 
 const groupsPreloaded = JSON.parse(localStorage.getItem('groups') || '');
 
 const store = configureStore({
   reducer: {
     groups,
+    reports,
   },
   preloadedState: {
     ...(groupsPreloaded && { groups: groupsPreloaded }),
