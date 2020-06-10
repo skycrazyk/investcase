@@ -2,12 +2,14 @@ import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
 import { getReports } from '../../selectors';
 
 export const currency = {
+  rub: 'rub',
   usd: 'usd',
 } as const;
 
 type TProduct = {
   id: string;
   name: string;
+  ticker: string;
   count: number;
   liquidationPrice: number;
   dividend: number;

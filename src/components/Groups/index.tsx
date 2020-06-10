@@ -105,7 +105,6 @@ const Groups: FC = () => {
                               type="dashed"
                               onClick={() => {
                                 addGroupValue({
-                                  name: '',
                                   id: nanoid(),
                                 });
                               }}
@@ -126,7 +125,6 @@ const Groups: FC = () => {
                   type="dashed"
                   onClick={() => {
                     add({
-                      name: '',
                       id: nanoid(),
                     });
                   }}

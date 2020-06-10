@@ -108,32 +108,77 @@ const Reports: FC = () => {
                     />
                   </Space>
 
-                  {/* <Form.List name={[group.name, 'values']}>
-                    {(
-                      groupValues,
-                      { add: addGroupValue, remove: removeGroupValue }
-                    ) => {
+                  <Form.List name={[report.name, 'products']}>
+                    {(products, { add: addProduct, remove: removeProduct }) => {
                       return (
                         <div style={{ marginLeft: 32 }}>
-                          {groupValues.map((groupValue) => (
+                          {products.map((product) => (
                             <Space
-                              key={groupValue.key}
+                              key={product.key}
                               style={{ display: 'flex', marginBottom: 8 }}
                               align="start"
                             >
                               <Form.Item
-                                {...groupValue}
-                                name={[groupValue.name, 'name']}
-                                fieldKey={[groupValue.fieldKey, 'name']}
+                                {...product}
+                                name={[product.name, 'name']}
+                                fieldKey={[product.fieldKey, 'name']}
                                 rules={[rules.reuired]}
                               >
-                                <Input placeholder="Значение" />
+                                <Input placeholder="Название продукта" />
+                              </Form.Item>
+
+                              <Form.Item
+                                {...product}
+                                name={[product.name, 'ticker']}
+                                fieldKey={[product.fieldKey, 'ticker']}
+                                rules={[rules.reuired]}
+                              >
+                                <Input placeholder="Тикер" />
+                              </Form.Item>
+
+                              <Form.Item
+                                {...product}
+                                name={[product.name, 'count']}
+                                fieldKey={[product.fieldKey, 'count']}
+                                rules={[rules.reuired]}
+                              >
+                                <Input placeholder="Количество" />
+                              </Form.Item>
+
+                              <Form.Item
+                                {...product}
+                                name={[product.name, 'liquidationPrice']}
+                                fieldKey={[
+                                  product.fieldKey,
+                                  'liquidationPrice',
+                                ]}
+                                rules={[rules.reuired]}
+                              >
+                                <Input placeholder="Ликвидационная стоимость" />
+                              </Form.Item>
+
+                              <Form.Item
+                                {...product}
+                                name={[product.name, 'dividend']}
+                                fieldKey={[product.fieldKey, 'dividend']}
+                                rules={[rules.reuired]}
+                              >
+                                <Input placeholder="Дивиденты" />
+                              </Form.Item>
+
+                              <Form.Item
+                                {...product}
+                                name={[product.name, 'currency']}
+                                fieldKey={[product.fieldKey, 'currency']}
+                                rules={[rules.reuired]}
+                              >
+                                <Input placeholder="Валюта приобретения" />
                               </Form.Item>
 
                               <MinusCircleOutlined
                                 className={style.deleteButton}
                                 onClick={() => {
-                                  removeGroupValue(groupValue.name);
+                                  removeProduct(product.name);
                                 }}
                               />
                             </Space>
@@ -143,20 +188,19 @@ const Reports: FC = () => {
                             <Button
                               type="dashed"
                               onClick={() => {
-                                addGroupValue({
-                                  name: '',
+                                addProduct({
                                   id: nanoid(),
                                 });
                               }}
                               block
                             >
-                              <PlusOutlined /> Добавить значение
+                              <PlusOutlined /> Добавить продукт
                             </Button>
                           </Form.Item>
                         </div>
                       );
                     }}
-                  </Form.List> */}
+                  </Form.List>
                 </div>
               ))}
 
