@@ -1,10 +1,10 @@
 import { hot } from 'react-hot-loader/root';
 import { Layout, Menu } from 'antd';
-const { Header, Footer, Sider, Content } = Layout;
 import React, { FC } from 'react';
 import { Switch, Route, Redirect, Link } from 'react-router-dom';
 import routes from '../../routes';
 import style from './style.module.css';
+const { Header, Footer, Sider, Content } = Layout;
 
 const App: FC = () => (
   <Layout>

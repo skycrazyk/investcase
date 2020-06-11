@@ -10,6 +10,8 @@ import {
   exchangeCurrencies,
   productCurrencies,
 } from '../../store/reports';
+import { productsSelectors } from '../../store/products';
+import { getProducts } from '../../selectors';
 import style from './style.module.css';
 
 const rules = {
@@ -38,11 +40,7 @@ const Reports: FC = () => {
   const reports = useSelector(reportsSelectors.selectAll);
 
   const onFinish = (values: any) => {
-    const resolvedValues = values.reports.map((report: any) => ({
-      ...report,
-      date: report.date.format('YYYY-MM-DD'),
-    }));
-
+    const resolvedValues = prepareReports.serialize(values);
     dispatch(reportsActions.setAll(resolvedValues));
   };
 
@@ -53,6 +51,14 @@ const Reports: FC = () => {
   const getLastReport = useCallback(() => form.getFieldValue('reports')[0], [
     form,
   ]);
+
+  const catalog = useSelector(productsSelectors.selectAll);
+
+  // const filteredCatalog = catalog.filter((catalogProduct) => {
+  //   // const { reports } = form.getFieldValue('reports');
+  //   // console.log(reports);
+  //   return catalogProduct;
+  // });
 
   return (
     <Form
@@ -125,20 +131,34 @@ const Reports: FC = () => {
                             >
                               <Form.Item
                                 {...product}
-                                name={[product.name, 'name']}
-                                fieldKey={[product.fieldKey, 'name']}
+                                name={[product.name, 'id']}
+                                fieldKey={[product.fieldKey, 'id']}
                                 rules={[rules.reuired]}
                               >
-                                <Input placeholder="Название продукта" />
-                              </Form.Item>
+                                <Select placeholder="Выберите продукт">
+                                  {catalog
+                                    .filter((catalogProduct) => {
+                                      const selectedProducts = form.getFieldValue(
+                                        'reports'
+                                      )[reportIndex].products;
 
-                              <Form.Item
-                                {...product}
-                                name={[product.name, 'ticker']}
-                                fieldKey={[product.fieldKey, 'ticker']}
-                                rules={[rules.reuired]}
-                              >
-                                <Input placeholder="Тикер" />
+                                      const isUsed = selectedProducts.some(
+                                        (product: any) =>
+                                          product?.id === catalogProduct?.id
+                                      );
+
+                                      return !isUsed;
+                                    })
+                                    .map((item) => (
+                                      <Select.Option
+                                        key={item.id}
+                                        value={item.id}
+                                        title={`${item.name} (${item.ticker})`}
+                                      >
+                                        {`${item.name} (${item.ticker})`}
+                                      </Select.Option>
+                                    ))}
+                                </Select>
                               </Form.Item>
 
                               <Form.Item
@@ -166,29 +186,8 @@ const Reports: FC = () => {
                                 {...product}
                                 name={[product.name, 'dividend']}
                                 fieldKey={[product.fieldKey, 'dividend']}
-                                rules={[rules.reuired]}
                               >
                                 <Input placeholder="Дивиденты" />
-                              </Form.Item>
-
-                              <Form.Item
-                                {...product}
-                                name={[product.name, 'currency']}
-                                fieldKey={[product.fieldKey, 'currency']}
-                                rules={[rules.reuired]}
-                              >
-                                <Select style={{ minWidth: 90 }}>
-                                  {Object.keys(productCurrencies).map(
-                                    (currencyKey) => (
-                                      <Select.Option
-                                        key={currencyKey}
-                                        value={currencyKey}
-                                      >
-                                        {currencyKey.toUpperCase()}
-                                      </Select.Option>
-                                    )
-                                  )}
-                                </Select>
                               </Form.Item>
 
                               <MinusCircleOutlined
@@ -204,10 +203,7 @@ const Reports: FC = () => {
                             <Button
                               type="dashed"
                               onClick={() => {
-                                addProduct({
-                                  ...getLastReport(),
-                                  id: nanoid(),
-                                });
+                                addProduct();
                               }}
                               block
                             >

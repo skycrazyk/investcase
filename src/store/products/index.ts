@@ -11,9 +11,6 @@ type TProduct = {
   id: string;
   name: string;
   ticker: string;
-  count: number;
-  liquidationPrice: number;
-  dividend: number;
   currency: keyof typeof productCurrencies;
   groups: {
     id: string;

@@ -12,16 +12,9 @@ export const productCurrencies = {
 
 type TProduct = {
   id: string;
-  name: string;
-  ticker: string;
   count: number;
   liquidationPrice: number;
   dividend: number;
-  currency: keyof typeof exchangeCurrencies;
-  groups: {
-    id: string;
-    valueId: string;
-  }[];
 };
 
 type TRate = {
