@@ -54,12 +54,6 @@ const Reports: FC = () => {
 
   const catalog = useSelector(productsSelectors.selectAll);
 
-  // const filteredCatalog = catalog.filter((catalogProduct) => {
-  //   // const { reports } = form.getFieldValue('reports');
-  //   // console.log(reports);
-  //   return catalogProduct;
-  // });
-
   return (
     <Form
       form={form}
@@ -135,9 +129,12 @@ const Reports: FC = () => {
                                 fieldKey={[product.fieldKey, 'id']}
                                 rules={[rules.reuired]}
                               >
-                                <Select placeholder="Выберите продукт">
+                                <Select
+                                  placeholder="Выберите продукт"
+                                  allowClear
+                                >
                                   {catalog
-                                    .filter((catalogProduct) => {
+                                    .map((catalogProduct) => {
                                       const selectedProducts = form.getFieldValue(
                                         'reports'
                                       )[reportIndex].products;
@@ -147,13 +144,26 @@ const Reports: FC = () => {
                                           product?.id === catalogProduct?.id
                                       );
 
-                                      return !isUsed;
+                                      return {
+                                        ...catalogProduct,
+                                        disabled: isUsed,
+                                      };
+                                    })
+                                    .sort((a, b) => {
+                                      if (a.disabled && !b.disabled) {
+                                        return 1;
+                                      } else if (!a.disabled && b.disabled) {
+                                        return -1;
+                                      } else {
+                                        return 0;
+                                      }
                                     })
                                     .map((item) => (
                                       <Select.Option
                                         key={item.id}
                                         value={item.id}
                                         title={`${item.name} (${item.ticker})`}
+                                        disabled={item.disabled}
                                       >
                                         {`${item.name} (${item.ticker})`}
                                       </Select.Option>
