@@ -139,6 +139,8 @@ const Reports: FC = () => {
                                         'reports'
                                       )[reportIndex].products;
 
+                                      console.log(selectedProducts);
+
                                       const isUsed = selectedProducts.some(
                                         (product: any) =>
                                           product?.id === catalogProduct?.id

@@ -34,7 +34,7 @@ const prepareReports = {
     })),
 };
 
-const ReportsItem: FC = () => {
+const Reports: FC = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const reports = useSelector(reportsSelectors.selectAll);
@@ -138,6 +138,8 @@ const ReportsItem: FC = () => {
                                       const selectedProducts = form.getFieldValue(
                                         'reports'
                                       )[reportIndex].products;
+
+                                      console.log(selectedProducts);
 
                                       const isUsed = selectedProducts.some(
                                         (product: any) =>
@@ -255,4 +257,4 @@ const ReportsItem: FC = () => {
   );
 };
 
-export default ReportsItem;
+export default Reports;
