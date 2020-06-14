@@ -23,7 +23,7 @@ export default {
   // и графики "Диверсификация по ... всем доступным группировкам"
   // 2. Добавление продукта в модальном окне
   report: {
-    path: '/report',
+    path: '/reports/:id',
     // component: Report,
     name: 'Отчет',
   },
