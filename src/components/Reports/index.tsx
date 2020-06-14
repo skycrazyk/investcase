@@ -24,11 +24,13 @@ const columns = [
 const Reports: FC = () => {
   const reports = useSelector(reportsSelectors.selectAll);
 
+  const history = useHistory();
+  const dispatch = useDispatch();
+
   const onAdd = () => {
-    const history = useHistory();
-    const dispatch = useDispatch();
     const id = nanoid();
 
+    // Создаем "Пустой отчет"
     dispatch(
       reportsActions.addOne({
         id,
@@ -39,7 +41,8 @@ const Reports: FC = () => {
       })
     );
 
-    history.push(`${routes.reports}/${id}`);
+    // Открывааем его
+    history.push(`${routes.reports.path}/${id}`);
   };
 
   return (
@@ -48,7 +51,11 @@ const Reports: FC = () => {
         ghost={false}
         onBack={() => window.history.back()}
         title="Отчеты"
-        extra={[<Button type="primary">Добавить</Button>]}
+        extra={[
+          <Button type="primary" onClick={onAdd}>
+            Добавить
+          </Button>,
+        ]}
       />
 
       <Table columns={columns} dataSource={reports} pagination={false} />

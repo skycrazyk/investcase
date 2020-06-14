@@ -29,6 +29,11 @@ const App: FC = () => (
       <Content className={style.content}>
         <Switch>
           <Route
+            path={routes.report.path}
+            component={routes.report.component}
+            exact
+          />
+          <Route
             path={routes.reports.path}
             component={routes.reports.component}
             exact
