@@ -53,9 +53,8 @@ const Reports: FC = () => {
   return (
     <>
       <PageHeader
-        ghost={false}
-        onBack={() => window.history.back()}
-        title="Отчеты"
+        onBack={() => history.goBack()}
+        title={routes.reports.name}
         extra={[
           <Button type="primary" onClick={onAdd}>
             Добавить
