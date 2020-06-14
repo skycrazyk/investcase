@@ -1,4 +1,5 @@
 import Reports from './components/Reports';
+import Report from './components/Report';
 import Groups from './components/Groups';
 import Products from './components/Products';
 import Settings from './components/Settings';
@@ -24,7 +25,7 @@ export default {
   // 2. Добавление продукта в модальном окне
   report: {
     path: '/reports/:id',
-    // component: Report,
+    component: Report,
     name: 'Отчет',
   },
   groups: {

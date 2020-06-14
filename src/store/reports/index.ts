@@ -1,6 +1,8 @@
 import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
 import { getReports } from '../../selectors';
 
+export const dateFormat = 'YYYY-MM-DD';
+
 export const exchangeCurrencies = {
   usd: 'usd',
 } as const;
