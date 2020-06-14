@@ -2,12 +2,13 @@ import React, { FC, useCallback } from 'react';
 import { Button, Table, PageHeader } from 'antd';
 import { nanoid } from '@reduxjs/toolkit';
 import { useSelector, useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import moment from 'moment';
 import {
   reportsSelectors,
   reportsActions,
   dateFormat,
+  TReport,
 } from '../../store/reports';
 import routes from '../../routes';
 
@@ -18,6 +19,9 @@ const columns = [
     title: 'Дата',
     dataIndex: 'date',
     key: 'date',
+    render: (date: string, report: TReport) => (
+      <Link to={`${routes.reports.path}/${report.id}`}>{date}</Link>
+    ),
   },
 ];
 
@@ -37,6 +41,7 @@ const Reports: FC = () => {
         date: moment().format(dateFormat),
         // TODO: Запрашивать актуальный курс из https://currencylayer.com/documentation
         rate: { usd: 70 },
+        // TODO: Копировать предыдущий отчет
         products: [],
       })
     );

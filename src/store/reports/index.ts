@@ -12,18 +12,18 @@ export const productCurrencies = {
   ...exchangeCurrencies,
 } as const;
 
-type TProduct = {
+export type TProduct = {
   id: string;
   count: number;
   liquidationPrice: number;
   dividend: number;
 };
 
-type TRate = {
+export type TRate = {
   [key in keyof typeof exchangeCurrencies]: number;
 };
 
-type TReport = {
+export type TReport = {
   id: string;
   date: string;
   products: TProduct[];
