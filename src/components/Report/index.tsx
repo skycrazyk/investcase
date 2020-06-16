@@ -48,8 +48,8 @@ const Report: FC = () => {
     reportsSelectors.selectById(state, routeParams.id)
   );
 
-  const onFinish = (changedValues: any, allValues: any) => {
-    const resolvedValues = formAdapter.serialize(allValues);
+  const onFinish = (values: any) => {
+    const resolvedValues = formAdapter.serialize(values);
 
     dispatch(
       reportsActions.updateOne({
@@ -74,13 +74,13 @@ const Report: FC = () => {
           </Button>,
         ]}
       />
-
+      {/* TODO: https://ant.design/components/form/#components-form-demo-form-context */}
       <Form
         form={form}
         name="report"
         initialValues={formAdapter.hidrate(report)}
         onFinishFailed={onFinishFailed}
-        onValuesChange={onFinish}
+        onFinish={onFinish}
       >
         <Form.Item
           name="date"
@@ -104,6 +104,15 @@ const Report: FC = () => {
             </Form.Item>
           );
         })}
+
+        <Form.Item>
+          <Button htmlType="submit" type="primary">
+            Сохранить
+          </Button>
+          <Button htmlType="button" style={{ margin: '0 8px' }}>
+            Добавить продукт
+          </Button>
+        </Form.Item>
       </Form>
     </>
   );
