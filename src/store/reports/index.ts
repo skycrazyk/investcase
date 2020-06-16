@@ -37,7 +37,7 @@ const slice = createSlice({
   initialState: reportsAdapter.getInitialState(),
   reducers: {
     addOne: reportsAdapter.addOne,
-    setAll: reportsAdapter.setAll,
+    updateOne: reportsAdapter.updateOne,
   },
 });
 
