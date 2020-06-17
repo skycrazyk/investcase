@@ -1,5 +1,30 @@
-import React, { useState } from 'react';
-import { Modal, Form, Input, Radio } from 'antd';
+import React, { useState, useRef, useEffect } from 'react';
+import { Modal, Form, Input, Radio, Select } from 'antd';
+import { FormInstance } from 'antd/lib/form';
+import { productsSelectors } from '../../store/products';
+import { rules } from '../../utils';
+
+const useResetFormOnCloseModal = ({
+  form,
+  visible,
+}: {
+  form: FormInstance;
+  visible: any;
+}) => {
+  const prevVisibleRef = useRef();
+
+  useEffect(() => {
+    prevVisibleRef.current = visible;
+  }, [visible]);
+
+  const prevVisible = prevVisibleRef.current;
+
+  useEffect(() => {
+    if (!visible && prevVisible) {
+      form.resetFields();
+    }
+  }, [visible]);
+};
 
 interface Values {
   title: string;
@@ -9,20 +34,30 @@ interface Values {
 
 interface ReportProductProps {
   visible: boolean;
-  onCreate: (values: Values) => void;
   onCancel: () => void;
   title: string;
   okText: string;
+  products: ReturnType<typeof productsSelectors['selectAll']>;
 }
 
 const ReportProduct: React.FC<ReportProductProps> = ({
   visible,
-  onCreate,
   onCancel,
   title,
   okText,
+  products,
 }) => {
   const [form] = Form.useForm();
+
+  useResetFormOnCloseModal({
+    form,
+    visible,
+  });
+
+  const onOk = () => {
+    form.submit();
+  };
+
   return (
     <Modal
       visible={visible}
@@ -30,25 +65,82 @@ const ReportProduct: React.FC<ReportProductProps> = ({
       okText={okText}
       cancelText="Отмена"
       onCancel={onCancel}
-      onOk={() => {
-        form
-          .validateFields()
-          .then((values) => {
-            form.resetFields();
-            onCreate(values);
-          })
-          .catch((info) => {
-            console.log('Validate Failed:', info);
-          });
-      }}
+      onOk={onOk}
     >
       <Form
         form={form}
         layout="vertical"
-        name="form_in_modal"
-        initialValues={{ modifier: 'public' }}
+        name="product"
+        // TODO: initialValues в случае обновления
+        // initialValues={{ modifier: 'public' }}
       >
-        Hello
+        <Form.Item name="product" fieldKey="product" rules={[rules.reuired]}>
+          <Select placeholder="Выберите продукт" allowClear>
+            {
+              // .map((catalogProduct) => {
+              //   const selectedProducts = form.getFieldValue('reports')[
+              //     reportIndex
+              //   ].products;
+
+              //   console.log(selectedProducts);
+
+              //   const isUsed = selectedProducts.some(
+              //     (product: any) => product?.id === catalogProduct?.id
+              //   );
+
+              //   return {
+              //     ...catalogProduct,
+              //     disabled: isUsed,
+              //   };
+              // })
+              // .sort((a, b) => {
+              //   if (a.disabled && !b.disabled) {
+              //     return 1;
+              //   } else if (!a.disabled && b.disabled) {
+              //     return -1;
+              //   } else {
+              //     return 0;
+              //   }
+              // })
+              products.map((item) => (
+                <Select.Option
+                  key={item.id}
+                  value={item.id}
+                  title={`${item.name} (${item.ticker})`}
+                  // disabled={item.disabled}s
+                >
+                  {`${item.name} (${item.ticker})`}
+                </Select.Option>
+              ))
+            }
+          </Select>
+        </Form.Item>
+        {/* 
+        <Form.Item
+          {...product}
+          name={[product.name, 'count']}
+          fieldKey={[product.fieldKey, 'count']}
+          rules={[rules.reuired]}
+        >
+          <Input placeholder="Количество" />
+        </Form.Item>
+
+        <Form.Item
+          {...product}
+          name={[product.name, 'liquidationPrice']}
+          fieldKey={[product.fieldKey, 'liquidationPrice']}
+          rules={[rules.reuired]}
+        >
+          <Input placeholder="Ликвидационная стоимость" />
+        </Form.Item>
+
+        <Form.Item
+          {...product}
+          name={[product.name, 'dividend']}
+          fieldKey={[product.fieldKey, 'dividend']}
+        >
+          <Input placeholder="Дивиденты" />
+        </Form.Item> */}
       </Form>
     </Modal>
   );

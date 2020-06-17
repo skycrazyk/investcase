@@ -1,5 +1,14 @@
 import React, { FC, useState } from 'react';
-import { PageHeader, Button, Form, DatePicker, InputNumber } from 'antd';
+import {
+  PageHeader,
+  Button,
+  Form,
+  DatePicker,
+  InputNumber,
+  Typography,
+  Table,
+} from 'antd';
+import { SmileOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { isEqual } from 'lodash';
@@ -10,7 +19,10 @@ import {
   reportsActions,
 } from '../../store/reports';
 import { State } from '../../store';
+import { productsSelectors } from '../../store/products';
 import routes from '../../routes';
+import { rules } from '../../utils';
+import ReportProduct from '../ReportProduct';
 
 const hidrate = (report: ReturnType<typeof reportsSelectors.selectById>) => {
   return (
@@ -35,9 +47,13 @@ const formAdapter = {
   serialize,
 };
 
-const rules = {
-  reuired: { required: true, message: 'Обязательное поле' },
-};
+const columns = [
+  {
+    title: 'Название',
+    dataIndex: 'name',
+    key: 'name',
+  },
+];
 
 const Report: FC = () => {
   const history = useHistory();
@@ -45,6 +61,7 @@ const Report: FC = () => {
   const routeParams = useParams<{ id: string }>();
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
+  const products = useSelector(productsSelectors.selectAll);
 
   const showProductsModal = () => {
     setVisible(true);
@@ -75,21 +92,15 @@ const Report: FC = () => {
 
   return (
     <>
-      <PageHeader
-        onBack={() => history.goBack()}
-        title={routes.report.name}
-        extra={[
-          <Button type="primary" key="1">
-            Добавить продукт
-          </Button>,
-        ]}
-      />
+      <PageHeader onBack={() => history.goBack()} title={routes.report.name} />
       {/* TODO: https://ant.design/components/form/#components-form-demo-form-context */}
       <Form.Provider
         onFormFinish={(name, { values, forms }) => {
           if (name === 'product') {
+            console.log(values);
             const { report } = forms;
             const products = report.getFieldValue('products') || [];
+            // TODO: логика обновления
             report.setFieldsValue({ products: [...products, values] });
             setVisible(false);
           }
@@ -128,23 +139,21 @@ const Report: FC = () => {
           <Form.Item
             label="Продукты"
             shouldUpdate={(prevValues, curValues) =>
-              prevValues.users !== curValues.users
+              !isEqual(prevValues.products, curValues.products)
             }
           >
             {({ getFieldValue }) => {
-              const users = getFieldValue('users') || [];
-              return users.length ? (
-                <ul>
-                  {users.map((user, index) => (
-                    <li key={index} className="user">
-                      <Avatar icon={<UserOutlined />} />
-                      {user.name} - {user.age}
-                    </li>
-                  ))}
-                </ul>
+              const products = getFieldValue('products') || [];
+
+              return products.length ? (
+                <Table
+                  columns={columns}
+                  dataSource={products}
+                  pagination={false}
+                />
               ) : (
                 <Typography.Text className="ant-form-text" type="secondary">
-                  ( <SmileOutlined /> No user yet. )
+                  ( <SmileOutlined /> No products yet. )
                 </Typography.Text>
               );
             }}
@@ -154,11 +163,23 @@ const Report: FC = () => {
             <Button htmlType="submit" type="primary">
               Сохранить
             </Button>
-            <Button htmlType="button" style={{ margin: '0 8px' }}>
+            <Button
+              htmlType="button"
+              style={{ margin: '0 8px' }}
+              onClick={showProductsModal}
+            >
               Добавить продукт
             </Button>
           </Form.Item>
         </Form>
+
+        <ReportProduct
+          products={products}
+          onCancel={hideProductsModal}
+          okText="Ok"
+          title="Добавить продукт"
+          visible={visible}
+        />
       </Form.Provider>
     </>
   );
