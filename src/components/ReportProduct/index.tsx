@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Modal, Form, Input, Radio, Select } from 'antd';
+import React, { useRef, useEffect } from 'react';
+import { Modal, Form, Select } from 'antd';
 import { FormInstance } from 'antd/lib/form';
+import { cloneDeep } from 'lodash';
 import { productsSelectors } from '../../store/products';
 import { rules } from '../../utils';
 
@@ -38,6 +39,8 @@ interface ReportProductProps {
   title: string;
   okText: string;
   productsCatalog: ReturnType<typeof productsSelectors['selectAll']>;
+  name: string;
+  initialValues?: any;
 }
 
 const ReportProduct: React.FC<ReportProductProps> = ({
@@ -46,6 +49,8 @@ const ReportProduct: React.FC<ReportProductProps> = ({
   title,
   okText,
   productsCatalog,
+  initialValues,
+  name,
 }) => {
   const [form] = Form.useForm();
 
@@ -53,6 +58,12 @@ const ReportProduct: React.FC<ReportProductProps> = ({
     form,
     visible,
   });
+
+  useEffect(() => {
+    if (initialValues) {
+      form.resetFields();
+    }
+  }, [initialValues]);
 
   const onOk = () => {
     form.submit();
@@ -70,15 +81,12 @@ const ReportProduct: React.FC<ReportProductProps> = ({
       <Form
         form={form}
         layout="vertical"
-        name="product"
+        name={name}
+        initialValues={cloneDeep(initialValues)}
         // TODO: initialValues в случае обновления
         // initialValues={{ modifier: 'public' }}
       >
-        <Form.Item
-          name="productId"
-          fieldKey="productId"
-          rules={[rules.reuired]}
-        >
+        <Form.Item name="id" fieldKey="id" rules={[rules.reuired]}>
           <Select placeholder="Выберите продукт" allowClear>
             {
               // .map((catalogProduct) => {
