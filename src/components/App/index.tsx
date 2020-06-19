@@ -4,11 +4,11 @@ import React, { FC } from 'react';
 import { Switch, Route, Redirect, Link } from 'react-router-dom';
 import routes from '../../routes';
 import style from './style.module.css';
-const { Header, Footer, Sider, Content } = Layout;
+const { Footer, Sider, Content } = Layout;
 
 const App: FC = () => (
   <Layout>
-    <Sider>
+    <Sider theme="light">
       <Menu>
         <Menu.Item>
           <Link to={routes.reports.path}>{routes.reports.name}</Link>
@@ -25,7 +25,6 @@ const App: FC = () => (
       </Menu>
     </Sider>
     <Layout>
-      {/* <Header>Header</Header> */}
       <Content className={style.content}>
         <Switch>
           <Route

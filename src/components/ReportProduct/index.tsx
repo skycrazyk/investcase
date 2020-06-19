@@ -37,7 +37,7 @@ interface ReportProductProps {
   onCancel: () => void;
   title: string;
   okText: string;
-  products: ReturnType<typeof productsSelectors['selectAll']>;
+  productsCatalog: ReturnType<typeof productsSelectors['selectAll']>;
 }
 
 const ReportProduct: React.FC<ReportProductProps> = ({
@@ -45,7 +45,7 @@ const ReportProduct: React.FC<ReportProductProps> = ({
   onCancel,
   title,
   okText,
-  products,
+  productsCatalog,
 }) => {
   const [form] = Form.useForm();
 
@@ -74,7 +74,11 @@ const ReportProduct: React.FC<ReportProductProps> = ({
         // TODO: initialValues в случае обновления
         // initialValues={{ modifier: 'public' }}
       >
-        <Form.Item name="product" fieldKey="product" rules={[rules.reuired]}>
+        <Form.Item
+          name="productId"
+          fieldKey="productId"
+          rules={[rules.reuired]}
+        >
           <Select placeholder="Выберите продукт" allowClear>
             {
               // .map((catalogProduct) => {
@@ -102,7 +106,7 @@ const ReportProduct: React.FC<ReportProductProps> = ({
               //     return 0;
               //   }
               // })
-              products.map((item) => (
+              productsCatalog.map((item) => (
                 <Select.Option
                   key={item.id}
                   value={item.id}
@@ -147,32 +151,3 @@ const ReportProduct: React.FC<ReportProductProps> = ({
 };
 
 export default ReportProduct;
-
-// const CollectionsPage = () => {
-//   const [visible, setVisible] = useState(false);
-
-//   const onCreate = values => {
-//     console.log('Received values of form: ', values);
-//     setVisible(false);
-//   };
-
-//   return (
-//     <div>
-//       <Button
-//         type="primary"
-//         onClick={() => {
-//           setVisible(true);
-//         }}
-//       >
-//         New Collection
-//       </Button>
-//       <CollectionCreateForm
-//         visible={visible}
-//         onCreate={onCreate}
-//         onCancel={() => {
-//           setVisible(false);
-//         }}
-//       />
-//     </div>
-//   );
-// };

@@ -5,10 +5,9 @@ import {
   Form,
   DatePicker,
   InputNumber,
-  Typography,
   Table,
+  Space,
 } from 'antd';
-import { SmileOutlined, UserOutlined } from '@ant-design/icons';
 import { useHistory, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { isEqual } from 'lodash';
@@ -61,7 +60,8 @@ const Report: FC = () => {
   const routeParams = useParams<{ id: string }>();
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
-  const products = useSelector(productsSelectors.selectAll);
+  const productsCatalog = useSelector(productsSelectors.selectAll);
+  const productsCatalogEntities = useSelector(productsSelectors.selectEntities);
 
   const showProductsModal = () => {
     setVisible(true);
@@ -75,15 +75,16 @@ const Report: FC = () => {
     reportsSelectors.selectById(state, routeParams.id)
   );
 
-  const onFinish = (values: any) => {
+  const onFinish = () => {
+    const values = form.getFieldsValue(['products', 'rate', 'date']);
     const resolvedValues = formAdapter.serialize(values);
-    console.log(resolvedValues);
-    // dispatch(
-    //   reportsActions.updateOne({
-    //     id: routeParams.id,
-    //     changes: resolvedValues,
-    //   })
-    // );
+
+    dispatch(
+      reportsActions.updateOne({
+        id: routeParams.id,
+        changes: resolvedValues,
+      })
+    );
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -101,8 +102,11 @@ const Report: FC = () => {
             const { report } = forms;
             const products = report.getFieldValue('products') || [];
             // TODO: логика обновления
-            report.setFieldsValue({ products: [...products, values] });
-            setVisible(false);
+            report.setFieldsValue({
+              products: [...products, { id: values.productId }],
+            });
+
+            hideProductsModal();
           }
         }}
       >
@@ -112,32 +116,36 @@ const Report: FC = () => {
           initialValues={formAdapter.hidrate(report)}
           onFinishFailed={onFinishFailed}
           onFinish={onFinish}
+          layout="vertical"
         >
-          <Form.Item
-            name="date"
-            fieldKey="date"
-            key="date"
-            rules={[rules.reuired]}
-          >
-            <DatePicker />
-          </Form.Item>
+          <Space>
+            <Form.Item
+              label="Дата"
+              name="date"
+              fieldKey="date"
+              key="date"
+              rules={[rules.reuired]}
+            >
+              <DatePicker />
+            </Form.Item>
 
-          {Object.keys(exchangeCurrencies).map((currencyKey) => {
-            return (
-              <Form.Item
-                {...report}
-                name={['rate', currencyKey]}
-                fieldKey={['rate', currencyKey]}
-                key={['rate', currencyKey].join('.')}
-                rules={[rules.reuired]}
-              >
-                <InputNumber placeholder={`Курс ${currencyKey}`} step="0.1" />
-              </Form.Item>
-            );
-          })}
+            {Object.keys(exchangeCurrencies).map((currencyKey) => {
+              return (
+                <Form.Item
+                  {...report}
+                  label={`Курс ${currencyKey.toUpperCase()}`}
+                  name={['rate', currencyKey]}
+                  fieldKey={['rate', currencyKey]}
+                  key={['rate', currencyKey].join('.')}
+                  rules={[rules.reuired]}
+                >
+                  <InputNumber placeholder={`Курс ${currencyKey}`} step="0.1" />
+                </Form.Item>
+              );
+            })}
+          </Space>
 
           <Form.Item
-            label="Продукты"
             shouldUpdate={(prevValues, curValues) =>
               !isEqual(prevValues.products, curValues.products)
             }
@@ -145,16 +153,18 @@ const Report: FC = () => {
             {({ getFieldValue }) => {
               const products = getFieldValue('products') || [];
 
-              return products.length ? (
+              const dataSource = products.map((item: any) => ({
+                ...item,
+                name: productsCatalogEntities[item.id]?.['name'],
+                key: item.id,
+              }));
+
+              return (
                 <Table
                   columns={columns}
-                  dataSource={products}
+                  dataSource={dataSource}
                   pagination={false}
                 />
-              ) : (
-                <Typography.Text className="ant-form-text" type="secondary">
-                  ( <SmileOutlined /> No products yet. )
-                </Typography.Text>
               );
             }}
           </Form.Item>
@@ -174,7 +184,7 @@ const Report: FC = () => {
         </Form>
 
         <ReportProduct
-          products={products}
+          productsCatalog={productsCatalog}
           onCancel={hideProductsModal}
           okText="Ok"
           title="Добавить продукт"
