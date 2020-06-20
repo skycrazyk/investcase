@@ -1,20 +1,22 @@
 import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
 import { getGroups } from '../../selectors';
 
-type TGroup = {
+export type TValue = {
+  id: string;
+  name: string;
+  // Дополнительные поля для значения
+  // fields?: {
+  //   id: string;
+  //   name: string;
+  //   type: 'string' | 'number';
+  // }[];
+};
+
+export type TGroup = {
   id: string;
   name: string;
   // Возможные значения
-  values: {
-    id: string;
-    name: string;
-    // Дополнительные поля для значения
-    // fields?: {
-    //   id: string;
-    //   name: string;
-    //   type: 'string' | 'number';
-    // }[];
-  }[];
+  values: TValue[];
 };
 
 const groupsAdapter = createEntityAdapter<TGroup>();
@@ -25,6 +27,8 @@ const slice = createSlice({
   reducers: {
     addOne: groupsAdapter.addOne,
     setAll: groupsAdapter.setAll,
+    removeOne: groupsAdapter.removeOne,
+    updateOne: groupsAdapter.updateOne,
   },
 });
 

@@ -1,151 +1,99 @@
-import React, { FC } from 'react';
-import { Button, Input, Form, Space, Divider } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { FC, useCallback, useState } from 'react';
+import { Button, Space, Table, List } from 'antd';
 import { nanoid } from '@reduxjs/toolkit';
-import { groupsSelectors, groupsActions } from '../../store/groups';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  groupsSelectors,
+  groupsActions,
+  TGroup,
+  TValue,
+} from '../../store/groups';
+import { useModalActions } from '../../hooks';
 import PageHeader from '../PageHeader';
-import style from './style.module.css';
-
-const rules = {
-  reuired: { required: true, message: 'Обязательное поле' },
-};
+import Group from '../Group';
 
 const Groups: FC = () => {
-  const [form] = Form.useForm();
   const dispatch = useDispatch();
   const groups = useSelector(groupsSelectors.selectAll);
+  const groupsEntities = useSelector(groupsSelectors.selectEntities);
+  const dataSource = groups.map((item) => ({ ...item, key: item.id }));
+  const createModal = useModalActions();
+  const editModal = useModalActions();
+  const [editableGroup, setEditableProduct] = useState<TGroup>();
 
-  const onFinish = (values: any) => {
-    dispatch(groupsActions.setAll(values.groups));
+  const editGroup = (id: string) => {
+    setEditableProduct(groupsEntities[id]);
+    editModal.show();
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
+  const deleteGroup = (id: string) => {
+    dispatch(groupsActions.removeOne(id));
   };
+
+  const columns = [
+    {
+      title: 'Название',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Значения',
+      dataIndex: 'values',
+      key: 'values',
+      render(values: TGroup['values']) {
+        return (
+          <List
+            size="small"
+            dataSource={values}
+            renderItem={(value: TValue) => <List.Item>{value.name}</List.Item>}
+          />
+        );
+      },
+    },
+    {
+      title: 'Действия',
+      key: 'action',
+      render(text: any, product: TGroup) {
+        return (
+          <Space size="middle">
+            <a onClick={() => editGroup(product.id)}>Изменить</a>
+            <a onClick={() => deleteGroup(product.id)}>Удалить</a>
+          </Space>
+        );
+      },
+    },
+  ];
 
   return (
     <>
-      <PageHeader />
-      <Form
-        form={form}
-        name="groups"
-        initialValues={{ groups }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-      >
-        <Form.List name="groups">
-          {(groups, { add, remove }) => {
-            return (
-              <div>
-                {groups.map((group, groupIndex) => (
-                  <div key={group.key}>
-                    {groupIndex > 0 && (
-                      <Divider
-                        orientation="left"
-                        style={{ marginBottom: 40, marginTop: 40 }}
-                      />
-                    )}
-
-                    <Space
-                      style={{
-                        display: 'flex',
-                        marginBottom: 2,
-                      }}
-                      align="start"
-                    >
-                      <Form.Item
-                        {...group}
-                        name={[group.name, 'name']}
-                        fieldKey={[group.fieldKey, 'name']}
-                        rules={[rules.reuired]}
-                      >
-                        <Input placeholder="Название группы" />
-                      </Form.Item>
-
-                      <MinusCircleOutlined
-                        className={style.deleteButton}
-                        onClick={() => {
-                          remove(group.name);
-                        }}
-                      />
-                    </Space>
-
-                    <Form.List name={[group.name, 'values']}>
-                      {(
-                        groupValues,
-                        { add: addGroupValue, remove: removeGroupValue }
-                      ) => {
-                        return (
-                          <div style={{ marginLeft: 32 }}>
-                            {groupValues.map((groupValue) => (
-                              <Space
-                                key={groupValue.key}
-                                style={{ display: 'flex', marginBottom: 8 }}
-                                align="start"
-                              >
-                                <Form.Item
-                                  {...groupValue}
-                                  name={[groupValue.name, 'name']}
-                                  fieldKey={[groupValue.fieldKey, 'name']}
-                                  rules={[rules.reuired]}
-                                >
-                                  <Input placeholder="Значение" />
-                                </Form.Item>
-
-                                <MinusCircleOutlined
-                                  className={style.deleteButton}
-                                  onClick={() => {
-                                    removeGroupValue(groupValue.name);
-                                  }}
-                                />
-                              </Space>
-                            ))}
-
-                            <Form.Item>
-                              <Button
-                                type="dashed"
-                                onClick={() => {
-                                  addGroupValue({
-                                    id: nanoid(),
-                                  });
-                                }}
-                                block
-                              >
-                                <PlusOutlined /> Добавить значение
-                              </Button>
-                            </Form.Item>
-                          </div>
-                        );
-                      }}
-                    </Form.List>
-                  </div>
-                ))}
-
-                <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => {
-                      add({
-                        id: nanoid(),
-                      });
-                    }}
-                    block
-                  >
-                    <PlusOutlined /> Добавить группу
-                  </Button>
-                </Form.Item>
-              </div>
-            );
-          }}
-        </Form.List>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Сохранить
-          </Button>
-        </Form.Item>
-      </Form>
+      <PageHeader
+        extra={[
+          <Button type="primary" onClick={createModal.show} key="1">
+            Добавить группу
+          </Button>,
+        ]}
+      />
+      <Table columns={columns} dataSource={dataSource} pagination={false} />
+      <Group
+        initialValues={{ id: nanoid() }}
+        title="Создание группы"
+        visible={createModal.visible}
+        onCancel={createModal.hide}
+        onOk={useCallback((values) => {
+          dispatch(groupsActions.addOne(values as TGroup));
+          createModal.hide();
+        }, [])}
+      />
+      <Group
+        initialValues={editableGroup}
+        title="Редактирование группы"
+        visible={editModal.visible}
+        onCancel={editModal.hide}
+        onOk={useCallback((values) => {
+          dispatch(groupsActions.updateOne({ id: values.id, changes: values }));
+          editModal.hide();
+        }, [])}
+      />
     </>
   );
 };
