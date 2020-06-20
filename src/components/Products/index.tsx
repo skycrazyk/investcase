@@ -4,8 +4,8 @@ import { nanoid } from '@reduxjs/toolkit';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   productsSelectors,
-  TProduct,
   productsActions,
+  TProduct,
 } from '../../store/products';
 import { useModalActions } from '../../hooks';
 import PageHeader from '../PageHeader';
@@ -24,6 +24,10 @@ const Products: FC = () => {
   const editProduct = (id: string) => {
     setEditableProduct(productsEntities[id]);
     editModal.show();
+  };
+
+  const deleteProduct = (id: string) => {
+    dispatch(productsActions.removeOne(id));
   };
 
   const columns = [
@@ -50,6 +54,7 @@ const Products: FC = () => {
         return (
           <Space size="middle">
             <a onClick={() => editProduct(product.id)}>Изменить</a>
+            <a onClick={() => deleteProduct(product.id)}>Удалить</a>
           </Space>
         );
       },
@@ -73,6 +78,7 @@ const Products: FC = () => {
         onCancel={createModal.hide}
         onOk={useCallback((values) => {
           dispatch(productsActions.addOne(values as TProduct));
+          createModal.hide();
         }, [])}
       />
       <Product
@@ -84,6 +90,7 @@ const Products: FC = () => {
           dispatch(
             productsActions.updateOne({ id: values.id, changes: values })
           );
+          editModal.hide();
         }, [])}
       />
     </>

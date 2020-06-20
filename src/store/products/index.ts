@@ -27,6 +27,7 @@ const slice = createSlice({
     setAll: productsAdapter.setAll,
     addOne: productsAdapter.addOne,
     updateOne: productsAdapter.updateOne,
+    removeOne: productsAdapter.removeOne,
   },
 });
 

@@ -44,7 +44,6 @@ const Product: FC<ProductProps> = ({
             ]);
 
             onOk(values);
-            onCancel();
           })
           .catch((info) => {
             console.log('Validate Failed:', info);
