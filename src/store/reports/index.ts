@@ -35,7 +35,11 @@ export type TReport = {
   rate: TRate;
 };
 
-const reportsAdapter = createEntityAdapter<TReport>();
+const reportsAdapter = createEntityAdapter<TReport>({
+  sortComparer: (a, b) => {
+    return moment(a.date).diff(moment(b.date));
+  },
+});
 
 const slice = createSlice({
   name: 'reports',
@@ -43,6 +47,7 @@ const slice = createSlice({
   reducers: {
     addOne: reportsAdapter.addOne,
     updateOne: reportsAdapter.updateOne,
+    removeOne: reportsAdapter.removeOne,
   },
 });
 
@@ -52,6 +57,7 @@ const buildInSelectors = reportsAdapter.getSelectors(getReports);
 
 const selectors = {
   ...buildInSelectors,
+  // TODO: удалить selectAllByDate т.к есть sortComparer
   selectAllByDate: createSelector(buildInSelectors.selectAll, (reports) => {
     return reports.sort((a, b) => {
       return moment(a.date).diff(moment(b.date));
