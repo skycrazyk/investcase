@@ -45,7 +45,9 @@ const Groups: FC = () => {
           <List
             size="small"
             dataSource={values}
-            renderItem={(value: TValue) => <List.Item>{value.name}</List.Item>}
+            renderItem={(value: TValue) => (
+              <List.Item key={value.id}>{value.name}</List.Item>
+            )}
           />
         );
       },
