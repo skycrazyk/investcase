@@ -26,13 +26,14 @@ const columns = [
 ];
 
 const Reports: FC = () => {
-  const reports = useSelector(reportsSelectors.selectAllByDate);
+  const reportsByDate = useSelector(reportsSelectors.selectAllByDate);
 
   const history = useHistory();
   const dispatch = useDispatch();
 
   const onAdd = () => {
     const id = nanoid();
+    const lastReport = reportsByDate[reportsByDate.length - 1];
 
     // Создаем новый отчет на основе предыдущего
     // TODO: сделать возможным создавать отчет на основе любого отчета
@@ -41,9 +42,8 @@ const Reports: FC = () => {
         id,
         date: moment().format(dateFormat),
         // TODO: Запрашивать актуальный курс из https://currencylayer.com/documentation
-        rate: { usd: 70 },
-        // TODO: Копировать предыдущий отчет
-        products: [],
+        rate: lastReport ? lastReport.rate : { usd: 70 },
+        products: lastReport ? lastReport.products : [],
       })
     );
 
@@ -63,7 +63,7 @@ const Reports: FC = () => {
         ]}
       />
 
-      <Table columns={columns} dataSource={reports} pagination={false} />
+      <Table columns={columns} dataSource={reportsByDate} pagination={false} />
     </>
   );
 };
