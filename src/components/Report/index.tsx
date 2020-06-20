@@ -14,6 +14,7 @@ import {
 import { State } from '../../store';
 import { productsSelectors } from '../../store/products';
 import { rules } from '../../utils';
+import { useModalActions } from '../../hooks';
 import PageHeader from '../PageHeader';
 import ReportProduct from '../ReportProduct';
 
@@ -38,25 +39,6 @@ const serialize = (report: any) => {
 const formAdapter = {
   hidrate,
   serialize,
-};
-
-const useModalActions = () => {
-  const [visible, setVisible] = useState(false);
-
-  const show = () => {
-    setVisible(true);
-  };
-
-  const hide = () => {
-    setVisible(false);
-  };
-
-  return {
-    visible,
-    setVisible,
-    show,
-    hide,
-  };
 };
 
 const formsNames = {
