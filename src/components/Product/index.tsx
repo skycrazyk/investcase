@@ -9,7 +9,7 @@ type ProductProps = {
   visible: boolean;
   onOk: (values: Store) => void;
   onCancel: () => void;
-  initialValues: Partial<TProduct>;
+  initialValues?: Partial<TProduct>;
 };
 
 const Product: FC<ProductProps> = ({
