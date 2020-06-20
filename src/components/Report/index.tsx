@@ -16,6 +16,7 @@ import {
   reportsSelectors,
   exchangeCurrencies,
   reportsActions,
+  TProduct,
 } from '../../store/reports';
 import { State } from '../../store';
 import { productsSelectors } from '../../store/products';
@@ -101,6 +102,36 @@ const useProductsCatalogForCreate = (
   return productsCatalogForCreate;
 };
 
+const useProductsCatalogForEdit = (
+  editableProduct: TProduct | undefined,
+  productsCatalog: ReturnType<typeof productsSelectors.selectAll>,
+  form: FormInstance,
+  updateCondition: any[]
+) => {
+  const [productsCatalogForEdit, setProductsCatalogForEdit] = useState<
+    ReturnType<typeof productsSelectors.selectAll>
+  >([]);
+
+  const productsInForm: TProduct[] = form.getFieldValue('products');
+
+  const productsInFormWithOutEditable = productsInForm?.filter(
+    (item) => item.id !== editableProduct?.id
+  );
+
+  useEffect(() => {
+    setProductsCatalogForEdit(
+      productsCatalog.filter(
+        (catalogProduct) =>
+          !productsInFormWithOutEditable?.some(
+            (productInForm: any) => productInForm.id === catalogProduct.id
+          )
+      )
+    );
+  }, updateCondition);
+
+  return productsCatalogForEdit;
+};
+
 const Report: FC = () => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -122,7 +153,12 @@ const Report: FC = () => {
     [createModal.visible]
   );
 
-  console.log(productsCatalogForCreate);
+  const productsCatalogForEdit = useProductsCatalogForEdit(
+    editableProduct,
+    productsCatalog,
+    form,
+    [editModal.visible]
+  );
 
   const onFinish = () => {
     const values = form.getFieldsValue(['products', 'rate', 'date']);
@@ -297,7 +333,7 @@ const Report: FC = () => {
         />
 
         <ReportProduct
-          productsCatalog={productsCatalog}
+          productsCatalog={productsCatalogForEdit}
           initialValues={editableProduct}
           onCancel={editModal.hide}
           okText="Ok"
