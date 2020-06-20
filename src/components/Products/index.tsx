@@ -10,7 +10,6 @@ import {
 import { useModalActions } from '../../hooks';
 import PageHeader from '../PageHeader';
 import Product from '../Product';
-import style from './style.module.css';
 
 const Products: FC = () => {
   const dispatch = useDispatch();

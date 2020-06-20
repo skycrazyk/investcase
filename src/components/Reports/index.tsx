@@ -1,5 +1,5 @@
-import React, { FC, useCallback } from 'react';
-import { Button, Table, PageHeader, Space } from 'antd';
+import React, { FC } from 'react';
+import { Button, Table, Space } from 'antd';
 import { nanoid } from '@reduxjs/toolkit';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, Link } from 'react-router-dom';
@@ -11,8 +11,7 @@ import {
   TReport,
 } from '../../store/reports';
 import routes from '../../routes';
-
-import style from './style.module.css';
+import PageHeader from '../PageHeader';
 
 const Reports: FC = () => {
   const reportsByDate = useSelector(reportsSelectors.selectAllByDate);
@@ -67,11 +66,9 @@ const Reports: FC = () => {
   return (
     <>
       <PageHeader
-        onBack={() => history.goBack()}
-        title={routes.reports.name}
         extra={[
           <Button type="primary" onClick={createReport}>
-            Добавить
+            Добавить отчет
           </Button>,
         ]}
       />
