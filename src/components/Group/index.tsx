@@ -70,7 +70,7 @@ const Group: FC<GroupProps> = ({
                   {groupValues.map((groupValue) => (
                     <Space
                       key={groupValue.key}
-                      style={{ display: 'flex', marginBottom: 4 }}
+                      style={{ display: 'flex' }}
                       align="start"
                     >
                       <Form.Item
@@ -91,19 +91,17 @@ const Group: FC<GroupProps> = ({
                     </Space>
                   ))}
 
-                  <Form.Item>
-                    <Button
-                      type="dashed"
-                      onClick={() => {
-                        add({
-                          id: nanoid(),
-                        });
-                      }}
-                      block
-                    >
-                      <PlusOutlined /> Добавить значение
-                    </Button>
-                  </Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => {
+                      add({
+                        id: nanoid(),
+                      });
+                    }}
+                    block
+                  >
+                    <PlusOutlined /> Добавить значение
+                  </Button>
                 </div>
               );
             }}

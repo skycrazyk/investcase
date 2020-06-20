@@ -15,6 +15,7 @@ import PageHeader from '../PageHeader';
 
 const Reports: FC = () => {
   const reportsByDate = useSelector(reportsSelectors.selectAllByDate);
+  const dataSource = reportsByDate.map((item) => ({ ...item, key: item.id }));
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -67,13 +68,13 @@ const Reports: FC = () => {
     <>
       <PageHeader
         extra={[
-          <Button type="primary" onClick={createReport}>
+          <Button type="primary" onClick={createReport} key="1">
             Добавить отчет
           </Button>,
         ]}
       />
 
-      <Table columns={columns} dataSource={reportsByDate} pagination={false} />
+      <Table columns={columns} dataSource={dataSource} pagination={false} />
     </>
   );
 };
