@@ -1,16 +1,9 @@
 import React, { FC, useState, useEffect } from 'react';
-import {
-  PageHeader,
-  Button,
-  Form,
-  DatePicker,
-  InputNumber,
-  Table,
-  Space,
-} from 'antd';
-import { useHistory, useParams } from 'react-router-dom';
+import { Button, Form, DatePicker, InputNumber, Table, Space } from 'antd';
+import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { isEqual, cloneDeep } from 'lodash';
+import { isEqual } from 'lodash';
+import { FormInstance } from 'antd/lib/form';
 import moment from 'moment';
 import {
   reportsSelectors,
@@ -20,10 +13,9 @@ import {
 } from '../../store/reports';
 import { State } from '../../store';
 import { productsSelectors } from '../../store/products';
-import routes from '../../routes';
 import { rules } from '../../utils';
+import PageHeader from '../PageHeader';
 import ReportProduct from '../ReportProduct';
-import { FormInstance } from 'antd/lib/form';
 
 const hidrate = (report: ReturnType<typeof reportsSelectors.selectById>) => {
   return (
@@ -129,7 +121,6 @@ const useProductsCatalogForEdit = (
 };
 
 const Report: FC = () => {
-  const history = useHistory();
   const dispatch = useDispatch();
   const routeParams = useParams<{ id: string }>();
   const [form] = Form.useForm();
@@ -213,7 +204,7 @@ const Report: FC = () => {
 
   return (
     <>
-      <PageHeader onBack={() => history.goBack()} title={routes.report.name} />
+      <PageHeader />
       <Form.Provider
         onFormFinish={(name, { values, forms }) => {
           if (name === formsNames.createProduct) {
