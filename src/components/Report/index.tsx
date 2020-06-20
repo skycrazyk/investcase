@@ -22,6 +22,7 @@ import { productsSelectors } from '../../store/products';
 import routes from '../../routes';
 import { rules } from '../../utils';
 import ReportProduct from '../ReportProduct';
+import { FormInstance } from 'antd/lib/form';
 
 const hidrate = (report: ReturnType<typeof reportsSelectors.selectById>) => {
   return (
@@ -71,6 +72,34 @@ const formsNames = {
   report: 'report',
 } as const;
 
+const useProductsCatalog = (
+  productsCatalog: ReturnType<typeof productsSelectors.selectAll>,
+  form: FormInstance
+) => {
+  const [productsCatalogForCreate, setProductsCatalogForCreate] = useState<
+    ReturnType<typeof productsSelectors.selectAll>
+  >([]);
+
+  const [productsCatalogForEdit, setProductsCatalogForEdit] = useState(
+    productsCatalog
+  );
+
+  const productsInForm = form.getFieldValue('products');
+
+  useEffect(() => {
+    setProductsCatalogForCreate(
+      productsCatalog.filter(
+        (catalogProduct) =>
+          !productsInForm?.some(
+            (productInForm: any) => productInForm.id === catalogProduct.id
+          )
+      )
+    );
+  }, []);
+
+  return [productsCatalogForCreate, productsCatalogForEdit];
+};
+
 const Report: FC = () => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -85,6 +114,10 @@ const Report: FC = () => {
   const report = useSelector((state: State) =>
     reportsSelectors.selectById(state, routeParams.id)
   );
+
+  const [productsCatalogForCreate] = useProductsCatalog(productsCatalog, form);
+
+  console.log(productsCatalogForCreate);
 
   const onFinish = () => {
     const values = form.getFieldsValue(['products', 'rate', 'date']);
