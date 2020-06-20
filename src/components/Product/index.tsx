@@ -1,12 +1,13 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import { Modal, Form, Input, Select } from 'antd';
+import { Store } from 'rc-field-form/es/interface';
 import { productCurrencies, TProduct } from '../../store/products';
 import { rules } from '../../utils';
 
 type ProductProps = {
   title: string;
   visible: boolean;
-  onOk: (values: any) => void;
+  onOk: (values: Store) => void;
   onCancel: () => void;
   initialValues: Partial<TProduct>;
 };
@@ -20,14 +21,9 @@ const Product: FC<ProductProps> = ({
 }) => {
   const [form] = Form.useForm();
 
-  useEffect(() => {
-    if (visible === true) {
-      form.resetFields();
-    }
-  }, [visible]);
-
   return (
     <Modal
+      afterClose={form.resetFields}
       visible={visible}
       title={title}
       onCancel={onCancel}
@@ -54,7 +50,6 @@ const Product: FC<ProductProps> = ({
         form={form}
         layout="vertical"
         name="product"
-        // TODO: initialValues для редактирования
         initialValues={initialValues}
       >
         <Form.Item name="name" fieldKey="name" rules={[rules.reuired]}>

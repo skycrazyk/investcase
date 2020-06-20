@@ -25,6 +25,7 @@ const slice = createSlice({
   initialState: productsAdapter.getInitialState(),
   reducers: {
     setAll: productsAdapter.setAll,
+    addOne: productsAdapter.addOne,
   },
 });
 
