@@ -7,7 +7,7 @@ export const productCurrencies = {
   ...exchangeCurrencies,
 } as const;
 
-type TProduct = {
+export type TProduct = {
   id: string;
   name: string;
   ticker: string;
