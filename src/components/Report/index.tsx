@@ -82,10 +82,6 @@ const useProductsCatalogForCreate = (
     ReturnType<typeof productsSelectors.selectAll>
   >([]);
 
-  // const [productsCatalogForEdit, setProductsCatalogForEdit] = useState(
-  //   productsCatalog
-  // );
-
   const productsInForm = form.getFieldValue('products');
 
   useEffect(() => {
