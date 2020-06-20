@@ -1,18 +1,21 @@
 import React, { FC, useEffect } from 'react';
-import { Modal, Form, Input, Select } from 'antd';
+import { Modal, Form, Input, Space, Button } from 'antd';
+import { nanoid } from '@reduxjs/toolkit';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Store } from 'rc-field-form/es/interface';
-import { productCurrencies, TProduct } from '../../store/products';
+import { TGroup } from '../../store/groups';
 import { rules } from '../../utils';
+import style from './style.module.css';
 
-type ProductProps = {
+type GroupProps = {
   title: string;
   visible: boolean;
   onOk: (values: Store) => void;
   onCancel: () => void;
-  initialValues?: Partial<TProduct>;
+  initialValues?: Partial<TGroup>;
 };
 
-const Product: FC<ProductProps> = ({
+const Group: FC<GroupProps> = ({
   visible,
   onCancel,
   onOk,
@@ -36,13 +39,7 @@ const Product: FC<ProductProps> = ({
         form
           .validateFields()
           .then(() => {
-            const values = form.getFieldsValue([
-              'name',
-              'ticker',
-              'currency',
-              'id',
-            ]);
-
+            const values = form.getFieldsValue(['id', 'name', 'values']);
             onOk(values);
           })
           .catch((info) => {
@@ -56,26 +53,65 @@ const Product: FC<ProductProps> = ({
         name="product"
         initialValues={initialValues}
       >
-        <Form.Item name="name" fieldKey="name" rules={[rules.reuired]}>
-          <Input placeholder="Название продукта" />
+        <Form.Item
+          label="Название группы"
+          name="name"
+          fieldKey="name"
+          rules={[rules.reuired]}
+        >
+          <Input placeholder="Введите название" />
         </Form.Item>
 
-        <Form.Item name="ticker" fieldKey="ticker" rules={[rules.reuired]}>
-          <Input placeholder="Тикер" />
-        </Form.Item>
+        <Form.Item label="Значения">
+          <Form.List name="values">
+            {(groupValues, { add, remove }) => {
+              return (
+                <div>
+                  {groupValues.map((groupValue) => (
+                    <Space
+                      key={groupValue.key}
+                      style={{ display: 'flex', marginBottom: 4 }}
+                      align="start"
+                    >
+                      <Form.Item
+                        {...groupValue}
+                        name={[groupValue.name, 'name']}
+                        fieldKey={[groupValue.fieldKey, 'name']}
+                        rules={[rules.reuired]}
+                      >
+                        <Input placeholder="Значение" />
+                      </Form.Item>
 
-        <Form.Item name="currency" fieldKey="currency" rules={[rules.reuired]}>
-          <Select style={{ minWidth: 90 }} placeholder="Валюта покупки">
-            {Object.keys(productCurrencies).map((currencyKey) => (
-              <Select.Option key={currencyKey} value={currencyKey}>
-                {currencyKey.toUpperCase()}
-              </Select.Option>
-            ))}
-          </Select>
+                      <MinusCircleOutlined
+                        className={style.deleteButton}
+                        onClick={() => {
+                          remove(groupValue.name);
+                        }}
+                      />
+                    </Space>
+                  ))}
+
+                  <Form.Item>
+                    <Button
+                      type="dashed"
+                      onClick={() => {
+                        add({
+                          id: nanoid(),
+                        });
+                      }}
+                      block
+                    >
+                      <PlusOutlined /> Добавить значение
+                    </Button>
+                  </Form.Item>
+                </div>
+              );
+            }}
+          </Form.List>
         </Form.Item>
       </Form>
     </Modal>
   );
 };
 
-export default Product;
+export default Group;
