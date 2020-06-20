@@ -74,7 +74,8 @@ const formsNames = {
 
 const useProductsCatalog = (
   productsCatalog: ReturnType<typeof productsSelectors.selectAll>,
-  form: FormInstance
+  form: FormInstance,
+  updateCondition: any[]
 ) => {
   const [productsCatalogForCreate, setProductsCatalogForCreate] = useState<
     ReturnType<typeof productsSelectors.selectAll>
@@ -95,7 +96,7 @@ const useProductsCatalog = (
           )
       )
     );
-  }, []);
+  }, updateCondition);
 
   return [productsCatalogForCreate, productsCatalogForEdit];
 };
@@ -115,7 +116,10 @@ const Report: FC = () => {
     reportsSelectors.selectById(state, routeParams.id)
   );
 
-  const [productsCatalogForCreate] = useProductsCatalog(productsCatalog, form);
+  const [productsCatalogForCreate] = useProductsCatalog(productsCatalog, form, [
+    createModal.visible,
+    editModal.visible,
+  ]);
 
   console.log(productsCatalogForCreate);
 
@@ -283,7 +287,7 @@ const Report: FC = () => {
         </Form>
 
         <ReportProduct
-          productsCatalog={productsCatalog}
+          productsCatalog={productsCatalogForCreate}
           onCancel={createModal.hide}
           okText="Ok"
           title="Добавить продукт"
