@@ -214,7 +214,6 @@ const Report: FC = () => {
   return (
     <>
       <PageHeader onBack={() => history.goBack()} title={routes.report.name} />
-      {/* TODO: https://ant.design/components/form/#components-form-demo-form-context */}
       <Form.Provider
         onFormFinish={(name, { values, forms }) => {
           if (name === formsNames.createProduct) {
