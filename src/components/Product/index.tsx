@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { Modal, Form, Input, Select } from 'antd';
 import { Store } from 'rc-field-form/es/interface';
 import { productCurrencies, TProduct } from '../../store/products';
@@ -21,9 +21,14 @@ const Product: FC<ProductProps> = ({
 }) => {
   const [form] = Form.useForm();
 
+  useEffect(() => {
+    if (visible) {
+      form.resetFields();
+    }
+  }, [visible]);
+
   return (
     <Modal
-      afterClose={form.resetFields}
       visible={visible}
       title={title}
       onCancel={onCancel}
