@@ -1,5 +1,10 @@
-import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createEntityAdapter,
+  createSelector,
+} from '@reduxjs/toolkit';
 import { getReports } from '../../selectors';
+import moment from 'moment';
 
 export const dateFormat = 'YYYY-MM-DD';
 
@@ -43,7 +48,16 @@ const slice = createSlice({
 
 const { actions, reducer } = slice;
 
-const selectors = reportsAdapter.getSelectors(getReports);
+const buildInSelectors = reportsAdapter.getSelectors(getReports);
+
+const selectors = {
+  ...buildInSelectors,
+  selectAllByDate: createSelector(buildInSelectors.selectAll, (reports) => {
+    return reports.sort((a, b) => {
+      return moment(a.date).diff(moment(b.date));
+    });
+  }),
+};
 
 export {
   reducer as default,

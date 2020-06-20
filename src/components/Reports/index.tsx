@@ -26,7 +26,7 @@ const columns = [
 ];
 
 const Reports: FC = () => {
-  const reports = useSelector(reportsSelectors.selectAll);
+  const reports = useSelector(reportsSelectors.selectAllByDate);
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -34,7 +34,8 @@ const Reports: FC = () => {
   const onAdd = () => {
     const id = nanoid();
 
-    // Создаем "Пустой отчет"
+    // Создаем новый отчет на основе предыдущего
+    // TODO: сделать возможным создавать отчет на основе любого отчета
     dispatch(
       reportsActions.addOne({
         id,
