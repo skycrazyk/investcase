@@ -72,7 +72,7 @@ const formsNames = {
   report: 'report',
 } as const;
 
-const useProductsCatalog = (
+const useProductsCatalogForCreate = (
   productsCatalog: ReturnType<typeof productsSelectors.selectAll>,
   form: FormInstance,
   updateCondition: any[]
@@ -81,9 +81,9 @@ const useProductsCatalog = (
     ReturnType<typeof productsSelectors.selectAll>
   >([]);
 
-  const [productsCatalogForEdit, setProductsCatalogForEdit] = useState(
-    productsCatalog
-  );
+  // const [productsCatalogForEdit, setProductsCatalogForEdit] = useState(
+  //   productsCatalog
+  // );
 
   const productsInForm = form.getFieldValue('products');
 
@@ -98,7 +98,7 @@ const useProductsCatalog = (
     );
   }, updateCondition);
 
-  return [productsCatalogForCreate, productsCatalogForEdit];
+  return productsCatalogForCreate;
 };
 
 const Report: FC = () => {
@@ -116,10 +116,11 @@ const Report: FC = () => {
     reportsSelectors.selectById(state, routeParams.id)
   );
 
-  const [productsCatalogForCreate] = useProductsCatalog(productsCatalog, form, [
-    createModal.visible,
-    editModal.visible,
-  ]);
+  const productsCatalogForCreate = useProductsCatalogForCreate(
+    productsCatalog,
+    form,
+    [createModal.visible]
+  );
 
   console.log(productsCatalogForCreate);
 
