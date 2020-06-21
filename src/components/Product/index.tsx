@@ -1,7 +1,9 @@
 import React, { FC, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Modal, Form, Input, Select } from 'antd';
 import { Store } from 'rc-field-form/es/interface';
 import { productCurrencies, TProduct } from '../../store/products';
+import { groupsSelectors } from '../../store/groups';
 import { rules } from '../../utils';
 
 type ProductProps = {
@@ -19,6 +21,8 @@ const Product: FC<ProductProps> = ({
   title,
   initialValues,
 }) => {
+  // const groupsCatalogEntities = useSelector(groupsSelectors.selectEntities);
+  const groupsCatalog = useSelector(groupsSelectors.selectAll);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -41,7 +45,10 @@ const Product: FC<ProductProps> = ({
               'ticker',
               'currency',
               'id',
+              'groups',
             ]);
+
+            console.log(values);
 
             onOk(values);
           })
@@ -73,6 +80,44 @@ const Product: FC<ProductProps> = ({
             ))}
           </Select>
         </Form.Item>
+
+        {/* <Form.List name="groups">
+          {(groups) => (
+            <div>
+              {groups.map((group) => {
+                const currentGroup = groupsCatalogEntities[group.id];
+
+                return (
+                  <Form.Item {...group}>
+                    <Select>{}</Select>
+                  </Form.Item>
+                );
+              })}
+            </div>
+          )}
+        </Form.List> */}
+
+        {groupsCatalog.map((group, idx) => {
+          return (
+            <Form.Item
+              name={['groups', idx]}
+              fieldKey={['groups', idx]}
+              rules={[rules.reuired]}
+              normalize={(valueId, prevValue, prevValues) => ({
+                id: group.id,
+                valueId,
+              })}
+            >
+              <Select style={{ minWidth: 90 }} placeholder={group.name}>
+                {group.values.map((groupValue) => (
+                  <Select.Option key={groupValue.id} value={groupValue.id}>
+                    {groupValue.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          );
+        })}
       </Form>
     </Modal>
   );
