@@ -63,16 +63,34 @@ const Product: FC<ProductProps> = ({
         name="product"
         initialValues={initialValues}
       >
-        <Form.Item name="name" fieldKey="name" rules={[rules.reuired]}>
-          <Input placeholder="Название продукта" />
+        <Form.Item
+          label="Название продукта"
+          name="name"
+          fieldKey="name"
+          rules={[rules.reuired]}
+        >
+          <Input placeholder="Введите название продукта" />
         </Form.Item>
 
-        <Form.Item name="ticker" fieldKey="ticker" rules={[rules.reuired]}>
-          <Input placeholder="Тикер" />
+        <Form.Item
+          label="Тикер"
+          name="ticker"
+          fieldKey="ticker"
+          rules={[rules.reuired]}
+        >
+          <Input placeholder="Введите тикер" />
         </Form.Item>
 
-        <Form.Item name="currency" fieldKey="currency" rules={[rules.reuired]}>
-          <Select style={{ minWidth: 90 }} placeholder="Валюта покупки">
+        <Form.Item
+          label="Валюта покупки"
+          name="currency"
+          fieldKey="currency"
+          rules={[rules.reuired]}
+        >
+          <Select
+            style={{ minWidth: 90 }}
+            placeholder="Выберите валюту покупки"
+          >
             {Object.keys(productCurrencies).map((currencyKey) => (
               <Select.Option key={currencyKey} value={currencyKey}>
                 {currencyKey.toUpperCase()}
@@ -81,34 +99,15 @@ const Product: FC<ProductProps> = ({
           </Select>
         </Form.Item>
 
-        {/* <Form.List name="groups">
-          {(groups) => (
-            <div>
-              {groups.map((group) => {
-                const currentGroup = groupsCatalogEntities[group.id];
-
-                return (
-                  <Form.Item {...group}>
-                    <Select>{}</Select>
-                  </Form.Item>
-                );
-              })}
-            </div>
-          )}
-        </Form.List> */}
-
-        {groupsCatalog.map((group, idx) => {
+        {groupsCatalog.map((group) => {
           return (
             <Form.Item
-              name={['groups', idx]}
-              fieldKey={['groups', idx]}
+              label={group.name}
+              name={['groups', group.id]}
+              fieldKey={['groups', group.id]}
               rules={[rules.reuired]}
-              normalize={(valueId, prevValue, prevValues) => ({
-                id: group.id,
-                valueId,
-              })}
             >
-              <Select style={{ minWidth: 90 }} placeholder={group.name}>
+              <Select placeholder={group.name}>
                 {group.values.map((groupValue) => (
                   <Select.Option key={groupValue.id} value={groupValue.id}>
                     {groupValue.name}

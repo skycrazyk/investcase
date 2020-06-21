@@ -13,9 +13,8 @@ export type TProduct = {
   ticker: string;
   currency: keyof typeof productCurrencies;
   groups: {
-    id: string;
-    valueId: string;
-  }[];
+    [key: string]: string;
+  };
 };
 
 const productsAdapter = createEntityAdapter<TProduct>();
