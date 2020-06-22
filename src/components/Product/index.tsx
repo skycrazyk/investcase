@@ -87,10 +87,7 @@ const Product: FC<ProductProps> = ({
           fieldKey="currency"
           rules={[rules.reuired]}
         >
-          <Select
-            style={{ minWidth: 90 }}
-            placeholder="Выберите валюту покупки"
-          >
+          <Select placeholder="Выберите валюту покупки">
             {Object.keys(productCurrencies).map((currencyKey) => (
               <Select.Option key={currencyKey} value={currencyKey}>
                 {currencyKey.toUpperCase()}
