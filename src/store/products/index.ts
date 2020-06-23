@@ -1,4 +1,8 @@
-import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  createEntityAdapter,
+  PayloadAction,
+} from '@reduxjs/toolkit';
 import { getProducts } from '../../selectors';
 import { exchangeCurrencies } from '../reports';
 
@@ -17,16 +21,25 @@ export type TProduct = {
   };
 };
 
+type TGroup = { groupId: string; valueId: string };
+
 const productsAdapter = createEntityAdapter<TProduct>();
 
 const slice = createSlice({
   name: 'products',
-  initialState: productsAdapter.getInitialState(),
+  initialState: productsAdapter.getInitialState<{
+    groups: TGroup[];
+  }>({
+    groups: [],
+  }),
   reducers: {
     setAll: productsAdapter.setAll,
     addOne: productsAdapter.addOne,
     updateOne: productsAdapter.updateOne,
     removeOne: productsAdapter.removeOne,
+    setGroups: (state, action: PayloadAction<TGroup[]>) => {
+      state.groups = action.payload;
+    },
   },
 });
 
