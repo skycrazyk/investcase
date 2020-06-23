@@ -3,7 +3,7 @@ import { Form, Select, Button, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { groupsSelectors } from '../../store/groups';
-import { productsActions } from '../../store/products';
+import { productsActions, productsSelectors } from '../../store/products';
 
 const ProductsGroups: FC = () => {
   const dispatch = useDispatch();

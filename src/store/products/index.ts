@@ -5,6 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 import { getProducts } from '../../selectors';
 import { exchangeCurrencies } from '../reports';
+import { State } from '../index';
 
 export const productCurrencies = {
   rub: 'rub',
@@ -43,7 +44,10 @@ const slice = createSlice({
 
 const { actions, reducer } = slice;
 
-const selectors = productsAdapter.getSelectors(getProducts);
+const selectors = {
+  ...productsAdapter.getSelectors(getProducts),
+  getGroups: (state: State) => state.products.groups,
+};
 
 export {
   reducer as default,
