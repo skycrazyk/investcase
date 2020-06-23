@@ -21,14 +21,12 @@ export type TProduct = {
   };
 };
 
-type TGroup = { groupId: string; valueId: string };
-
 const productsAdapter = createEntityAdapter<TProduct>();
 
 const slice = createSlice({
   name: 'products',
   initialState: productsAdapter.getInitialState<{
-    groups: TGroup[];
+    groups: string[];
   }>({
     groups: [],
   }),
@@ -37,7 +35,7 @@ const slice = createSlice({
     addOne: productsAdapter.addOne,
     updateOne: productsAdapter.updateOne,
     removeOne: productsAdapter.removeOne,
-    setGroups: (state, action: PayloadAction<TGroup[]>) => {
+    setGroups: (state, action: PayloadAction<string[]>) => {
       state.groups = action.payload;
     },
   },
