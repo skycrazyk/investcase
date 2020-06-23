@@ -9,14 +9,9 @@ const ProductsGroups: FC = () => {
   const dispatch = useDispatch();
   const groupsCatalog = useSelector(groupsSelectors.selectAll);
 
-  const onFinish = (values) => {
-    console.log('Received values of form:', values);
-  };
-
   return (
     <Form
       name="groups"
-      onFinish={onFinish}
       onValuesChange={(changedValues, values) => {
         dispatch(productsActions.setGroups(values.groups));
       }}
@@ -73,12 +68,6 @@ const ProductsGroups: FC = () => {
           );
         }}
       </Form.List>
-
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          Submit
-        </Button>
-      </Form.Item>
     </Form>
   );
 };
