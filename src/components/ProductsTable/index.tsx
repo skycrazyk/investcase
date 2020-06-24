@@ -19,7 +19,6 @@ const groupedProducts = (
   parentGroup?: TGroup | undefined,
   parentGroupValue?: TValue | undefined
 ) => {
-  console.log(parentGroup, parentGroupValue);
   const copyProductsGroups = [...restProductsGroups];
   const currentGroupId = copyProductsGroups.shift();
   const currentGroup = groups[currentGroupId || ''];
@@ -98,13 +97,23 @@ const groupedProducts = (
   );
 };
 
-type GroupedProducts = {};
+type GroupedProducts =
+  | ({
+      type: 'group';
+      groupValueId: string;
+      children?: GroupedProducts;
+    } & TGroup)
+  | ({
+      type: 'products';
+    } & TProduct[]);
 
 const groupProducts = (
   productsGroups: TProductsGroups,
   productsCatalog: TProduct[],
   groupsEntities: Dictionary<TGroup>
-) => {};
+): GroupedProducts => {
+  // TODO
+};
 
 const ProductsTable: FC = () => {
   const productsGroups = useSelector(productsSelectors.getGroups);
