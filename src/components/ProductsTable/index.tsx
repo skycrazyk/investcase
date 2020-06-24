@@ -12,13 +12,15 @@ import {
 import { groupsSelectors, TGroup } from '../../store/groups';
 
 const groupedProducts = (
-  sourceProductsGroups: TProductsGroups,
+  restProductsGroups: TProductsGroups,
+  allProductsGroups: TProductsGroups,
   products: TProduct[],
   groups: Dictionary<TGroup>
 ) => {
-  const productsGroups = [...sourceProductsGroups];
-  const currentGroupId = productsGroups.shift();
+  const copyProductsGroups = [...restProductsGroups];
+  const currentGroupId = copyProductsGroups.shift();
   const currentGroup = groups[currentGroupId || ''];
+  // const copyProducts = [...restProducts];
 
   const columns = currentGroup
     ? [
@@ -63,10 +65,19 @@ const groupedProducts = (
     ? currentGroup.values.map((item) => ({ ...item, key: item.id }))
     : products.map((item) => ({ ...item, key: item.id }));
 
+  const filteredProducts = products.filter((product) => {
+    return true;
+  });
+
   const expandable = currentGroup
     ? {
         expandedRowRender: () =>
-          groupedProducts(productsGroups, products, groups),
+          groupedProducts(
+            copyProductsGroups,
+            allProductsGroups,
+            filteredProducts,
+            groups
+          ),
       }
     : undefined;
 
@@ -85,7 +96,12 @@ const ProductsTable: FC = () => {
   const productsCatalog = useSelector(productsSelectors.selectAll);
   const groupsEntities = useSelector(groupsSelectors.selectEntities);
 
-  return groupedProducts(productsGroups, productsCatalog, groupsEntities);
+  return groupedProducts(
+    productsGroups,
+    productsGroups,
+    productsCatalog,
+    groupsEntities
+  );
 };
 
 export default ProductsTable;
