@@ -98,6 +98,14 @@ const groupedProducts = (
   );
 };
 
+type GroupedProducts = {};
+
+const groupProducts = (
+  productsGroups: TProductsGroups,
+  productsCatalog: TProduct[],
+  groupsEntities: Dictionary<TGroup>
+) => {};
+
 const ProductsTable: FC = () => {
   const productsGroups = useSelector(productsSelectors.getGroups);
   const productsCatalog = useSelector(productsSelectors.selectAll);
