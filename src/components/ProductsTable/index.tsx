@@ -9,18 +9,20 @@ import {
   TProductsGroups,
 } from '../../store/products';
 
-import { groupsSelectors, TGroup } from '../../store/groups';
+import { groupsSelectors, TGroup, TValue } from '../../store/groups';
 
 const groupedProducts = (
   restProductsGroups: TProductsGroups,
   allProductsGroups: TProductsGroups,
   products: TProduct[],
-  groups: Dictionary<TGroup>
+  groups: Dictionary<TGroup>,
+  parentGroup?: TGroup | undefined,
+  parentGroupValue?: TValue | undefined
 ) => {
+  console.log(parentGroup, parentGroupValue);
   const copyProductsGroups = [...restProductsGroups];
   const currentGroupId = copyProductsGroups.shift();
   const currentGroup = groups[currentGroupId || ''];
-  // const copyProducts = [...restProducts];
 
   const columns = currentGroup
     ? [
@@ -61,22 +63,27 @@ const groupedProducts = (
         // },
       ];
 
+  const filteredProducts =
+    parentGroup && parentGroupValue
+      ? products.filter((product) => {
+          return product.groups[parentGroup.id] === parentGroupValue.id;
+        })
+      : products;
+
   const dataSource = currentGroup
     ? currentGroup.values.map((item) => ({ ...item, key: item.id }))
-    : products.map((item) => ({ ...item, key: item.id }));
-
-  const filteredProducts = products.filter((product) => {
-    return true;
-  });
+    : filteredProducts.map((item) => ({ ...item, key: item.id }));
 
   const expandable = currentGroup
     ? {
-        expandedRowRender: () =>
+        expandedRowRender: (record: TValue) =>
           groupedProducts(
             copyProductsGroups,
             allProductsGroups,
             filteredProducts,
-            groups
+            groups,
+            currentGroup,
+            record
           ),
       }
     : undefined;
