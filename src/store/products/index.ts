@@ -12,6 +12,8 @@ export const productCurrencies = {
   ...exchangeCurrencies,
 } as const;
 
+export type TProductsGroups = string[];
+
 export type TProduct = {
   id: string;
   name: string;
@@ -27,7 +29,7 @@ const productsAdapter = createEntityAdapter<TProduct>();
 const slice = createSlice({
   name: 'products',
   initialState: productsAdapter.getInitialState<{
-    groups: string[];
+    groups: TProductsGroups;
   }>({
     groups: [],
   }),
@@ -36,7 +38,7 @@ const slice = createSlice({
     addOne: productsAdapter.addOne,
     updateOne: productsAdapter.updateOne,
     removeOne: productsAdapter.removeOne,
-    setGroups: (state, action: PayloadAction<string[]>) => {
+    setGroups: (state, action: PayloadAction<TProductsGroups>) => {
       state.groups = action.payload;
     },
   },

@@ -8,13 +8,13 @@ const ProductsGroups: FC = () => {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
   const groupsCatalog = useSelector(groupsSelectors.selectAll);
-  const storeGroups = useSelector(productsSelectors.getGroups);
+  const productsGroups = useSelector(productsSelectors.getGroups);
 
   return (
     <Form
       form={form}
       name="groups"
-      initialValues={{ groups: storeGroups }}
+      initialValues={{ groups: productsGroups }}
       onValuesChange={(changedValues, values) => {
         dispatch(productsActions.setGroups(values.groups));
       }}

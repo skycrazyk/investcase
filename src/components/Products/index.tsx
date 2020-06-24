@@ -11,6 +11,7 @@ import { useModalActions } from '../../hooks';
 import PageHeader from '../PageHeader';
 import Product from '../Product';
 import ProductsGroups from '../ProductsGroups';
+import ProductsTable from '../ProductsTable';
 
 const Products: FC = () => {
   const dispatch = useDispatch();
@@ -71,6 +72,7 @@ const Products: FC = () => {
         ]}
       />
       <ProductsGroups />
+      <ProductsTable />
       <Table columns={columns} dataSource={dataSource} pagination={false} />
       <Product
         initialValues={{ id: nanoid() }}
