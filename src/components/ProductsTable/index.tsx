@@ -113,7 +113,7 @@ const groupProducts = (
   productsCatalog: TProduct[],
   parent?: {
     group: TGroup;
-    groupValue: TValue | undefined; // undefined в случае если есть продуты без значения в текущей группе
+    groupValue?: TValue; // undefined в случае если есть продуты без значения в текущей группе
   }
 ): any => {
   const copyProductsGroupsIds = [...productsGroupsIds];
