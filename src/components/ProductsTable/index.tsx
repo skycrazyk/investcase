@@ -97,6 +97,7 @@ const groupedProducts = (
   );
 };
 
+// TODO: поправить и заюзать тип
 type GroupedProducts =
   | ({
       type: 'group';
@@ -143,6 +144,7 @@ const groupProducts = (
       []
     );
 
+    // Продукты без значения в текущей группе
     const unfilteredProducts = productsCatalog.filter((product) => {
       const thereIsUsedGroup = currentGroup.values.some(
         (groupValue) => product.groups[currentGroup.id] === groupValue.id
@@ -151,6 +153,7 @@ const groupProducts = (
       return thereIsUsedGroup === false;
     });
 
+    // Продукты без значения в текущей группе собираются в отдельном узле
     const unfilteredChild =
       Boolean(unfilteredProducts.length) &&
       groupProducts(copyProductsGroupsIds, groupsEntities, unfilteredProducts, {
@@ -159,13 +162,13 @@ const groupProducts = (
       });
 
     return {
+      parent,
+      type: 'group',
       group: currentGroup,
       children: [
         ...filteredChildren,
         ...(unfilteredChild ? [unfilteredChild] : []),
       ],
-      type: 'group',
-      parent,
     };
   } else {
     return {
