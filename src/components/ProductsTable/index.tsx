@@ -102,23 +102,85 @@ type GroupedProducts =
       type: 'group';
       groupValueId: string;
       children?: GroupedProducts;
-    } & TGroup)
+    } & TGroup)[]
   | ({
       type: 'products';
-    } & TProduct[]);
+    } & TProduct[])[];
 
 const groupProducts = (
-  productsGroups: TProductsGroups,
+  productsGroupsIds: TProductsGroups,
+  groupsEntities: Dictionary<TGroup>,
   productsCatalog: TProduct[],
-  groupsEntities: Dictionary<TGroup>
-): GroupedProducts => {
-  // TODO
+  parent?: {
+    group: TGroup;
+    groupValue: TValue | undefined; // undefined в случае если есть продуты без значения в текущей группе
+  }
+): any => {
+  const copyProductsGroupsIds = [...productsGroupsIds];
+  const currentGroupId = copyProductsGroupsIds.shift();
+  const currentGroup = currentGroupId && groupsEntities[currentGroupId];
+
+  if (currentGroup) {
+    const filteredChildren = currentGroup.values.reduce<any[]>(
+      (acc, groupValue) => {
+        const filteredProducts = productsCatalog.filter(
+          (product) => product.groups[currentGroup.id] === groupValue.id
+        );
+
+        if (filteredProducts.length) {
+          acc.push(
+            groupProducts(
+              copyProductsGroupsIds,
+              groupsEntities,
+              filteredProducts,
+              { group: currentGroup, groupValue }
+            )
+          );
+        }
+
+        return acc;
+      },
+      []
+    );
+
+    const unfilteredProducts = productsCatalog.filter((product) => {
+      const thereIsUsedGroup = currentGroup.values.some(
+        (groupValue) => product.groups[currentGroup.id] === groupValue.id
+      );
+
+      return thereIsUsedGroup === false;
+    });
+
+    const unfilteredChild =
+      Boolean(unfilteredProducts.length) &&
+      groupProducts(copyProductsGroupsIds, groupsEntities, unfilteredProducts, {
+        group: currentGroup,
+        groupValue: undefined,
+      });
+
+    return {
+      group: currentGroup,
+      children: [
+        ...filteredChildren,
+        ...(unfilteredChild ? [unfilteredChild] : []),
+      ],
+      type: 'group',
+      parent,
+    };
+  } else {
+    return {
+      type: 'product',
+      products: productsCatalog,
+    };
+  }
 };
 
 const ProductsTable: FC = () => {
   const productsGroups = useSelector(productsSelectors.getGroups);
   const productsCatalog = useSelector(productsSelectors.selectAll);
   const groupsEntities = useSelector(groupsSelectors.selectEntities);
+
+  console.log(groupProducts(productsGroups, groupsEntities, productsCatalog));
 
   return groupedProducts(
     productsGroups,

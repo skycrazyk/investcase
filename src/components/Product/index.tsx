@@ -102,7 +102,7 @@ const Product: FC<ProductProps> = ({
               label={group.name}
               name={['groups', group.id]}
               fieldKey={['groups', group.id]}
-              rules={[rules.reuired]}
+              // rules={[rules.reuired]}
             >
               <Select placeholder={group.name}>
                 {group.values.map((groupValue) => (
