@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useState } from 'react';
-import { Button, Space, Table } from 'antd';
+import { Button } from 'antd';
 import { nanoid } from '@reduxjs/toolkit';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -15,9 +15,7 @@ import ProductsTable from '../ProductsTable';
 
 const Products: FC = () => {
   const dispatch = useDispatch();
-  const products = useSelector(productsSelectors.selectAll);
   const productsEntities = useSelector(productsSelectors.selectEntities);
-  const dataSource = products.map((item) => ({ ...item, key: item.id }));
   const createModal = useModalActions();
   const editModal = useModalActions();
   const [editableProduct, setEditableProduct] = useState<TProduct>();
@@ -31,37 +29,6 @@ const Products: FC = () => {
     dispatch(productsActions.removeOne(id));
   };
 
-  const columns = [
-    {
-      title: 'Название',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Тикер',
-      dataIndex: 'ticker',
-      key: 'ticker',
-    },
-    {
-      title: 'Валюта покупки',
-      dataIndex: 'currency',
-      key: 'currency',
-      render: (currency: string) => currency.toUpperCase(),
-    },
-    {
-      title: 'Действия',
-      key: 'action',
-      render: (text: any, product: TProduct) => {
-        return (
-          <Space size="middle">
-            <a onClick={() => editProduct(product.id)}>Изменить</a>
-            <a onClick={() => deleteProduct(product.id)}>Удалить</a>
-          </Space>
-        );
-      },
-    },
-  ];
-
   return (
     <>
       <PageHeader
@@ -72,8 +39,7 @@ const Products: FC = () => {
         ]}
       />
       <ProductsGroups />
-      <ProductsTable />
-      <Table columns={columns} dataSource={dataSource} pagination={false} />
+      <ProductsTable editProduct={editProduct} deleteProduct={deleteProduct} />
       <Product
         initialValues={{ id: nanoid() }}
         title="Создание продукта"
