@@ -97,16 +97,26 @@ const groupedProducts = (
   );
 };
 
-// TODO: поправить и заюзать тип
+const nodeTypes = {
+  group: 'group',
+  products: 'products',
+} as const;
+
 type GroupedProducts =
-  | ({
-      type: 'group';
-      groupValueId: string;
-      children?: GroupedProducts;
-    } & TGroup)[]
-  | ({
-      type: 'products';
-    } & TProduct[])[];
+  | {
+      type: typeof nodeTypes.group;
+      group: TGroup;
+      parent?: {
+        group: TGroup;
+        /** undefined в случае если есть продуты без значения в текущей группе */
+        groupValue?: TValue;
+      };
+      children?: GroupedProducts[];
+    }
+  | {
+      type: typeof nodeTypes.products;
+      products: TProduct[];
+    };
 
 const groupProducts = (
   productsGroupsIds: TProductsGroups,
@@ -114,9 +124,9 @@ const groupProducts = (
   productsCatalog: TProduct[],
   parent?: {
     group: TGroup;
-    groupValue?: TValue; // undefined в случае если есть продуты без значения в текущей группе
+    groupValue?: TValue;
   }
-): any => {
+): GroupedProducts => {
   const copyProductsGroupsIds = [...productsGroupsIds];
   const currentGroupId = copyProductsGroupsIds.shift();
   const currentGroup = currentGroupId && groupsEntities[currentGroupId];
@@ -163,7 +173,7 @@ const groupProducts = (
 
     return {
       parent,
-      type: 'group',
+      type: nodeTypes.group,
       group: currentGroup,
       children: [
         ...filteredChildren,
@@ -172,7 +182,7 @@ const groupProducts = (
     };
   } else {
     return {
-      type: 'product',
+      type: nodeTypes.products,
       products: productsCatalog,
     };
   }
