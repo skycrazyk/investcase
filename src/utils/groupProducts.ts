@@ -26,10 +26,9 @@ export type TProductsNode<P> = {
 export type TGroupedProducts<P> = TGroupNode<P> | TProductsNode<P>;
 
 /**
- * Для группировки продукт как минимум должет содержать
- * информацию о том к каким группам он относится
+ * Минимальные требования к объекту продукт, чтобы его можно было группировать
  */
-export type TMinimalProduct = { groups: { [key: string]: string } };
+export type TMinimalProduct = { id: string; groups: { [key: string]: string } };
 
 /**
  * Формирурует дерево продуктов согласно списоку идентификаторов групп
