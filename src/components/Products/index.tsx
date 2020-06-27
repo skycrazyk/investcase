@@ -12,6 +12,7 @@ import PageHeader from '../PageHeader';
 import Product from '../Product';
 import ProductsGroups from '../ProductsGroups';
 import ProductsTable from '../ProductsTable';
+import GroupsFilter from '../GroupsFilter';
 
 const Products: FC = () => {
   const dispatch = useDispatch();
@@ -29,6 +30,10 @@ const Products: FC = () => {
     dispatch(productsActions.removeOne(id));
   };
 
+  const onGroupsFilterChanged = (changedValues, values) => {
+    dispatch(productsActions.setGroups(values.groups));
+  };
+
   return (
     <>
       <PageHeader
@@ -38,7 +43,7 @@ const Products: FC = () => {
           </Button>,
         ]}
       />
-      <ProductsGroups />
+      <GroupsFilter onChange={onGroupsFilterChanged} />
       <ProductsTable editProduct={editProduct} deleteProduct={deleteProduct} />
       <Product
         initialValues={{ id: nanoid() }}

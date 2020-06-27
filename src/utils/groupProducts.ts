@@ -7,23 +7,23 @@ export const nodeTypes = {
   products: 'products',
 } as const;
 
-export type TGroupNodeValue = {
+export type TGroupNodeValue<P> = {
   value?: TValue;
-  child: TGroupedProducts;
+  child: TGroupedProducts<P>;
 };
 
-export type TGroupNode = {
+export type TGroupNode<P> = {
   type: typeof nodeTypes.group;
   group: TGroup;
-  values: TGroupNodeValue[];
+  values: TGroupNodeValue<P>[];
 };
 
-export type TProductsNode = {
+export type TProductsNode<P> = {
   type: typeof nodeTypes.products;
-  products: TProduct[];
+  products: P[];
 };
 
-export type TGroupedProducts = TGroupNode | TProductsNode;
+export type TGroupedProducts<P> = TGroupNode<P> | TProductsNode<P>;
 
 /**
  * Формирурует дерево продуктов согласно списоку идентификаторов групп
@@ -31,11 +31,11 @@ export type TGroupedProducts = TGroupNode | TProductsNode;
  * @param groupsEntities Каталог групп (по id)
  * @param productsCatalog Каталог продуктов
  */
-const groupProducts = (
+const groupProducts = <P extends TProduct>(
   productsGroupsIds: TProductsGroups,
   groupsEntities: Dictionary<TGroup>,
-  productsCatalog: TProduct[]
-): TGroupedProducts => {
+  productsCatalog: P[]
+): TGroupedProducts<P> => {
   const copyProductsGroupsIds = [...productsGroupsIds];
   const currentGroupId = copyProductsGroupsIds.shift();
   const currentGroup = currentGroupId && groupsEntities[currentGroupId];

@@ -8,19 +8,20 @@ import {
 } from './groupProducts';
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
+import { TProduct } from 'src/store/products';
 
 /**
  * Рекурсивно рендереит дерево продуктов
  * @param groupedProducts
  */
-const treeProducts = ({
+const treeProducts = <P extends TProduct>({
   groupedProducts,
   groupColumns,
   productColums,
 }: {
-  groupedProducts: TGroupedProducts;
-  groupColumns: (groupedProducts: TGroupNode) => ColumnsType<any>;
-  productColums: (groupedProducts: TProductsNode) => ColumnsType<any>;
+  groupedProducts: TGroupedProducts<P>;
+  groupColumns: (groupedProducts: TGroupNode<P>) => ColumnsType<any>;
+  productColums: (groupedProducts: TProductsNode<P>) => ColumnsType<any>;
 }) => {
   let result: ReactElement;
 
@@ -52,7 +53,7 @@ const treeProducts = ({
     });
 
     const expandable = {
-      expandedRowRender: (record: TGroupNodeValue) =>
+      expandedRowRender: (record: TGroupNodeValue<P>) =>
         treeProducts({
           groupedProducts: record.child,
           groupColumns,

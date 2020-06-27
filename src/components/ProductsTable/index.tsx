@@ -5,12 +5,12 @@ import { treeProducts, groupProducts } from '../../utils';
 import { productsSelectors, TProduct } from '../../store/products';
 import { groupsSelectors } from '../../store/groups';
 
-type TProductTable = {
+type TProductsTable = {
   editProduct: (id: string) => void;
   deleteProduct: (id: string) => void;
 };
 
-const ProductsTable: FC<TProductTable> = ({ editProduct, deleteProduct }) => {
+const ProductsTable: FC<TProductsTable> = ({ editProduct, deleteProduct }) => {
   const productsGroups = useSelector(productsSelectors.getGroups);
   const productsCatalog = useSelector(productsSelectors.selectAll);
   const groupsEntities = useSelector(groupsSelectors.selectEntities);
