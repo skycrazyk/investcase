@@ -115,7 +115,7 @@ const ReportProduct: React.FC<ReportProductProps> = ({
           <InputNumber placeholder="0" style={{ width: 150 }} min={1} />
         </Form.Item>
 
-        <Form.Item name="accruals" label="Дополнительные начисления">
+        <Form.Item name="payments" label="Дополнительные начисления">
           <InputNumber placeholder="0" style={{ width: 150 }} min={1} />
         </Form.Item>
       </Form>

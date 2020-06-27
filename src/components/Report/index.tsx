@@ -160,7 +160,6 @@ const Report: FC = () => {
     const products: { id: string }[] = form.getFieldValue('products');
     const product = products.find((item) => item.id === id);
     setEditableProduct(product);
-    // editableProduct = product;
     editModal.show();
   };
 
@@ -169,6 +168,21 @@ const Report: FC = () => {
       title: 'Название',
       dataIndex: 'name',
       key: 'name',
+    },
+    {
+      title: 'Количество',
+      dataIndex: 'count',
+      key: 'count',
+    },
+    {
+      title: 'Ликвид. стоимость',
+      dataIndex: 'liquidationPrice',
+      key: 'liquidationPrice',
+    },
+    {
+      title: 'Доп. выплаты',
+      dataIndex: 'payments',
+      key: 'payments',
     },
     {
       title: 'Действия',
