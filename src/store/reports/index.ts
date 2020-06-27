@@ -4,6 +4,7 @@ import {
   createSelector,
   PayloadAction,
 } from '@reduxjs/toolkit';
+import { State } from '../index';
 import { getReports } from '../../selectors';
 import moment from 'moment';
 
@@ -44,17 +45,19 @@ const reportsAdapter = createEntityAdapter<TReport>({
   },
 });
 
+export const initialState = {
+  settings: {
+    groups: [],
+  },
+};
+
 const slice = createSlice({
   name: 'reports',
   initialState: reportsAdapter.getInitialState<{
     settings: {
       groups: TReportGroups;
     };
-  }>({
-    settings: {
-      groups: [],
-    },
-  }),
+  }>(initialState),
   reducers: {
     addOne: reportsAdapter.addOne,
     updateOne: reportsAdapter.updateOne,
@@ -77,6 +80,7 @@ const selectors = {
       return moment(a.date).diff(moment(b.date));
     });
   }),
+  getGroups: (state: State) => state.reports.settings.groups,
 };
 
 export {

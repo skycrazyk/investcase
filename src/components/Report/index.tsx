@@ -13,10 +13,11 @@ import {
 } from '../../store/reports';
 import { State } from '../../store';
 import { productsSelectors } from '../../store/products';
-import { rules } from '../../utils';
+import { rules, groupProducts, treeProducts } from '../../utils';
 import { useModalActions } from '../../hooks';
 import PageHeader from '../PageHeader';
 import ReportProduct from '../ReportProduct';
+import ReportTable from '../ReportTable';
 import GroupsFilter from '../GroupsFilter';
 import { Store } from 'antd/lib/form/interface';
 
@@ -200,14 +201,14 @@ const Report: FC = () => {
     },
   ];
 
-  const onGroupsFilterChanged = (changedValues: Store, values: Store) => {
+  const setGroups = (changedValues: Store, values: Store) => {
     dispatch(reportsActions.setGroups(values.groups));
   };
 
   return (
     <>
       <PageHeader />
-      <GroupsFilter onChange={onGroupsFilterChanged} />
+      <GroupsFilter onChange={setGroups} />
       <Form.Provider
         onFormFinish={(name, { values, forms }) => {
           if (name === formsNames.createProduct) {
@@ -280,7 +281,7 @@ const Report: FC = () => {
             }
           >
             {({ getFieldValue }) => {
-              const products = getFieldValue('products') || [];
+              const products: TProduct[] = getFieldValue('products') || [];
 
               const dataSource = products.map((item: any) => ({
                 ...item,
@@ -289,11 +290,18 @@ const Report: FC = () => {
               }));
 
               return (
-                <Table
-                  columns={columns}
-                  dataSource={dataSource}
-                  pagination={false}
-                />
+                <>
+                  <ReportTable
+                    deleteProduct={deleteProduct}
+                    editProduct={editProduct}
+                    reportProducts={products}
+                  />
+                  <Table
+                    columns={columns}
+                    dataSource={dataSource}
+                    pagination={false}
+                  />
+                </>
               );
             }}
           </Form.Item>

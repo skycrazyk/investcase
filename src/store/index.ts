@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { merge } from 'lodash';
 import groups from './groups';
-import reports from './reports';
+import reports, { initialState } from './reports';
 import products from './products';
 
 const localStorageGroups = localStorage.getItem('groups');
@@ -20,7 +21,7 @@ const store = configureStore({
   },
   preloadedState: {
     ...(groupsPreloaded && { groups: groupsPreloaded }),
-    ...(reportsPreloaded && { reports: reportsPreloaded }),
+    ...(reportsPreloaded && { reports: merge(reportsPreloaded, initialState) }),
     ...(productsPreloaded && { products: productsPreloaded }),
   },
 });
