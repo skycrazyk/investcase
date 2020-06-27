@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Modal, Form, Select } from 'antd';
+import { Modal, Form, Select, InputNumber } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { cloneDeep } from 'lodash';
 import { productsSelectors } from '../../store/products';
@@ -83,76 +83,41 @@ const ReportProduct: React.FC<ReportProductProps> = ({
         layout="vertical"
         name={name}
         initialValues={cloneDeep(initialValues)}
-        // TODO: initialValues в случае обновления
-        // initialValues={{ modifier: 'public' }}
       >
-        <Form.Item name="id" fieldKey="id" rules={[rules.reuired]}>
+        <Form.Item
+          name="id"
+          fieldKey="id"
+          rules={[rules.reuired]}
+          label="Продукт"
+        >
           <Select placeholder="Выберите продукт" allowClear>
-            {
-              // .map((catalogProduct) => {
-              //   const selectedProducts = form.getFieldValue('reports')[
-              //     reportIndex
-              //   ].products;
-
-              //   console.log(selectedProducts);
-
-              //   const isUsed = selectedProducts.some(
-              //     (product: any) => product?.id === catalogProduct?.id
-              //   );
-
-              //   return {
-              //     ...catalogProduct,
-              //     disabled: isUsed,
-              //   };
-              // })
-              // .sort((a, b) => {
-              //   if (a.disabled && !b.disabled) {
-              //     return 1;
-              //   } else if (!a.disabled && b.disabled) {
-              //     return -1;
-              //   } else {
-              //     return 0;
-              //   }
-              // })
-              productsCatalog.map((item) => (
-                <Select.Option
-                  key={item.id}
-                  value={item.id}
-                  title={`${item.name} (${item.ticker})`}
-                  // disabled={item.disabled}s
-                >
-                  {`${item.name} (${item.ticker})`}
-                </Select.Option>
-              ))
-            }
+            {productsCatalog.map((item) => (
+              <Select.Option
+                key={item.id}
+                value={item.id}
+                title={`${item.name} (${item.ticker})`}
+              >
+                {`${item.name} (${item.ticker})`}
+              </Select.Option>
+            ))}
           </Select>
         </Form.Item>
-        {/* 
-        <Form.Item
-          {...product}
-          name={[product.name, 'count']}
-          fieldKey={[product.fieldKey, 'count']}
-          rules={[rules.reuired]}
-        >
-          <Input placeholder="Количество" />
+
+        <Form.Item name="count" rules={[rules.reuired]} label="Количество">
+          <InputNumber placeholder="0" style={{ width: 150 }} min={1} />
         </Form.Item>
 
         <Form.Item
-          {...product}
-          name={[product.name, 'liquidationPrice']}
-          fieldKey={[product.fieldKey, 'liquidationPrice']}
+          label="Ликвидационная стоимость"
+          name="liquidationPrice"
           rules={[rules.reuired]}
         >
-          <Input placeholder="Ликвидационная стоимость" />
+          <InputNumber placeholder="0" style={{ width: 150 }} min={1} />
         </Form.Item>
 
-        <Form.Item
-          {...product}
-          name={[product.name, 'dividend']}
-          fieldKey={[product.fieldKey, 'dividend']}
-        >
-          <Input placeholder="Дивиденты" />
-        </Form.Item> */}
+        <Form.Item name="accruals" label="Дополнительные начисления">
+          <InputNumber placeholder="0" style={{ width: 150 }} min={1} />
+        </Form.Item>
       </Form>
     </Modal>
   );

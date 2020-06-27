@@ -21,7 +21,7 @@ export type TProduct = {
   id: string;
   count: number;
   liquidationPrice: number;
-  dividend: number;
+  accruals: number;
 };
 
 export type TRate = {
