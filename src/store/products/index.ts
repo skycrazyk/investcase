@@ -29,6 +29,7 @@ const productsAdapter = createEntityAdapter<TProduct>();
 const slice = createSlice({
   name: 'products',
   initialState: productsAdapter.getInitialState<{
+    // TODO: settings.groups
     groups: TProductsGroups;
   }>({
     groups: [],

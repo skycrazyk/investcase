@@ -17,6 +17,8 @@ import { rules } from '../../utils';
 import { useModalActions } from '../../hooks';
 import PageHeader from '../PageHeader';
 import ReportProduct from '../ReportProduct';
+import GroupsFilter from '../GroupsFilter';
+import { Store } from 'antd/lib/form/interface';
 
 const hidrate = (report: ReturnType<typeof reportsSelectors.selectById>) => {
   return (
@@ -198,9 +200,14 @@ const Report: FC = () => {
     },
   ];
 
+  const onGroupsFilterChanged = (changedValues: Store, values: Store) => {
+    dispatch(reportsActions.setGroups(values.groups));
+  };
+
   return (
     <>
       <PageHeader />
+      <GroupsFilter onChange={onGroupsFilterChanged} />
       <Form.Provider
         onFormFinish={(name, { values, forms }) => {
           if (name === formsNames.createProduct) {

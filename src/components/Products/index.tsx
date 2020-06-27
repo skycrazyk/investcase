@@ -1,5 +1,6 @@
 import React, { FC, useCallback, useState } from 'react';
 import { Button } from 'antd';
+import { Store } from 'antd/lib/form/interface';
 import { nanoid } from '@reduxjs/toolkit';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -10,7 +11,6 @@ import {
 import { useModalActions } from '../../hooks';
 import PageHeader from '../PageHeader';
 import Product from '../Product';
-import ProductsGroups from '../ProductsGroups';
 import ProductsTable from '../ProductsTable';
 import GroupsFilter from '../GroupsFilter';
 
@@ -30,7 +30,7 @@ const Products: FC = () => {
     dispatch(productsActions.removeOne(id));
   };
 
-  const onGroupsFilterChanged = (changedValues, values) => {
+  const onGroupsFilterChanged = (changedValues: Store, values: Store) => {
     dispatch(productsActions.setGroups(values.groups));
   };
 
