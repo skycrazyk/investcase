@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from 'react';
-import { Button, Form, DatePicker, InputNumber, Table, Space } from 'antd';
+import { Button, Form, DatePicker, InputNumber, Space } from 'antd';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { isEqual } from 'lodash';
@@ -112,7 +112,6 @@ const Report: FC = () => {
   const createModal = useModalActions();
   const editModal = useModalActions();
   const productsCatalog = useSelector(productsSelectors.selectAll);
-  const productsCatalogEntities = useSelector(productsSelectors.selectEntities);
   const [editableProduct, setEditableProduct] = useState<any>();
 
   const report = useSelector((state: State) =>
@@ -165,41 +164,6 @@ const Report: FC = () => {
     setEditableProduct(product);
     editModal.show();
   };
-
-  const columns = [
-    {
-      title: 'Название',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Количество',
-      dataIndex: 'count',
-      key: 'count',
-    },
-    {
-      title: 'Ликвид. стоимость',
-      dataIndex: 'liquidationPrice',
-      key: 'liquidationPrice',
-    },
-    {
-      title: 'Доп. выплаты',
-      dataIndex: 'payments',
-      key: 'payments',
-    },
-    {
-      title: 'Действия',
-      key: 'action',
-      render: (text: any, record: { id: string }) => {
-        return (
-          <Space size="middle">
-            <a onClick={() => editProduct(record.id)}>Изменить</a>
-            <a onClick={() => deleteProduct(record.id)}>Удалить</a>
-          </Space>
-        );
-      },
-    },
-  ];
 
   const setGroups = (changedValues: Store, values: Store) => {
     dispatch(reportsActions.setGroups(values.groups));
@@ -283,25 +247,12 @@ const Report: FC = () => {
             {({ getFieldValue }) => {
               const products: TProduct[] = getFieldValue('products') || [];
 
-              const dataSource = products.map((item: any) => ({
-                ...item,
-                name: productsCatalogEntities[item.id]?.['name'],
-                key: item.id,
-              }));
-
               return (
-                <>
-                  <ReportTable
-                    deleteProduct={deleteProduct}
-                    editProduct={editProduct}
-                    reportProducts={products}
-                  />
-                  <Table
-                    columns={columns}
-                    dataSource={dataSource}
-                    pagination={false}
-                  />
-                </>
+                <ReportTable
+                  deleteProduct={deleteProduct}
+                  editProduct={editProduct}
+                  reportProducts={products}
+                />
               );
             }}
           </Form.Item>
