@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
+import { Space } from 'antd';
 import { treeProducts, groupProducts } from '../../utils';
 import {
   productsSelectors,
@@ -10,6 +11,8 @@ import {
   reportsSelectors,
   TProduct as TReportProducts,
 } from '../../store/reports';
+
+type TComboReportProduct = TProductsProduct & TReportProducts;
 
 type TReportTable = {
   editProduct: (id: string) => void;
@@ -30,7 +33,7 @@ const ReportTable: FC<TReportTable> = ({
     const catalogProduct = productsEntities[reportProduct.id];
 
     if (!catalogProduct) {
-      throw new Error('В каталоге неизвестный продукт!');
+      throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
     }
 
     return {
@@ -45,9 +48,45 @@ const ReportTable: FC<TReportTable> = ({
     resolvedReportProducts
   );
 
-  console.log(groupedProducts);
-
-  return <div>hello</div>;
+  return treeProducts({
+    groupedProducts,
+    groupColumns: (groupedProducts) => [
+      {
+        title: groupedProducts.group.name,
+        dataIndex: ['value', 'name'],
+      },
+    ],
+    productColums: () => [
+      {
+        title: 'Название продукта',
+        dataIndex: 'name',
+        key: 'name',
+      },
+      {
+        title: 'Тикер',
+        dataIndex: 'ticker',
+        key: 'ticker',
+      },
+      {
+        title: 'Валюта покупки',
+        dataIndex: 'currency',
+        key: 'currency',
+        render: (currency: string) => currency.toUpperCase(),
+      },
+      {
+        title: 'Действия',
+        key: 'action',
+        render: (text: any, product: TComboReportProduct) => {
+          return (
+            <Space size="middle">
+              <a onClick={() => editProduct(product.id)}>Изменить</a>
+              <a onClick={() => deleteProduct(product.id)}>Удалить</a>
+            </Space>
+          );
+        },
+      },
+    ],
+  });
 };
 
 export default ReportTable;

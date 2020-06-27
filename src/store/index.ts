@@ -20,9 +20,9 @@ const store = configureStore({
     products,
   },
   preloadedState: {
-    ...(groupsPreloaded && { groups: groupsPreloaded }),
+    ...(groupsPreloaded && { groups: groupsPreloaded }), // TODO: add merge with initialState
     ...(reportsPreloaded && { reports: merge(reportsPreloaded, initialState) }),
-    ...(productsPreloaded && { products: productsPreloaded }),
+    ...(productsPreloaded && { products: productsPreloaded }), // TODO: add merge with initialState
   },
 });
 

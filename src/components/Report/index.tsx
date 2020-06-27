@@ -13,7 +13,7 @@ import {
 } from '../../store/reports';
 import { State } from '../../store';
 import { productsSelectors } from '../../store/products';
-import { rules, groupProducts, treeProducts } from '../../utils';
+import { rules } from '../../utils';
 import { useModalActions } from '../../hooks';
 import PageHeader from '../PageHeader';
 import ReportProduct from '../ReportProduct';
