@@ -42,7 +42,7 @@ const ReportTable: FC<TReportTable> = ({
     };
   });
 
-  const groupedProducts = groupProducts(
+  const groupedProducts = groupProducts<TComboReportProduct>(
     reportGroups,
     groupEntities,
     resolvedReportProducts

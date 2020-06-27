@@ -26,12 +26,18 @@ export type TProductsNode<P> = {
 export type TGroupedProducts<P> = TGroupNode<P> | TProductsNode<P>;
 
 /**
+ * Для группировки продукт как минимум должет содержать
+ * информацию о том к каким группам он относится
+ */
+export type TMinimalProduct = { groups: { [key: string]: string } };
+
+/**
  * Формирурует дерево продуктов согласно списоку идентификаторов групп
  * @param productsGroupsIds Список идентификаторов групп для фильтрации
  * @param groupsEntities Каталог групп (по id)
  * @param productsCatalog Каталог продуктов
  */
-const groupProducts = <P extends TProduct>(
+const groupProducts = <P extends TMinimalProduct>(
   productsGroupsIds: TProductsGroups,
   groupsEntities: Dictionary<TGroup>,
   productsCatalog: P[]

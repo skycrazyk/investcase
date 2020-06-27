@@ -5,16 +5,16 @@ import {
   nodeTypes,
   TGroupNode,
   TProductsNode,
+  TMinimalProduct,
 } from './groupProducts';
 import { Table } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
-import { TProduct } from 'src/store/products';
 
 /**
  * Рекурсивно рендереит дерево продуктов
  * @param groupedProducts
  */
-const treeProducts = <P extends TProduct>({
+const treeProducts = <P extends TMinimalProduct>({
   groupedProducts,
   groupColumns,
   productColums,

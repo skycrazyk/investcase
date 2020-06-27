@@ -15,7 +15,7 @@ const ProductsTable: FC<TProductsTable> = ({ editProduct, deleteProduct }) => {
   const productsCatalog = useSelector(productsSelectors.selectAll);
   const groupsEntities = useSelector(groupsSelectors.selectEntities);
 
-  const groupedProducts = groupProducts(
+  const groupedProducts = groupProducts<TProduct>(
     productsGroups,
     groupsEntities,
     productsCatalog
