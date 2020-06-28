@@ -43,7 +43,10 @@ const Products: FC = () => {
           </Button>,
         ]}
       />
-      <GroupsFilter onChange={onGroupsFilterChanged} />
+      <GroupsFilter
+        onChange={onGroupsFilterChanged}
+        groupsSelector={productsSelectors.getGroups}
+      />
       <ProductsTable editProduct={editProduct} deleteProduct={deleteProduct} />
       <Product
         initialValues={{ id: nanoid() }}

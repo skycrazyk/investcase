@@ -3,16 +3,17 @@ import { Form, Select } from 'antd';
 import { Store } from 'antd/lib/form/interface';
 import { useSelector } from 'react-redux';
 import { groupsSelectors } from '../../store/groups';
-import { productsSelectors } from '../../store/products';
+import { State } from '../../store';
 
 type TGroupsFilter = {
   onChange: (changedValues: Store, allValues: Store) => void;
+  groupsSelector: (state: State) => string[];
 };
 
-const GroupsFilter: FC<TGroupsFilter> = ({ onChange }) => {
+const GroupsFilter: FC<TGroupsFilter> = ({ onChange, groupsSelector }) => {
   const [form] = Form.useForm();
   const groupsCatalog = useSelector(groupsSelectors.selectAll);
-  const productsGroups = useSelector(productsSelectors.getGroups);
+  const productsGroups = useSelector(groupsSelector);
 
   return (
     <Form

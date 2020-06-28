@@ -172,7 +172,10 @@ const Report: FC = () => {
   return (
     <>
       <PageHeader />
-      <GroupsFilter onChange={setGroups} />
+      <GroupsFilter
+        onChange={setGroups}
+        groupsSelector={reportsSelectors.getGroups}
+      />
       <Form.Provider
         onFormFinish={(name, { values, forms }) => {
           if (name === formsNames.createProduct) {
