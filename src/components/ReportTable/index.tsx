@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { Space } from 'antd';
-import { treeProducts, groupProducts } from '../../utils';
+import { treeProducts, groupProducts, format } from '../../utils';
 import {
   productsSelectors,
   TProduct as TProductsProduct,
@@ -12,7 +12,10 @@ import {
   TProduct as TReportProducts,
 } from '../../store/reports';
 
-type TComboReportProduct = TProductsProduct & TReportProducts;
+type TComboReportProduct = TProductsProduct &
+  TReportProducts & {
+    totalPrice: number;
+  };
 
 type TReportTable = {
   editProduct: (id: string) => void;
@@ -29,18 +32,21 @@ const ReportTable: FC<TReportTable> = ({
   const reportGroups = useSelector(reportsSelectors.getGroups);
   const groupEntities = useSelector(groupsSelectors.selectEntities);
 
-  const resolvedReportProducts = reportProducts.map((reportProduct) => {
-    const catalogProduct = productsEntities[reportProduct.id];
+  const resolvedReportProducts: TComboReportProduct[] = reportProducts.map(
+    (reportProduct) => {
+      const catalogProduct = productsEntities[reportProduct.id];
 
-    if (!catalogProduct) {
-      throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
+      if (!catalogProduct) {
+        throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
+      }
+
+      return {
+        ...reportProduct,
+        ...catalogProduct,
+        totalPrice: reportProduct.liquidationPrice * reportProduct.count,
+      };
     }
-
-    return {
-      ...reportProduct,
-      ...catalogProduct,
-    };
-  });
+  );
 
   const groupedProducts = groupProducts<TComboReportProduct>(
     reportGroups,
@@ -72,6 +78,37 @@ const ReportTable: FC<TReportTable> = ({
         dataIndex: 'currency',
         key: 'currency',
         render: (currency: string) => currency.toUpperCase(),
+      },
+      {
+        title: 'Количество',
+        dataIndex: 'count',
+        key: 'count',
+        align: 'right',
+        render: (count: number) => format.number()(count),
+      },
+      {
+        title: 'Ликвид. стоимость',
+        dataIndex: 'liquidationPrice',
+        key: 'liquidationPrice',
+        align: 'right',
+        render: (liquidationPrice: number, record: TComboReportProduct) =>
+          format.currency(record.currency)(liquidationPrice),
+      },
+      {
+        title: 'Доп. начисления',
+        dataIndex: 'payments',
+        key: 'payments',
+        align: 'right',
+        render: (payments: number, record: TComboReportProduct) =>
+          format.currency(record.currency)(payments ?? 0),
+      },
+      {
+        title: 'Общая стоимость',
+        dataIndex: 'totalPrice',
+        key: 'totalPrice',
+        align: 'right',
+        render: (totalPrice: number, record: TComboReportProduct) =>
+          format.currency(record.currency)(totalPrice),
       },
       {
         title: 'Действия',
