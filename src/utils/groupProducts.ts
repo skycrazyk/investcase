@@ -7,15 +7,19 @@ export const nodeTypes = {
   products: 'products',
 } as const;
 
-export type TGroupNodeValue<P, V = TValue> = {
-  value?: V;
-  child: TGroupedProducts<P, V>;
+export type TGroupValue = TValue & {
+  [key: string]: any;
 };
 
-export type TGroupNode<P, V = TValue> = {
+export type TGroupNodeValue<P> = {
+  value?: TGroupValue;
+  child: TGroupedProducts<P>;
+};
+
+export type TGroupNode<P> = {
   type: typeof nodeTypes.group;
   group: TGroup;
-  values: TGroupNodeValue<P, V>[];
+  values: TGroupNodeValue<P>[];
 };
 
 export type TProductsNode<P> = {
@@ -23,9 +27,7 @@ export type TProductsNode<P> = {
   products: P[];
 };
 
-export type TGroupedProducts<P, V = TValue> =
-  | TGroupNode<P, V>
-  | TProductsNode<P>;
+export type TGroupedProducts<P> = TGroupNode<P> | TProductsNode<P>;
 
 /**
  * Минимальные требования к объекту продукт, чтобы его можно было группировать
@@ -35,8 +37,8 @@ export type TMinimalProduct = { id: string; groups: { [key: string]: string } };
 /**
  * Функция для модификации значения value в объекте типа TGroupNodeValue
  */
-export interface ResolveGroupValue<P, V> {
-  (groupValue: TValue | undefined, products: P[]): V | TValue | undefined;
+export interface ResolveGroupValue<P> {
+  (groupValue: TGroupValue | undefined, products: P[]): TGroupValue | undefined;
 }
 
 /**
@@ -45,12 +47,15 @@ export interface ResolveGroupValue<P, V> {
  * @param groupsEntities Каталог групп (по id)
  * @param productsCatalog Каталог продуктов
  */
-const groupProducts = <P extends TMinimalProduct, V extends TValue = TValue>(
+const groupProducts = <
+  P extends TMinimalProduct,
+  V extends TGroupValue = TGroupValue
+>(
   productsGroupsIds: TProductsGroups,
   groupsEntities: Dictionary<TGroup>,
   productsCatalog: P[],
-  resolveGroupValue: ResolveGroupValue<P, V> = (groupValue) => groupValue
-): TGroupedProducts<P, V> => {
+  resolveGroupValue: ResolveGroupValue<P> = (groupValue) => groupValue
+): TGroupedProducts<P> => {
   const copyProductsGroupsIds = [...productsGroupsIds];
   const currentGroupId = copyProductsGroupsIds.shift();
   const currentGroup = currentGroupId && groupsEntities[currentGroupId];

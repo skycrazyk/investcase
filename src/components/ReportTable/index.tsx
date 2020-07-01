@@ -17,7 +17,7 @@ type TComboReportProduct = TProductsProduct &
     totalPrice: number;
   };
 
-type TComboReportGroupValue = TValue & {
+type TComboReportGroupValue = {
   productsCount: number;
 };
 
@@ -52,10 +52,7 @@ const ReportTable: FC<TReportTable> = ({
     }
   );
 
-  const groupedProducts = groupProducts<
-    TComboReportProduct,
-    TComboReportGroupValue
-  >(
+  const groupedProducts = groupProducts<TComboReportProduct>(
     reportGroups,
     groupEntities,
     resolvedReportProducts,
