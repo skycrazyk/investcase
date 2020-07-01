@@ -6,7 +6,7 @@ import {
   productsSelectors,
   TProduct as TProductsProduct,
 } from '../../store/products';
-import { groupsSelectors } from '../../store/groups';
+import { groupsSelectors, TValue } from '../../store/groups';
 import {
   reportsSelectors,
   TProduct as TReportProducts,
@@ -16,6 +16,10 @@ type TComboReportProduct = TProductsProduct &
   TReportProducts & {
     totalPrice: number;
   };
+
+type TComboReportGroupValue = TValue & {
+  productsCount: number;
+};
 
 type TReportTable = {
   editProduct: (id: string) => void;
@@ -48,11 +52,25 @@ const ReportTable: FC<TReportTable> = ({
     }
   );
 
-  const groupedProducts = groupProducts<TComboReportProduct>(
+  const groupedProducts = groupProducts<
+    TComboReportProduct,
+    TComboReportGroupValue
+  >(
     reportGroups,
     groupEntities,
     resolvedReportProducts,
-    (groupValue, products) => groupValue
+    (groupValue, products) => {
+      let resolvedValue = groupValue;
+
+      if (groupValue) {
+        resolvedValue = {
+          ...groupValue,
+          productsCount: products.length,
+        };
+      }
+
+      return resolvedValue;
+    }
   );
 
   return treeProducts({
