@@ -1,21 +1,21 @@
 import { Dictionary } from '@reduxjs/toolkit';
 import { TGroup, TValue } from '../store/groups';
-import { TProduct, TProductsGroups } from '../store/products';
+import { TProductsGroups } from '../store/products';
 
 export const nodeTypes = {
   group: 'group',
   products: 'products',
 } as const;
 
-export type TGroupNodeValue<P> = {
-  value?: TValue;
-  child: TGroupedProducts<P>;
+export type TGroupNodeValue<P, V = TValue> = {
+  value?: V;
+  child: TGroupedProducts<P, V>;
 };
 
-export type TGroupNode<P> = {
+export type TGroupNode<P, V = TValue> = {
   type: typeof nodeTypes.group;
   group: TGroup;
-  values: TGroupNodeValue<P>[];
+  values: TGroupNodeValue<P, V>[];
 };
 
 export type TProductsNode<P> = {
@@ -23,7 +23,9 @@ export type TProductsNode<P> = {
   products: P[];
 };
 
-export type TGroupedProducts<P> = TGroupNode<P> | TProductsNode<P>;
+export type TGroupedProducts<P, V = TValue> =
+  | TGroupNode<P, V>
+  | TProductsNode<P>;
 
 /**
  * Минимальные требования к объекту продукт, чтобы его можно было группировать
@@ -36,11 +38,14 @@ export type TMinimalProduct = { id: string; groups: { [key: string]: string } };
  * @param groupsEntities Каталог групп (по id)
  * @param productsCatalog Каталог продуктов
  */
-const groupProducts = <P extends TMinimalProduct>(
+const groupProducts = <P extends TMinimalProduct, V extends TValue = TValue>(
   productsGroupsIds: TProductsGroups,
   groupsEntities: Dictionary<TGroup>,
-  productsCatalog: P[]
-): TGroupedProducts<P> => {
+  productsCatalog: P[],
+  resolveGroupValue: (groupValue: TValue | undefined) => TValue | undefined = (
+    groupValue
+  ) => groupValue
+): TGroupedProducts<P, V> => {
   const copyProductsGroupsIds = [...productsGroupsIds];
   const currentGroupId = copyProductsGroupsIds.shift();
   const currentGroup = currentGroupId && groupsEntities[currentGroupId];
@@ -54,11 +59,12 @@ const groupProducts = <P extends TMinimalProduct>(
 
         if (filteredProducts.length) {
           acc.push({
-            value: groupValue,
+            value: resolveGroupValue(groupValue),
             child: groupProducts(
               copyProductsGroupsIds,
               groupsEntities,
-              filteredProducts
+              filteredProducts,
+              resolveGroupValue
             ),
           });
         }
@@ -79,11 +85,12 @@ const groupProducts = <P extends TMinimalProduct>(
 
     // Продукты без значения в текущей группе собираются в отдельном узле
     const unfilteredChild = Boolean(unfilteredProducts.length) && {
-      value: undefined,
+      value: resolveGroupValue(undefined),
       child: groupProducts(
         copyProductsGroupsIds,
         groupsEntities,
-        unfilteredProducts
+        unfilteredProducts,
+        resolveGroupValue
       ),
     };
 
