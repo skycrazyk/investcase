@@ -10,6 +10,7 @@ import {
   exchangeCurrencies,
   reportsActions,
   TProduct,
+  TRate,
 } from '../../store/reports';
 import { State } from '../../store';
 import { productsSelectors } from '../../store/products';
@@ -249,12 +250,14 @@ const Report: FC = () => {
           >
             {({ getFieldValue }) => {
               const products: TProduct[] = getFieldValue('products') || [];
+              const rate: TRate = getFieldValue('rate');
 
               return (
                 <ReportTable
                   deleteProduct={deleteProduct}
                   editProduct={editProduct}
                   reportProducts={products}
+                  rate={rate}
                 />
               );
             }}

@@ -7,6 +7,7 @@ export const nodeTypes = {
   products: 'products',
 } as const;
 
+// TODO: По идее надо как-то прокидывать тип из вне
 export type TGroupValue = TValue & {
   [key: string]: any;
 };
@@ -47,10 +48,7 @@ export interface ResolveGroupValue<P> {
  * @param groupsEntities Каталог групп (по id)
  * @param productsCatalog Каталог продуктов
  */
-const groupProducts = <
-  P extends TMinimalProduct,
-  V extends TGroupValue = TGroupValue
->(
+const groupProducts = <P extends TMinimalProduct>(
   productsGroupsIds: TProductsGroups,
   groupsEntities: Dictionary<TGroup>,
   productsCatalog: P[],

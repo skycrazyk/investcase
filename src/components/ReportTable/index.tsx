@@ -6,10 +6,11 @@ import {
   productsSelectors,
   TProduct as TProductsProduct,
 } from '../../store/products';
-import { groupsSelectors, TValue } from '../../store/groups';
+import { groupsSelectors } from '../../store/groups';
 import {
   reportsSelectors,
   TProduct as TReportProducts,
+  TRate as TReportRate,
 } from '../../store/reports';
 
 type TComboReportProduct = TProductsProduct &
@@ -17,20 +18,18 @@ type TComboReportProduct = TProductsProduct &
     totalPrice: number;
   };
 
-type TComboReportGroupValue = {
-  productsCount: number;
-};
-
 type TReportTable = {
   editProduct: (id: string) => void;
   deleteProduct: (id: string) => void;
   reportProducts: TReportProducts[];
+  rate: TReportRate;
 };
 
 const ReportTable: FC<TReportTable> = ({
   editProduct,
   deleteProduct,
   reportProducts,
+  rate,
 }) => {
   const productsEntities = useSelector(productsSelectors.selectEntities);
   const reportGroups = useSelector(reportsSelectors.getGroups);
@@ -60,9 +59,18 @@ const ReportTable: FC<TReportTable> = ({
       let resolvedValue = groupValue;
 
       if (groupValue) {
+        const productsCount = products.length;
+
+        // BUG: нужно учитывать валюту и приводить к RUB в соответствии с текущим курсом
+        const totalPrice = products.reduce((acc, product) => {
+          acc += product.totalPrice;
+          return acc;
+        }, 0);
+
         resolvedValue = {
           ...groupValue,
-          productsCount: products.length,
+          productsCount,
+          totalPrice,
         };
       }
 
@@ -76,6 +84,17 @@ const ReportTable: FC<TReportTable> = ({
       {
         title: groupedProducts.group.name,
         dataIndex: ['value', 'name'],
+      },
+      {
+        title: 'Кол-во инструментов',
+        align: 'right',
+        dataIndex: ['value', 'productsCount'],
+      },
+      {
+        title: 'Общая стоимость',
+        align: 'right',
+        dataIndex: ['value', 'totalPrice'],
+        render: (totalPrice: number) => format.currency('RUB')(totalPrice),
       },
     ],
     productColums: () => [
