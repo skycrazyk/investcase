@@ -33,6 +33,13 @@ export type TGroupedProducts<P, V = TValue> =
 export type TMinimalProduct = { id: string; groups: { [key: string]: string } };
 
 /**
+ * Функция для модификации значения value в объекте типа TGroupNodeValue
+ */
+export interface ResolveGroupValue<P, V> {
+  (groupValue: TValue | undefined, products: P[]): V | TValue | undefined;
+}
+
+/**
  * Формирурует дерево продуктов согласно списоку идентификаторов групп
  * @param productsGroupsIds Список идентификаторов групп для фильтрации
  * @param groupsEntities Каталог групп (по id)
@@ -42,9 +49,7 @@ const groupProducts = <P extends TMinimalProduct, V extends TValue = TValue>(
   productsGroupsIds: TProductsGroups,
   groupsEntities: Dictionary<TGroup>,
   productsCatalog: P[],
-  resolveGroupValue: (groupValue: TValue | undefined) => TValue | undefined = (
-    groupValue
-  ) => groupValue
+  resolveGroupValue: ResolveGroupValue<P, V> = (groupValue) => groupValue
 ): TGroupedProducts<P, V> => {
   const copyProductsGroupsIds = [...productsGroupsIds];
   const currentGroupId = copyProductsGroupsIds.shift();
@@ -59,7 +64,7 @@ const groupProducts = <P extends TMinimalProduct, V extends TValue = TValue>(
 
         if (filteredProducts.length) {
           acc.push({
-            value: resolveGroupValue(groupValue),
+            value: resolveGroupValue(groupValue, filteredProducts),
             child: groupProducts(
               copyProductsGroupsIds,
               groupsEntities,
@@ -85,7 +90,7 @@ const groupProducts = <P extends TMinimalProduct, V extends TValue = TValue>(
 
     // Продукты без значения в текущей группе собираются в отдельном узле
     const unfilteredChild = Boolean(unfilteredProducts.length) && {
-      value: resolveGroupValue(undefined),
+      value: resolveGroupValue(undefined, unfilteredProducts),
       child: groupProducts(
         copyProductsGroupsIds,
         groupsEntities,

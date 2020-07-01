@@ -51,7 +51,8 @@ const ReportTable: FC<TReportTable> = ({
   const groupedProducts = groupProducts<TComboReportProduct>(
     reportGroups,
     groupEntities,
-    resolvedReportProducts
+    resolvedReportProducts,
+    (groupValue, products) => groupValue
   );
 
   return treeProducts({
