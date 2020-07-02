@@ -16,7 +16,9 @@ import {
 
 type TComboReportProduct = TProductsProduct &
   TReportProducts & {
-    totalPrice: number;
+    totalPriceInProductCurrency: number;
+    totalPriceInBaseCurrency: number;
+    percentInCase: number;
   };
 
 type TReportTable = {
@@ -43,13 +45,14 @@ const ReportTable: FC<TReportTable> = ({
       throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
     }
 
+    const totalPriceInProductCurrency =
+      reportProduct.liquidationPrice * reportProduct.count +
+      (reportProduct.payments || 0);
+
     if (catalogProduct.currency !== productCurrencies.rub) {
-      acc +=
-        reportProduct.liquidationPrice *
-        reportProduct.count *
-        rate[catalogProduct.currency];
+      acc += totalPriceInProductCurrency * rate[catalogProduct.currency];
     } else {
-      acc += reportProduct.liquidationPrice * reportProduct.count;
+      acc += totalPriceInProductCurrency;
     }
 
     return acc;
@@ -65,9 +68,11 @@ const ReportTable: FC<TReportTable> = ({
         throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
       }
 
-      const totalPrice = reportProduct.liquidationPrice * reportProduct.count;
+      const totalPriceInProductCurrency =
+        reportProduct.liquidationPrice * reportProduct.count +
+        (reportProduct.payments || 0);
 
-      let totalPriceInBaseCurrency = totalPrice;
+      let totalPriceInBaseCurrency = totalPriceInProductCurrency;
 
       if (catalogProduct.currency !== productCurrencies.rub) {
         totalPriceInBaseCurrency *= rate[catalogProduct.currency];
@@ -78,7 +83,8 @@ const ReportTable: FC<TReportTable> = ({
       return {
         ...reportProduct,
         ...catalogProduct,
-        totalPrice,
+        totalPriceInProductCurrency,
+        totalPriceInBaseCurrency,
         percentInCase,
       };
     }
@@ -95,12 +101,7 @@ const ReportTable: FC<TReportTable> = ({
         const productsCount = products.length;
 
         const totalPrice = products.reduce((acc, product) => {
-          if (product.currency !== productCurrencies.rub) {
-            acc += product.totalPrice * rate[product.currency];
-          } else {
-            acc += product.totalPrice;
-          }
-
+          acc += product.totalPriceInBaseCurrency;
           return acc;
         }, 0);
 
@@ -176,11 +177,13 @@ const ReportTable: FC<TReportTable> = ({
       },
       {
         title: 'Общая стоимость',
-        dataIndex: 'totalPrice',
-        key: 'totalPrice',
+        dataIndex: 'totalPriceInProductCurrency',
+        key: 'totalPriceInProductCurrency',
         align: 'right',
-        render: (totalPrice: number, record: TComboReportProduct) =>
-          format.currency(record.currency)(totalPrice),
+        render: (
+          totalPriceInProductCurrency: number,
+          record: TComboReportProduct
+        ) => format.currency(record.currency)(totalPriceInProductCurrency),
       },
       {
         title: 'Процент в портфеле',
