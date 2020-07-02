@@ -5,6 +5,7 @@ import { treeProducts, groupProducts, format } from '../../utils';
 import {
   productsSelectors,
   TProduct as TProductsProduct,
+  productCurrencies,
 } from '../../store/products';
 import { groupsSelectors } from '../../store/groups';
 import {
@@ -61,9 +62,13 @@ const ReportTable: FC<TReportTable> = ({
       if (groupValue) {
         const productsCount = products.length;
 
-        // BUG: нужно учитывать валюту и приводить к RUB в соответствии с текущим курсом
         const totalPrice = products.reduce((acc, product) => {
-          acc += product.totalPrice;
+          if (product.currency !== productCurrencies.rub) {
+            acc += product.totalPrice * rate[product.currency];
+          } else {
+            acc += product.totalPrice;
+          }
+
           return acc;
         }, 0);
 
