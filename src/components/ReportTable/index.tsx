@@ -36,6 +36,27 @@ const ReportTable: FC<TReportTable> = ({
   const reportGroups = useSelector(reportsSelectors.getGroups);
   const groupEntities = useSelector(groupsSelectors.selectEntities);
 
+  const totalCasePrice = reportProducts.reduce((acc, reportProduct) => {
+    const catalogProduct = productsEntities[reportProduct.id];
+
+    if (!catalogProduct) {
+      throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
+    }
+
+    if (catalogProduct.currency !== productCurrencies.rub) {
+      acc +=
+        reportProduct.liquidationPrice *
+        reportProduct.count *
+        rate[catalogProduct.currency];
+    } else {
+      acc += reportProduct.liquidationPrice * reportProduct.count;
+    }
+
+    return acc;
+  }, 0);
+
+  const totalCasePriceOnePercent = totalCasePrice / 100;
+
   const resolvedReportProducts: TComboReportProduct[] = reportProducts.map(
     (reportProduct) => {
       const catalogProduct = productsEntities[reportProduct.id];
@@ -44,10 +65,21 @@ const ReportTable: FC<TReportTable> = ({
         throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
       }
 
+      const totalPrice = reportProduct.liquidationPrice * reportProduct.count;
+
+      let totalPriceInBaseCurrency = totalPrice;
+
+      if (catalogProduct.currency !== productCurrencies.rub) {
+        totalPriceInBaseCurrency *= rate[catalogProduct.currency];
+      }
+
+      const percentInCase = totalPriceInBaseCurrency / totalCasePriceOnePercent;
+
       return {
         ...reportProduct,
         ...catalogProduct,
-        totalPrice: reportProduct.liquidationPrice * reportProduct.count,
+        totalPrice,
+        percentInCase,
       };
     }
   );
@@ -149,6 +181,13 @@ const ReportTable: FC<TReportTable> = ({
         align: 'right',
         render: (totalPrice: number, record: TComboReportProduct) =>
           format.currency(record.currency)(totalPrice),
+      },
+      {
+        title: 'Процент в портфеле',
+        dataIndex: 'percentInCase',
+        key: 'percentInCase',
+        align: 'right',
+        render: (percentInCase: number) => format.percent()(percentInCase),
       },
       {
         title: 'Действия',
