@@ -19,8 +19,7 @@ import { useModalActions } from '../../hooks';
 import PageHeader from '../PageHeader';
 import ReportProduct from '../ReportProduct';
 import ReportProducts from '../ReportProducts';
-import GroupsFilter from '../GroupsFilter';
-import { Store } from 'antd/lib/form/interface';
+import ReportSettings from '../ReportSettings';
 
 const hidrate = (report: ReturnType<typeof reportsSelectors.selectById>) => {
   return (
@@ -166,17 +165,21 @@ const Report: FC = () => {
     editModal.show();
   };
 
-  const setGroups = (changedValues: Store, values: Store) => {
-    dispatch(reportsActions.setGroups(values.groups));
-  };
-
   return (
     <>
-      <PageHeader />
-      <GroupsFilter
-        onChange={setGroups}
-        groupsSelector={reportsSelectors.getGroups}
+      <PageHeader
+        extra={[
+          <Button
+            htmlType="submit"
+            type="primary"
+            key="1"
+            onClick={form.submit}
+          >
+            Сохранить
+          </Button>,
+        ]}
       />
+      <ReportSettings />
       <Form.Provider
         onFormFinish={(name, { values, forms }) => {
           if (name === formsNames.createProduct) {
@@ -264,9 +267,6 @@ const Report: FC = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button htmlType="submit" type="primary">
-              Сохранить
-            </Button>
             <Button
               htmlType="button"
               style={{ margin: '0 8px' }}

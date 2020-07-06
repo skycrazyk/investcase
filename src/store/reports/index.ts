@@ -39,6 +39,11 @@ export type TReport = {
 
 export type TReportGroups = string[];
 
+export type TReportSettings = {
+  groups: TReportGroups;
+  compareReportId?: string;
+};
+
 const reportsAdapter = createEntityAdapter<TReport>({
   sortComparer: (a, b) => {
     return moment(a.date).diff(moment(b.date));
@@ -54,9 +59,7 @@ export const initialState = {
 const slice = createSlice({
   name: 'reports',
   initialState: reportsAdapter.getInitialState<{
-    settings: {
-      groups: TReportGroups;
-    };
+    settings: TReportSettings;
   }>(initialState),
   reducers: {
     addOne: reportsAdapter.addOne,
@@ -64,6 +67,12 @@ const slice = createSlice({
     removeOne: reportsAdapter.removeOne,
     setGroups: (state, action: PayloadAction<TReportGroups>) => {
       state.settings.groups = action.payload;
+    },
+    setSettings: (state, action: PayloadAction<Partial<TReportSettings>>) => {
+      state.settings = {
+        ...state.settings,
+        ...action.payload,
+      };
     },
   },
 });
@@ -81,6 +90,7 @@ const selectors = {
     });
   }),
   getGroups: (state: State) => state.reports.settings.groups,
+  getSettings: (state: State) => state.reports.settings,
 };
 
 export {
