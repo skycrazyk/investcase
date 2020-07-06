@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Form, Select } from 'antd';
+import { Form, Select, Collapse } from 'antd';
 import { Store } from 'antd/lib/form/interface';
 import { useParams } from 'react-router-dom';
 import { reportsActions, reportsSelectors } from '../../store/reports';
@@ -23,32 +23,37 @@ const ReportSettings: FC = () => {
   }, [routeParams.id]);
 
   return (
-    <Form
-      name="settings"
-      initialValues={settings}
-      onValuesChange={onSettingsChange}
-    >
-      <Form.Item name="groups">
-        <Select mode="multiple" placeholder="Группировка продуктов" allowClear>
-          {groupsCatalog.map((group) => (
-            <Select.Option key={group.id} value={group.id}>
-              {group.name}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
-      <Form.Item name="compareReportId">
-        <Select placeholder="Отчет для сравнения" allowClear>
-          {reports
-            .filter((report) => report.id !== routeParams.id)
-            .map((report) => (
-              <Select.Option key={report.id} value={report.id}>
-                {report.date}
-              </Select.Option>
-            ))}
-        </Select>
-      </Form.Item>
-    </Form>
+    <Collapse style={{ marginBottom: 32 }} ghost>
+      <Collapse.Panel key="1" header="Настройки">
+        <Form
+          layout="inline"
+          name="settings"
+          initialValues={settings}
+          onValuesChange={onSettingsChange}
+        >
+          <Form.Item name="groups" label="Группировка продуктов">
+            <Select mode="multiple" placeholder="Выберите группы" allowClear>
+              {groupsCatalog.map((group) => (
+                <Select.Option key={group.id} value={group.id}>
+                  {group.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item name="compareReportId" label="Отчет для сравнения">
+            <Select placeholder="Выберите отчет для сравнения" allowClear>
+              {reports
+                .filter((report) => report.id !== routeParams.id)
+                .map((report) => (
+                  <Select.Option key={report.id} value={report.id}>
+                    {report.date}
+                  </Select.Option>
+                ))}
+            </Select>
+          </Form.Item>
+        </Form>
+      </Collapse.Panel>
+    </Collapse>
   );
 };
 
