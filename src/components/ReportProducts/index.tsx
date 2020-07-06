@@ -28,7 +28,7 @@ type TReportTable = {
   rate: TReportRate;
 };
 
-const ReportTable: FC<TReportTable> = ({
+const ReportProducts: FC<TReportTable> = ({
   editProduct,
   deleteProduct,
   reportProducts,
@@ -217,4 +217,4 @@ const ReportTable: FC<TReportTable> = ({
   });
 };
 
-export default ReportTable;
+export default ReportProducts;

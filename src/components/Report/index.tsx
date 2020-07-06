@@ -18,7 +18,7 @@ import { rules } from '../../utils';
 import { useModalActions } from '../../hooks';
 import PageHeader from '../PageHeader';
 import ReportProduct from '../ReportProduct';
-import ReportTable from '../ReportTable';
+import ReportProducts from '../ReportProducts';
 import GroupsFilter from '../GroupsFilter';
 import { Store } from 'antd/lib/form/interface';
 
@@ -253,7 +253,7 @@ const Report: FC = () => {
               const rate: TRate = getFieldValue('rate');
 
               return (
-                <ReportTable
+                <ReportProducts
                   deleteProduct={deleteProduct}
                   editProduct={editProduct}
                   reportProducts={products}
