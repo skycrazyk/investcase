@@ -105,10 +105,13 @@ const ReportTable: FC<TReportTable> = ({
           return acc;
         }, 0);
 
+        const percentInCase = totalPrice / totalCasePriceOnePercent;
+
         resolvedValue = {
           ...groupValue,
           productsCount,
           totalPrice,
+          percentInCase,
         };
       }
 
@@ -133,6 +136,12 @@ const ReportTable: FC<TReportTable> = ({
         align: 'right',
         dataIndex: ['value', 'totalPrice'],
         render: (totalPrice: number) => format.currency('RUB')(totalPrice),
+      },
+      {
+        title: 'Доля в портфеле',
+        align: 'right',
+        dataIndex: ['value', 'percentInCase'],
+        render: (percentInCase: number) => format.percent()(percentInCase),
       },
     ],
     productColums: () => [
@@ -186,7 +195,7 @@ const ReportTable: FC<TReportTable> = ({
         ) => format.currency(record.currency)(totalPriceInProductCurrency),
       },
       {
-        title: 'Процент в портфеле',
+        title: 'Доля в портфеле',
         dataIndex: 'percentInCase',
         key: 'percentInCase',
         align: 'right',
