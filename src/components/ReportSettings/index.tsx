@@ -23,7 +23,7 @@ const ReportSettings: FC = () => {
   }, [routeParams.id]);
 
   return (
-    <Collapse style={{ marginBottom: 32 }} ghost>
+    <Collapse defaultActiveKey={['1']} style={{ marginBottom: 24 }}>
       <Collapse.Panel key="1" header="Настройки">
         <Form
           layout="inline"
@@ -32,7 +32,12 @@ const ReportSettings: FC = () => {
           onValuesChange={onSettingsChange}
         >
           <Form.Item name="groups" label="Группировка продуктов">
-            <Select mode="multiple" placeholder="Выберите группы" allowClear>
+            <Select
+              mode="multiple"
+              placeholder="Выберите группы"
+              allowClear
+              style={{ minWidth: 140 }}
+            >
               {groupsCatalog.map((group) => (
                 <Select.Option key={group.id} value={group.id}>
                   {group.name}
@@ -41,7 +46,7 @@ const ReportSettings: FC = () => {
             </Select>
           </Form.Item>
           <Form.Item name="compareReportId" label="Отчет для сравнения">
-            <Select placeholder="Выберите отчет для сравнения" allowClear>
+            <Select placeholder="Выберите отчет" allowClear>
               {reports
                 .filter((report) => report.id !== routeParams.id)
                 .map((report) => (
