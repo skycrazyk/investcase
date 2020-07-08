@@ -11,7 +11,6 @@ import {
 import {
   productsSelectors,
   TProduct as TProductsProduct,
-  productCurrencies,
 } from '../../store/products';
 import { groupsSelectors } from '../../store/groups';
 import {
