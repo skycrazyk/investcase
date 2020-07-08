@@ -1,7 +1,13 @@
 import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { Space } from 'antd';
-import { treeProducts, groupProducts, format } from '../../utils';
+import {
+  treeProducts,
+  groupProducts,
+  format,
+  reportCalculations,
+  reportProductCalculations,
+} from '../../utils';
 import {
   productsSelectors,
   TProduct as TProductsProduct,
@@ -35,14 +41,14 @@ type TReportTable = {
   editProduct: (id: string) => void;
   deleteProduct: (id: string) => void;
   reportProducts: TReportProducts[];
-  rate: TReportRate;
+  reportRate: TReportRate;
 };
 
 const ReportProducts: FC<TReportTable> = ({
   editProduct,
   deleteProduct,
   reportProducts,
-  rate,
+  reportRate,
 }) => {
   const productsEntities = useSelector(productsSelectors.selectEntities);
   const reportSettings = useSelector(reportsSelectors.getSettings);
@@ -52,27 +58,11 @@ const ReportProducts: FC<TReportTable> = ({
     reportsSelectors.selectById(state, reportSettings.compareReportId || '')
   );
 
-  const totalCasePrice = reportProducts.reduce((acc, reportProduct) => {
-    const catalogProduct = productsEntities[reportProduct.id];
-
-    if (!catalogProduct) {
-      throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
-    }
-
-    const totalPriceInProductCurrency =
-      reportProduct.liquidationPrice * reportProduct.count +
-      (reportProduct.payments || 0);
-
-    if (catalogProduct.currency !== productCurrencies.rub) {
-      acc += totalPriceInProductCurrency * rate[catalogProduct.currency];
-    } else {
-      acc += totalPriceInProductCurrency;
-    }
-
-    return acc;
-  }, 0);
-
-  const totalCasePriceOnePercent = totalCasePrice / 100;
+  const { totalCasePriceOnePercent } = reportCalculations({
+    reportProducts,
+    reportRate,
+    productsEntities,
+  });
 
   const resolvedReportProducts: TComboReportProduct[] = reportProducts.map(
     (reportProduct) => {
@@ -82,17 +72,16 @@ const ReportProducts: FC<TReportTable> = ({
         throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
       }
 
-      const totalPriceInProductCurrency =
-        reportProduct.liquidationPrice * reportProduct.count +
-        (reportProduct.payments || 0);
-
-      let totalPriceInBaseCurrency = totalPriceInProductCurrency;
-
-      if (catalogProduct.currency !== productCurrencies.rub) {
-        totalPriceInBaseCurrency *= rate[catalogProduct.currency];
-      }
-
-      const percentInCase = totalPriceInBaseCurrency / totalCasePriceOnePercent;
+      const {
+        totalPriceInProductCurrency,
+        totalPriceInBaseCurrency,
+        percentInCase,
+      } = reportProductCalculations({
+        catalogProduct,
+        reportProduct,
+        reportRate,
+        totalCasePriceOnePercent,
+      });
 
       const compareReportProduct = compareReport?.products.find(
         (compareProduct) => compareProduct.id === reportProduct.id

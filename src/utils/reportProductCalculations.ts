@@ -1,9 +1,10 @@
-import { Dictionary } from '@reduxjs/toolkit';
+// import { Dictionary } from '@reduxjs/toolkit';
 import { TProduct, productCurrencies } from '../store/products';
 import { TProduct as TReportProduct, TRate } from '../store/reports';
 
 type TReportProductCalculationsProps = {
-  productsEntities: Dictionary<TProduct>; // Каталог продуктов
+  // productsEntities: Dictionary<TProduct>; // Каталог продуктов
+  catalogProduct: TProduct;
   reportProduct: TReportProduct; // Продукт для которого расчеты
   reportRate: TRate; // Курсы отчета
   totalCasePriceOnePercent: number; // Стоимость одного процента портфеля
@@ -19,16 +20,16 @@ type TReportProductCalculationsResult = {
  * Расчет дополнительных показателей продукта в отчете
  */
 export default function reportProductCalculations({
-  productsEntities,
+  catalogProduct,
   reportProduct,
   reportRate,
   totalCasePriceOnePercent,
 }: TReportProductCalculationsProps): TReportProductCalculationsResult {
-  const catalogProduct = productsEntities[reportProduct.id];
+  // const catalogProduct = productsEntities[reportProduct.id];
 
-  if (!catalogProduct) {
-    throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
-  }
+  // if (!catalogProduct) {
+  //   throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
+  // }
 
   const totalPriceInProductCurrency =
     reportProduct.liquidationPrice * reportProduct.count +

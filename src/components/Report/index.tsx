@@ -260,7 +260,7 @@ const Report: FC = () => {
                   deleteProduct={deleteProduct}
                   editProduct={editProduct}
                   reportProducts={products}
-                  rate={rate}
+                  reportRate={rate}
                 />
               );
             }}
