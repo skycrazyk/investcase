@@ -20,6 +20,14 @@ import {
 } from '../../store/reports';
 import { State } from '../../store';
 
+type TDiffValue = {
+  dir: '+' | '-';
+  value: string; // Значние с направлением (на пример: +52, -73, и.т.д.)
+  source: number; // Оригинальное значение
+  originalValue: number; // Значение которое сравнивалось
+  compareValue: number; // Значение С которым сравнивалось
+};
+
 type TComboCompareReportProduct = TProductsProduct &
   TReportProducts & {
     totalPriceInProductCurrency: number;
@@ -34,6 +42,10 @@ type TComboReportProduct = TComboCompareReportProduct & {
   compareTotalPriceInProductCurrency?: number;
   compareTotalPriceInBaseCurrency?: number;
   comparePercentInCase?: number;
+  diffLiquidationPrice?: TDiffValue;
+  diffCount?: TDiffValue;
+  diffPayments?: TDiffValue;
+  // TODO: добавить остальные diff поля
 };
 
 type TReportTable = {
@@ -123,6 +135,7 @@ const ReportProducts: FC<TReportTable> = ({
               compareProductCalculations.totalPriceInBaseCurrency,
             comparePercentInCase: compareProductCalculations.percentInCase,
           }),
+        // TODO: Добавить diff поля (Добавить вспомогательную функцию которая преобразует объекты продуктов в объект со значениями типа TDiffValue)
       };
     }
   );
