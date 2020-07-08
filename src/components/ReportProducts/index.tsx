@@ -15,12 +15,21 @@ import {
 } from '../../store/reports';
 import { State } from '../../store';
 
-type TComboReportProduct = TProductsProduct &
+type TComboCompareReportProduct = TProductsProduct &
   TReportProducts & {
     totalPriceInProductCurrency: number;
     totalPriceInBaseCurrency: number;
     percentInCase: number;
   };
+
+type TComboReportProduct = TComboCompareReportProduct & {
+  compareLiquidationPrice?: number;
+  compareCount?: number;
+  comparePayments?: number;
+  compareTotalPriceInProductCurrency?: number;
+  compareTotalPriceInBaseCurrency?: number;
+  comparePercentInCase?: number;
+};
 
 type TReportTable = {
   editProduct: (id: string) => void;
@@ -84,6 +93,12 @@ const ReportProducts: FC<TReportTable> = ({
       }
 
       const percentInCase = totalPriceInBaseCurrency / totalCasePriceOnePercent;
+
+      const compareReportProduct = compareReport?.products.find(
+        (compareProduct) => compareProduct.id === reportProduct.id
+      );
+
+      console.log(compareReportProduct);
 
       return {
         ...reportProduct,
