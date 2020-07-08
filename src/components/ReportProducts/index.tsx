@@ -63,6 +63,14 @@ const ReportProducts: FC<TReportTable> = ({
     productsEntities,
   });
 
+  const compareReportCalculations =
+    compareReport &&
+    reportCalculations({
+      reportProducts: compareReport.products,
+      reportRate: compareReport.rate,
+      productsEntities,
+    });
+
   const resolvedReportProducts: TComboReportProduct[] = reportProducts.map(
     (reportProduct) => {
       const catalogProduct = productsEntities[reportProduct.id];
@@ -82,11 +90,21 @@ const ReportProducts: FC<TReportTable> = ({
         totalCasePriceOnePercent,
       });
 
-      const compareReportProduct = compareReport?.products.find(
+      const compareProduct = compareReport?.products.find(
         (compareProduct) => compareProduct.id === reportProduct.id
       );
 
-      console.log(compareReportProduct);
+      const compareProductCalculations =
+        compareReport &&
+        compareReportCalculations &&
+        compareProduct &&
+        reportProductCalculations({
+          catalogProduct,
+          reportProduct: compareProduct,
+          reportRate: compareReport.rate,
+          totalCasePriceOnePercent:
+            compareReportCalculations.totalCasePriceOnePercent,
+        });
 
       return {
         ...reportProduct,
@@ -94,6 +112,17 @@ const ReportProducts: FC<TReportTable> = ({
         totalPriceInProductCurrency,
         totalPriceInBaseCurrency,
         percentInCase,
+        ...(compareProductCalculations &&
+          compareProduct && {
+            compareLiquidationPrice: compareProduct.liquidationPrice,
+            compareCount: compareProduct.count,
+            comparePayments: compareProduct.payments,
+            compareTotalPriceInProductCurrency:
+              compareProductCalculations.totalPriceInProductCurrency,
+            compareTotalPriceInBaseCurrency:
+              compareProductCalculations.totalPriceInBaseCurrency,
+            comparePercentInCase: compareProductCalculations.percentInCase,
+          }),
       };
     }
   );
