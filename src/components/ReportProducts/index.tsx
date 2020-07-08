@@ -13,6 +13,7 @@ import {
   TProduct as TReportProducts,
   TRate as TReportRate,
 } from '../../store/reports';
+import { State } from '../../store';
 
 type TComboReportProduct = TProductsProduct &
   TReportProducts & {
@@ -36,7 +37,11 @@ const ReportProducts: FC<TReportTable> = ({
 }) => {
   const productsEntities = useSelector(productsSelectors.selectEntities);
   const reportSettings = useSelector(reportsSelectors.getSettings);
-  const groupEntities = useSelector(groupsSelectors.selectEntities);
+  const groupsEntities = useSelector(groupsSelectors.selectEntities);
+
+  const compareReport = useSelector((state: State) =>
+    reportsSelectors.selectById(state, reportSettings.compareReportId || '')
+  );
 
   const totalCasePrice = reportProducts.reduce((acc, reportProduct) => {
     const catalogProduct = productsEntities[reportProduct.id];
@@ -92,7 +97,7 @@ const ReportProducts: FC<TReportTable> = ({
 
   const groupedProducts = groupProducts<TComboReportProduct>(
     reportSettings.groups,
-    groupEntities,
+    groupsEntities,
     resolvedReportProducts,
     (groupValue, products) => {
       let resolvedValue = groupValue;
