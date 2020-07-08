@@ -35,7 +35,7 @@ const ReportProducts: FC<TReportTable> = ({
   rate,
 }) => {
   const productsEntities = useSelector(productsSelectors.selectEntities);
-  const reportGroups = useSelector(reportsSelectors.getGroups);
+  const reportSettings = useSelector(reportsSelectors.getSettings);
   const groupEntities = useSelector(groupsSelectors.selectEntities);
 
   const totalCasePrice = reportProducts.reduce((acc, reportProduct) => {
@@ -91,7 +91,7 @@ const ReportProducts: FC<TReportTable> = ({
   );
 
   const groupedProducts = groupProducts<TComboReportProduct>(
-    reportGroups,
+    reportSettings.groups,
     groupEntities,
     resolvedReportProducts,
     (groupValue, products) => {
