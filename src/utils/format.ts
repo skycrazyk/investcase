@@ -26,8 +26,8 @@ const number = (options?: Intl.NumberFormatOptions) => {
 const percent = (options?: Intl.NumberFormatOptions) => {
   const format = new Intl.NumberFormat('ru-RU', {
     style: 'percent',
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
     ...options,
   });
 

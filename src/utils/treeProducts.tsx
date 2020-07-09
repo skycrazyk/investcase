@@ -63,6 +63,8 @@ const treeProducts = <P extends TMinimalProduct>({
 
     result = (
       <Table
+        scroll={{ x: true }}
+        size="small"
         columns={columns}
         dataSource={data}
         pagination={false}

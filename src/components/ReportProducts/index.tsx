@@ -7,6 +7,8 @@ import {
   format,
   reportCalculations,
   reportProductCalculations,
+  makeDiff,
+  TDiffValue,
 } from '../../utils';
 import {
   productsSelectors,
@@ -20,14 +22,6 @@ import {
 } from '../../store/reports';
 import { State } from '../../store';
 
-type TDiffValue = {
-  dir: '+' | '-';
-  value: string; // Значние с направлением (на пример: +52, -73, и.т.д.)
-  source: number; // Оригинальное значение
-  originalValue: number; // Значение которое сравнивалось
-  compareValue: number; // Значение С которым сравнивалось
-};
-
 type TComboCompareReportProduct = TProductsProduct &
   TReportProducts & {
     totalPriceInProductCurrency: number;
@@ -36,16 +30,12 @@ type TComboCompareReportProduct = TProductsProduct &
   };
 
 type TComboReportProduct = TComboCompareReportProduct & {
-  compareLiquidationPrice?: number;
-  compareCount?: number;
-  comparePayments?: number;
-  compareTotalPriceInProductCurrency?: number;
-  compareTotalPriceInBaseCurrency?: number;
-  comparePercentInCase?: number;
   diffLiquidationPrice?: TDiffValue;
   diffCount?: TDiffValue;
   diffPayments?: TDiffValue;
-  // TODO: добавить остальные diff поля
+  diffTotalPriceInProductCurrency?: TDiffValue;
+  diffTotalPriceInBaseCurrency?: TDiffValue;
+  diffPercentInCase?: TDiffValue;
 };
 
 type TReportTable = {
@@ -126,16 +116,29 @@ const ReportProducts: FC<TReportTable> = ({
         percentInCase,
         ...(compareProductCalculations &&
           compareProduct && {
-            compareLiquidationPrice: compareProduct.liquidationPrice,
-            compareCount: compareProduct.count,
-            comparePayments: compareProduct.payments,
-            compareTotalPriceInProductCurrency:
+            diffLiquidationPrice: makeDiff(
+              reportProduct.liquidationPrice,
+              compareProduct.liquidationPrice
+            ),
+            diffCount: makeDiff(reportProduct.count, compareProduct.count),
+            diffPayments: makeDiff(
+              reportProduct.count,
+              compareProduct.payments
+            ),
+            diffTotalPriceInProductCurrency: makeDiff(
+              totalPriceInProductCurrency,
               compareProductCalculations.totalPriceInProductCurrency,
-            compareTotalPriceInBaseCurrency:
-              compareProductCalculations.totalPriceInBaseCurrency,
-            comparePercentInCase: compareProductCalculations.percentInCase,
+              format.currency(catalogProduct.currency)
+            ),
+            diffTotalPriceInBaseCurrency: makeDiff(
+              totalPriceInBaseCurrency,
+              compareProductCalculations.totalPriceInBaseCurrency
+            ),
+            diffPercentInCase: makeDiff(
+              percentInCase,
+              compareProductCalculations.percentInCase
+            ),
           }),
-        // TODO: Добавить diff поля (Добавить вспомогательную функцию которая преобразует объекты продуктов в объект со значениями типа TDiffValue)
       };
     }
   );
@@ -194,9 +197,9 @@ const ReportProducts: FC<TReportTable> = ({
         render: (percentInCase: number) => format.percent()(percentInCase),
       },
     ],
-    productColums: () => [
+    productColums: (product) => [
       {
-        title: 'Название продукта',
+        title: 'Название продукта',
         dataIndex: 'name',
         key: 'name',
       },
@@ -206,7 +209,7 @@ const ReportProducts: FC<TReportTable> = ({
         key: 'ticker',
       },
       {
-        title: 'Валюта покупки',
+        title: 'Валюта',
         dataIndex: 'currency',
         key: 'currency',
         render: (currency: string) => currency.toUpperCase(),
@@ -219,7 +222,7 @@ const ReportProducts: FC<TReportTable> = ({
         render: (count: number) => format.number()(count),
       },
       {
-        title: 'Ликвид. стоимость',
+        title: 'Лик. стоимость',
         dataIndex: 'liquidationPrice',
         key: 'liquidationPrice',
         align: 'right',
@@ -227,7 +230,7 @@ const ReportProducts: FC<TReportTable> = ({
           format.currency(record.currency)(liquidationPrice),
       },
       {
-        title: 'Доп. начисления',
+        title: 'Доп. нач‑я',
         dataIndex: 'payments',
         key: 'payments',
         align: 'right',
@@ -242,10 +245,13 @@ const ReportProducts: FC<TReportTable> = ({
         render: (
           totalPriceInProductCurrency: number,
           record: TComboReportProduct
-        ) => format.currency(record.currency)(totalPriceInProductCurrency),
+        ) =>
+          record.diffTotalPriceInProductCurrency
+            ? record.diffTotalPriceInProductCurrency.fullValue
+            : format.currency(record.currency)(totalPriceInProductCurrency),
       },
       {
-        title: 'Доля в портфеле',
+        title: 'Доля в портфеле',
         dataIndex: 'percentInCase',
         key: 'percentInCase',
         align: 'right',
