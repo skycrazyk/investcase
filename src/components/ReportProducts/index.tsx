@@ -143,6 +143,39 @@ const ReportProducts: FC<TReportTable> = ({
     }
   );
 
+  const resolvedCompareReportProducts:
+    | TComboCompareReportProduct[]
+    | undefined =
+    compareReport &&
+    compareReportCalculations &&
+    compareReport.products.map((compareReportProduct) => {
+      const catalogProduct = productsEntities[compareReportProduct.id];
+
+      if (!catalogProduct) {
+        throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
+      }
+
+      const {
+        totalPriceInProductCurrency,
+        totalPriceInBaseCurrency,
+        percentInCase,
+      } = reportProductCalculations({
+        catalogProduct,
+        reportProduct: compareReportProduct,
+        reportRate: compareReport.rate,
+        totalCasePriceOnePercent:
+          compareReportCalculations.totalCasePriceOnePercent,
+      });
+
+      return {
+        ...compareReportProduct,
+        ...catalogProduct,
+        totalPriceInProductCurrency,
+        totalPriceInBaseCurrency,
+        percentInCase,
+      };
+    });
+
   const groupedProducts = groupProducts<TComboReportProduct>(
     reportSettings.groups,
     groupsEntities,
