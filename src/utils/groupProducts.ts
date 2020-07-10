@@ -36,10 +36,17 @@ export type TGroupedProducts<P> = TGroupNode<P> | TProductsNode<P>;
 export type TMinimalProduct = { id: string; groups: { [key: string]: string } };
 
 /**
+ * Путь до текущей группы. Нужно для функционала сравнения
+ */
+export type TGroupPath = (string | null)[];
+
+/**
  * Функция для модификации значения value в объекте типа TGroupNodeValue
  */
 export interface ResolveGroupValue<P> {
-  (groupValue: TGroupValue | undefined, products: P[]): TGroupValue | undefined;
+  (groupValue: TGroupValue | undefined, products: P[], groupPath: TGroupPath):
+    | TGroupValue
+    | undefined;
 }
 
 /**
@@ -52,7 +59,8 @@ const groupProducts = <P extends TMinimalProduct>(
   productsGroupsIds: TProductsGroups,
   groupsEntities: Dictionary<TGroup>,
   productsCatalog: P[],
-  resolveGroupValue: ResolveGroupValue<P> = (groupValue) => groupValue
+  resolveGroupValue: ResolveGroupValue<P> = (groupValue) => groupValue,
+  groupPath: TGroupPath = []
 ): TGroupedProducts<P> => {
   const copyProductsGroupsIds = [...productsGroupsIds];
   const currentGroupId = copyProductsGroupsIds.shift();
@@ -65,14 +73,21 @@ const groupProducts = <P extends TMinimalProduct>(
           (product) => product.groups[currentGroup.id] === groupValue.id
         );
 
+        const copyGroupPath = [...groupPath, groupValue.id];
+
         if (filteredProducts.length) {
           acc.push({
-            value: resolveGroupValue(groupValue, filteredProducts),
+            value: resolveGroupValue(
+              groupValue,
+              filteredProducts,
+              copyGroupPath
+            ),
             child: groupProducts(
               copyProductsGroupsIds,
               groupsEntities,
               filteredProducts,
-              resolveGroupValue
+              resolveGroupValue,
+              copyGroupPath
             ),
           });
         }
@@ -91,14 +106,17 @@ const groupProducts = <P extends TMinimalProduct>(
       return thereIsUsedGroup === false;
     });
 
+    const copyGroupPath = [...groupPath, null];
+
     // Продукты без значения в текущей группе собираются в отдельном узле
     const unfilteredChild = Boolean(unfilteredProducts.length) && {
-      value: resolveGroupValue(undefined, unfilteredProducts),
+      value: resolveGroupValue(undefined, unfilteredProducts, copyGroupPath),
       child: groupProducts(
         copyProductsGroupsIds,
         groupsEntities,
         unfilteredProducts,
-        resolveGroupValue
+        resolveGroupValue,
+        copyGroupPath
       ),
     };
 

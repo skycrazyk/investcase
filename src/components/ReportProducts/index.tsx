@@ -215,7 +215,8 @@ const ReportProducts: FC<TReportTable> = ({
     reportSettings.groups,
     groupsEntities,
     resolvedReportProducts,
-    (groupValue, products) => {
+    (groupValue, products, groupPath) => {
+      console.log(groupPath);
       let resolvedValue = groupValue;
 
       if (groupValue) {
@@ -227,12 +228,15 @@ const ReportProducts: FC<TReportTable> = ({
         resolvedValue = {
           ...groupValue,
           ...calculations,
+          // diffTotalPrice: makeDiff(calculations.totalPrice, get)
         };
       }
 
       return resolvedValue;
     }
   );
+
+  console.log(groupedProducts);
 
   return treeProducts({
     groupedProducts,
