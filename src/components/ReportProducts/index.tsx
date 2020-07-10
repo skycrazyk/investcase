@@ -300,18 +300,37 @@ const ReportProducts: FC<TReportTable> = ({
           format.currency(record.currency)(payments ?? 0),
       },
       {
-        title: 'Общая стоимость',
+        title: 'Общая стоимость',
         dataIndex: 'totalPriceInProductCurrency',
         key: 'totalPriceInProductCurrency',
         align: 'right',
         render: (
           totalPriceInProductCurrency: number,
           record: TComboReportProduct
-        ) =>
-          record.diffTotalPriceInProductCurrency
-            ? record.diffTotalPriceInProductCurrency.fullValue
-            : format.currency(record.currency)(totalPriceInProductCurrency),
+        ) => format.currency(record.currency)(totalPriceInProductCurrency),
       },
+      ...(compareReport
+        ? ([
+            {
+              title: 'Доход',
+              key: 'earn',
+              align: 'right',
+              render: (value: any, record: TComboReportProduct) =>
+                record.diffTotalPriceInProductCurrency?.value,
+            },
+          ] as const)
+        : []),
+      ...(compareReport
+        ? ([
+            {
+              title: 'Доход (%)',
+              key: 'earn',
+              align: 'right',
+              render: (value: any, record: TComboReportProduct) =>
+                record.diffTotalPriceInProductCurrency?.percent,
+            },
+          ] as const)
+        : []),
       {
         title: 'Доля в портфеле',
         dataIndex: 'percentInCase',

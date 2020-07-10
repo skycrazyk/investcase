@@ -8,7 +8,8 @@ export const dirMap = {
 
 export type TDiffValue = {
   dir: 'gt' | 'lt' | 'eq';
-  value: string; // Значние с направлением (на пример: +52.25, -73.23, и.т.д.)
+  value: string; // Значние с направлением (на пример: +10.50, -73.23, и.т.д.)
+  percent: string; // Процент с направлением (на пример: +3.50%)
   longValue: string; // value + процентом (на пример: +10.50 (+3.50%))
   fullValue: string; // currentValue + longValue
   raw: number; // Оригинальное значение
@@ -27,14 +28,14 @@ export default function makeDiff(
   const value = `${dirMap[dir]}${formatter(Math.abs(raw))}`;
   const onePercent = currentValue / 100;
   const rawPercent = raw / onePercent;
-  const longValue = `${value} (${dirMap[dir]}${format.percent()(
-    Math.abs(rawPercent)
-  )})`;
+  const percent = `${dirMap[dir]}${format.percent()(Math.abs(rawPercent))}`;
+  const longValue = `${value} (${percent})`;
   const fullValue = `${formatter(currentValue)} / ${longValue}`;
 
   return {
     dir,
     value,
+    percent,
     longValue,
     fullValue,
     raw,
