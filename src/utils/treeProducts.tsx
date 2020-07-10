@@ -63,6 +63,7 @@ const treeProducts = <P extends TMinimalProduct>({
 
     result = (
       <Table
+        // TODO: скрол должен быть только у первой группы
         scroll={{ x: true }}
         size="small"
         columns={columns}
@@ -79,7 +80,14 @@ const treeProducts = <P extends TMinimalProduct>({
       key: item.id,
     }));
 
-    result = <Table columns={columns} dataSource={data} pagination={false} />;
+    result = (
+      <Table
+        // TODO: скрол должен быть только если нет группировки
+        columns={columns}
+        dataSource={data}
+        pagination={false}
+      />
+    );
   }
 
   return result;
