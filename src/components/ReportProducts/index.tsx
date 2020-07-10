@@ -7,6 +7,7 @@ import {
   format,
   reportCalculations,
   reportProductCalculations,
+  reportGroupValueCalculations,
   makeDiff,
   TDiffValue,
 } from '../../utils';
@@ -55,16 +56,12 @@ const ReportProducts: FC<TReportTable> = ({
   const reportSettings = useSelector(reportsSelectors.getSettings);
   const groupsEntities = useSelector(groupsSelectors.selectEntities);
 
+  // Отчет для сравнения
   const compareReport = useSelector((state: State) =>
     reportsSelectors.selectById(state, reportSettings.compareReportId || '')
   );
 
-  const { totalCasePriceOnePercent } = reportCalculations({
-    reportProducts,
-    reportRate,
-    productsEntities,
-  });
-
+  // Общие расчеты по отчету для сравнения
   const compareReportCalculations =
     compareReport &&
     reportCalculations({
@@ -73,6 +70,76 @@ const ReportProducts: FC<TReportTable> = ({
       productsEntities,
     });
 
+  // Подготовка массива продуктов отчета для сравнения
+  const resolvedCompareReportProducts:
+    | TComboCompareReportProduct[]
+    | undefined =
+    compareReport &&
+    compareReportCalculations &&
+    compareReport.products.map((compareReportProduct) => {
+      const catalogProduct = productsEntities[compareReportProduct.id];
+
+      if (!catalogProduct) {
+        throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
+      }
+
+      const {
+        totalPriceInProductCurrency,
+        totalPriceInBaseCurrency,
+        percentInCase,
+      } = reportProductCalculations({
+        catalogProduct,
+        reportProduct: compareReportProduct,
+        reportRate: compareReport.rate,
+        totalCasePriceOnePercent:
+          compareReportCalculations.totalCasePriceOnePercent,
+      });
+
+      return {
+        ...compareReportProduct,
+        ...catalogProduct,
+        totalPriceInProductCurrency,
+        totalPriceInBaseCurrency,
+        percentInCase,
+      };
+    });
+
+  // Сгруппированный отчет для сравнения
+  const compareGroupedProducts =
+    compareReportCalculations &&
+    resolvedCompareReportProducts &&
+    groupProducts<TComboCompareReportProduct>(
+      reportSettings.groups,
+      groupsEntities,
+      resolvedCompareReportProducts,
+      (groupValue, products) => {
+        let resolvedValue = groupValue;
+
+        if (groupValue) {
+          const calculations = reportGroupValueCalculations({
+            products,
+            totalCasePriceOnePercent:
+              compareReportCalculations.totalCasePriceOnePercent,
+          });
+
+          resolvedValue = {
+            ...groupValue,
+            ...calculations,
+          };
+        }
+
+        return resolvedValue;
+      }
+    );
+
+  // Общие расчеты текущего отчета
+  const { totalCasePriceOnePercent } = reportCalculations({
+    reportProducts,
+    reportRate,
+    productsEntities,
+  });
+
+  // Подготовка продуктов текущего отчета
   const resolvedReportProducts: TComboReportProduct[] = reportProducts.map(
     (reportProduct) => {
       const catalogProduct = productsEntities[reportProduct.id];
@@ -143,39 +210,7 @@ const ReportProducts: FC<TReportTable> = ({
     }
   );
 
-  const resolvedCompareReportProducts:
-    | TComboCompareReportProduct[]
-    | undefined =
-    compareReport &&
-    compareReportCalculations &&
-    compareReport.products.map((compareReportProduct) => {
-      const catalogProduct = productsEntities[compareReportProduct.id];
-
-      if (!catalogProduct) {
-        throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
-      }
-
-      const {
-        totalPriceInProductCurrency,
-        totalPriceInBaseCurrency,
-        percentInCase,
-      } = reportProductCalculations({
-        catalogProduct,
-        reportProduct: compareReportProduct,
-        reportRate: compareReport.rate,
-        totalCasePriceOnePercent:
-          compareReportCalculations.totalCasePriceOnePercent,
-      });
-
-      return {
-        ...compareReportProduct,
-        ...catalogProduct,
-        totalPriceInProductCurrency,
-        totalPriceInBaseCurrency,
-        percentInCase,
-      };
-    });
-
+  // Сгруппированный текущий отчет
   const groupedProducts = groupProducts<TComboReportProduct>(
     reportSettings.groups,
     groupsEntities,
@@ -184,20 +219,14 @@ const ReportProducts: FC<TReportTable> = ({
       let resolvedValue = groupValue;
 
       if (groupValue) {
-        const productsCount = products.length;
-
-        const totalPrice = products.reduce((acc, product) => {
-          acc += product.totalPriceInBaseCurrency;
-          return acc;
-        }, 0);
-
-        const percentInCase = totalPrice / totalCasePriceOnePercent;
+        const calculations = reportGroupValueCalculations({
+          products,
+          totalCasePriceOnePercent,
+        });
 
         resolvedValue = {
           ...groupValue,
-          productsCount,
-          totalPrice,
-          percentInCase,
+          ...calculations,
         };
       }
 

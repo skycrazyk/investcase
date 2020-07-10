@@ -10,3 +10,4 @@ export {
   dirMap as diffDirMap,
   TDiffValue,
 } from './makeDiff';
+export { default as reportGroupValueCalculations } from './reportGroupValueCalculations';
