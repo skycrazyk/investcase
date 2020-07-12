@@ -15,6 +15,7 @@ import {
 import {
   productsSelectors,
   TProduct as TProductsProduct,
+  productCurrencies,
 } from '../../store/products';
 import { groupsSelectors } from '../../store/groups';
 import {
@@ -23,6 +24,7 @@ import {
   TRate as TReportRate,
 } from '../../store/reports';
 import { State } from '../../store';
+import { TGroupNodeValue } from 'src/utils/groupProducts';
 
 type TComboCompareReportProduct = TProductsProduct &
   TReportProducts & {
@@ -230,15 +232,14 @@ const ReportProducts: FC<TReportTable> = ({
           compareGroupedProducts &&
           findGroupValue(compareGroupedProducts, groupPath)?.value?.totalPrice;
 
-        console.log(compareTotalPrice);
-
         resolvedValue = {
           ...groupValue,
           ...calculations,
           ...(compareTotalPrice && {
             diffTotalPrice: makeDiff(
               calculations.totalPrice,
-              compareTotalPrice
+              compareTotalPrice,
+              format.currency(productCurrencies.rub)
             ),
           }),
         };
@@ -247,8 +248,6 @@ const ReportProducts: FC<TReportTable> = ({
       return resolvedValue;
     }
   );
-
-  console.log(groupedProducts);
 
   return treeProducts({
     groupedProducts,
@@ -268,6 +267,32 @@ const ReportProducts: FC<TReportTable> = ({
         dataIndex: ['value', 'totalPrice'],
         render: (totalPrice: number) => format.currency('RUB')(totalPrice),
       },
+      ...(compareReport
+        ? ([
+            {
+              title: 'Доход',
+              key: 'earn',
+              align: 'right',
+              render: (
+                value: any,
+                record: TGroupNodeValue<TComboReportProduct>
+              ) => record.value?.diffTotalPrice.value,
+            },
+          ] as const)
+        : []),
+      ...(compareReport
+        ? ([
+            {
+              title: 'Доход (%)',
+              key: 'earn',
+              align: 'right',
+              render: (
+                value: any,
+                record: TGroupNodeValue<TComboReportProduct>
+              ) => record.value?.diffTotalPrice.percent,
+            },
+          ] as const)
+        : []),
       {
         title: 'Доля в портфеле',
         align: 'right',
