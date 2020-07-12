@@ -10,6 +10,7 @@ import {
   reportGroupValueCalculations,
   makeDiff,
   TDiffValue,
+  findGroupValue,
 } from '../../utils';
 import {
   productsSelectors,
@@ -225,10 +226,21 @@ const ReportProducts: FC<TReportTable> = ({
           totalCasePriceOnePercent,
         });
 
+        const compareTotalPrice =
+          compareGroupedProducts &&
+          findGroupValue(compareGroupedProducts, groupPath)?.value?.totalPrice;
+
+        console.log(compareTotalPrice);
+
         resolvedValue = {
           ...groupValue,
           ...calculations,
-          // diffTotalPrice: makeDiff(calculations.totalPrice, get)
+          ...(compareTotalPrice && {
+            diffTotalPrice: makeDiff(
+              calculations.totalPrice,
+              compareTotalPrice
+            ),
+          }),
         };
       }
 

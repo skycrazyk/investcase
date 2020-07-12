@@ -11,3 +11,4 @@ export {
   TDiffValue,
 } from './makeDiff';
 export { default as reportGroupValueCalculations } from './reportGroupValueCalculations';
+export { default as findGroupValue } from './findGroupValue';

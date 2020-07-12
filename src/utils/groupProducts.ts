@@ -49,6 +49,12 @@ export interface ResolveGroupValue<P> {
     | undefined;
 }
 
+export const isGroupNode = <T>(
+  node: TGroupedProducts<T>
+): node is TGroupNode<T> => {
+  return node.type === nodeTypes.group;
+};
+
 /**
  * Формирурует дерево продуктов согласно списоку идентификаторов групп
  * @param productsGroupsIds Список идентификаторов групп для фильтрации
