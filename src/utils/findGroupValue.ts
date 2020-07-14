@@ -27,9 +27,11 @@ export default function findGroupValue<
         (groupValue) => groupValue.value?.id === needGroupValueId
       );
     } else if (needGroupValueId === null) {
-      needGroupValue = groupedProducts.values.find(
-        (groupValue) => groupValue.value === undefined
-      );
+      needGroupValue = groupedProducts.values.find((groupValue) => {
+        return (
+          groupValue.value === undefined || groupValue.value?.id === undefined
+        );
+      });
     }
 
     if (needGroupValue) {

@@ -43,6 +43,7 @@ const treeProducts = <P extends TMinimalProduct>({
           key: 'ungroup',
           ...item,
           value: {
+            id: 'ungroup',
             ...item.value,
             name: `Не в группе "${groupedProducts.group.name}"`,
           },

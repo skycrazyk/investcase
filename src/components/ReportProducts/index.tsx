@@ -117,18 +117,22 @@ const ReportProducts: FC<TReportTable> = ({
       groupsEntities,
       resolvedCompareReportProducts,
       (groupValue, products) => {
-        let resolvedValue = groupValue;
+        let resolvedValue: TResolvedGroupValue = groupValue;
+
+        const calculations = reportGroupValueCalculations({
+          products,
+          totalCasePriceOnePercent:
+            compareReportCalculations.totalCasePriceOnePercent,
+        });
+
+        resolvedValue = {
+          ...calculations,
+        };
 
         if (groupValue) {
-          const calculations = reportGroupValueCalculations({
-            products,
-            totalCasePriceOnePercent:
-              compareReportCalculations.totalCasePriceOnePercent,
-          });
-
           resolvedValue = {
+            ...resolvedValue,
             ...groupValue,
-            ...calculations,
           };
         }
 
@@ -252,8 +256,6 @@ const ReportProducts: FC<TReportTable> = ({
       return resolvedValue;
     }
   );
-
-  console.log(groupedProducts);
 
   return treeProducts({
     groupedProducts,
