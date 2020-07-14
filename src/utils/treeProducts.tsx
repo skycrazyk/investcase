@@ -31,7 +31,7 @@ const treeProducts = <P extends TMinimalProduct>({
     const data = groupedProducts.values.map((item) => {
       let resolvedValue;
 
-      if (item.value) {
+      if (item.value?.id) {
         resolvedValue = {
           ...item,
           key: item.value.id,
@@ -40,12 +40,12 @@ const treeProducts = <P extends TMinimalProduct>({
       // Случай с продуктами без значения в текущей группе
       else {
         resolvedValue = {
+          key: 'ungroup',
           ...item,
           value: {
-            name: `Без значения в группе "${groupedProducts.group.name}"`,
-            id: 'unvalued',
+            ...item.value,
+            name: `Не в группе "${groupedProducts.group.name}"`,
           },
-          key: 'unvalued',
         };
       }
 

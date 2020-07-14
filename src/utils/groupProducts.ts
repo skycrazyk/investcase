@@ -12,6 +12,13 @@ export type TGroupValue = TValue & {
   [key: string]: any;
 };
 
+// TODO: По идее надо как-то прокидывать тип из вне
+export type TGroupValueUngroup =
+  | {
+      [key: string]: any;
+    }
+  | undefined;
+
 export type TGroupNodeValue<P> = {
   value?: TGroupValue;
   child: TGroupedProducts<P>;
@@ -40,13 +47,17 @@ export type TMinimalProduct = { id: string; groups: { [key: string]: string } };
  */
 export type TGroupPath = (string | null)[];
 
+export type TResolvedGroupValue = TGroupValue | TGroupValueUngroup;
+
 /**
  * Функция для модификации значения value в объекте типа TGroupNodeValue
  */
-export interface ResolveGroupValue<P> {
-  (groupValue: TGroupValue | undefined, products: P[], groupPath: TGroupPath):
-    | TGroupValue
-    | undefined;
+export interface IResolveGroupValue<P> {
+  (
+    groupValue: TGroupValue | undefined,
+    products: P[],
+    groupPath: TGroupPath
+  ): TResolvedGroupValue;
 }
 
 export const isGroupNode = <T>(
@@ -65,7 +76,7 @@ const groupProducts = <P extends TMinimalProduct>(
   productsGroupsIds: TProductsGroups,
   groupsEntities: Dictionary<TGroup>,
   productsCatalog: P[],
-  resolveGroupValue: ResolveGroupValue<P> = (groupValue) => groupValue,
+  resolveGroupValue: IResolveGroupValue<P> = (groupValue) => groupValue,
   groupPath: TGroupPath = []
 ): TGroupedProducts<P> => {
   const copyProductsGroupsIds = [...productsGroupsIds];

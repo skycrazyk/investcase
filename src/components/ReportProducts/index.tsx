@@ -12,6 +12,7 @@ import {
   TDiffValue,
   findGroupValue,
 } from '../../utils';
+import { TResolvedGroupValue } from '../../utils/groupProducts';
 import {
   productsSelectors,
   TProduct as TProductsProduct,
@@ -219,35 +220,40 @@ const ReportProducts: FC<TReportTable> = ({
     groupsEntities,
     resolvedReportProducts,
     (groupValue, products, groupPath) => {
-      console.log(groupPath);
-      let resolvedValue = groupValue;
+      let resolvedValue: TResolvedGroupValue;
+
+      const calculations = reportGroupValueCalculations({
+        products,
+        totalCasePriceOnePercent,
+      });
+
+      const compareTotalPrice =
+        compareGroupedProducts &&
+        findGroupValue(compareGroupedProducts, groupPath)?.value?.totalPrice;
+
+      resolvedValue = {
+        ...calculations,
+        ...(compareTotalPrice && {
+          diffTotalPrice: makeDiff(
+            calculations.totalPrice,
+            compareTotalPrice,
+            format.currency(productCurrencies.rub)
+          ),
+        }),
+      };
 
       if (groupValue) {
-        const calculations = reportGroupValueCalculations({
-          products,
-          totalCasePriceOnePercent,
-        });
-
-        const compareTotalPrice =
-          compareGroupedProducts &&
-          findGroupValue(compareGroupedProducts, groupPath)?.value?.totalPrice;
-
         resolvedValue = {
           ...groupValue,
-          ...calculations,
-          ...(compareTotalPrice && {
-            diffTotalPrice: makeDiff(
-              calculations.totalPrice,
-              compareTotalPrice,
-              format.currency(productCurrencies.rub)
-            ),
-          }),
+          ...resolvedValue,
         };
       }
 
       return resolvedValue;
     }
   );
+
+  console.log(groupedProducts);
 
   return treeProducts({
     groupedProducts,
@@ -276,7 +282,7 @@ const ReportProducts: FC<TReportTable> = ({
               render: (
                 value: any,
                 record: TGroupNodeValue<TComboReportProduct>
-              ) => record.value?.diffTotalPrice.value,
+              ) => record.value?.diffTotalPrice?.value, // TODO: отображать 0 руб
             },
           ] as const)
         : []),
@@ -289,7 +295,7 @@ const ReportProducts: FC<TReportTable> = ({
               render: (
                 value: any,
                 record: TGroupNodeValue<TComboReportProduct>
-              ) => record.value?.diffTotalPrice.percent,
+              ) => record.value?.diffTotalPrice?.percent, // TODO: отображать 0 %
             },
           ] as const)
         : []),
