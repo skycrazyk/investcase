@@ -7,16 +7,11 @@ export const nodeTypes = {
   products: 'products',
 } as const;
 
-// TODO: По идее надо как-то прокидывать тип из вне
-export type TGroupValue = TValue & {
-  [key: string]: any;
-};
-
-// TODO: По идее надо как-то прокидывать тип из вне
-export type TGroupValueUngroup =
-  | {
+// TODO: По идее надо как-то прокидывать тип из вне вместо { [key: string]: any; }
+export type TGroupValue =
+  | (Partial<TValue> & {
       [key: string]: any;
-    }
+    })
   | undefined;
 
 export type TGroupNodeValue<P> = {
@@ -47,8 +42,6 @@ export type TMinimalProduct = { id: string; groups: { [key: string]: string } };
  */
 export type TGroupPath = (string | null)[];
 
-export type TResolvedGroupValue = TGroupValue | TGroupValueUngroup;
-
 /**
  * Функция для модификации значения value в объекте типа TGroupNodeValue
  */
@@ -57,7 +50,7 @@ export interface IResolveGroupValue<P> {
     groupValue: TGroupValue | undefined,
     products: P[],
     groupPath: TGroupPath
-  ): TResolvedGroupValue;
+  ): TGroupValue;
 }
 
 export const isGroupNode = <T>(

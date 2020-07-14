@@ -12,7 +12,7 @@ import {
   TDiffValue,
   findGroupValue,
 } from '../../utils';
-import { TResolvedGroupValue } from '../../utils/groupProducts';
+import { TGroupValue } from '../../utils/groupProducts';
 import {
   productsSelectors,
   TProduct as TProductsProduct,
@@ -117,7 +117,7 @@ const ReportProducts: FC<TReportTable> = ({
       groupsEntities,
       resolvedCompareReportProducts,
       (groupValue, products) => {
-        let resolvedValue: TResolvedGroupValue = groupValue;
+        let resolvedValue: TGroupValue = groupValue;
 
         const calculations = reportGroupValueCalculations({
           products,
@@ -224,7 +224,7 @@ const ReportProducts: FC<TReportTable> = ({
     groupsEntities,
     resolvedReportProducts,
     (groupValue, products, groupPath) => {
-      let resolvedValue: TResolvedGroupValue;
+      let resolvedValue: TGroupValue;
 
       const calculations = reportGroupValueCalculations({
         products,
