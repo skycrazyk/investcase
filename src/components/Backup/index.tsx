@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { Button } from 'antd';
-import { download } from '../../utils';
+import { download, loadfile } from '../../utils';
 import PageHeader from '../PageHeader';
 import getDownloadData from '../../selectors/getDownloadData';
 
@@ -25,6 +25,18 @@ const Backup: FC = () => {
         <Button onClick={onSave}>Скачать</Button>
       </p>
       <h2>Загрузка</h2>
+      <form
+        id="jsonFile"
+        name="jsonFile"
+        encType="multipart/form-data"
+        method="post"
+      >
+        <fieldset>
+          <h2>Json File</h2>
+          <input type="file" id="fileinput" />
+          <input type="button" id="btnLoad" value="Load" onClick={loadfile} />
+        </fieldset>
+      </form>
     </>
   );
 };
