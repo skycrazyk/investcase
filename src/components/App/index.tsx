@@ -22,6 +22,9 @@ const App: FC = () => (
         <Menu.Item>
           <Link to={routes.settings.path}>{routes.settings.name}</Link>
         </Menu.Item>
+        <Menu.Item>
+          <Link to={routes.saveAndLoad.path}>{routes.saveAndLoad.name}</Link>
+        </Menu.Item>
       </Menu>
     </Sider>
     <Layout>
@@ -50,6 +53,11 @@ const App: FC = () => (
           <Route
             path={routes.settings.path}
             component={routes.settings.component}
+            exact
+          />
+          <Route
+            path={routes.saveAndLoad.path}
+            component={routes.saveAndLoad.component}
             exact
           />
           <Redirect from="/" to={routes.reports.path} exact />
