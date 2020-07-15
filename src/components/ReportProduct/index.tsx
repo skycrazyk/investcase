@@ -108,6 +108,14 @@ const ReportProduct: React.FC<ReportProductProps> = ({
         </Form.Item>
 
         <Form.Item
+          label="Балансовая стоимость"
+          name="balancePrice"
+          rules={[rules.reuired]}
+        >
+          <InputNumber placeholder="0" style={{ width: 150 }} min={1} />
+        </Form.Item>
+
+        <Form.Item
           label="Ликвидационная стоимость"
           name="liquidationPrice"
           rules={[rules.reuired]}

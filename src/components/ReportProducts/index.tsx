@@ -333,7 +333,15 @@ const ReportProducts: FC<TReportTable> = ({
         render: (count: number) => format.number()(count),
       },
       {
-        title: 'Лик. стоимость',
+        title: 'Баланс. стоимость',
+        dataIndex: 'balancePrice',
+        key: 'balancePrice',
+        align: 'right',
+        render: (balancePrice: number, record: TComboReportProduct) =>
+          format.currency(record.currency)(balancePrice),
+      },
+      {
+        title: 'Ликвид. стоимость',
         dataIndex: 'liquidationPrice',
         key: 'liquidationPrice',
         align: 'right',
@@ -341,7 +349,7 @@ const ReportProducts: FC<TReportTable> = ({
           format.currency(record.currency)(liquidationPrice),
       },
       {
-        title: 'Доп. нач‑я',
+        title: 'Доп. начисления',
         dataIndex: 'payments',
         key: 'payments',
         align: 'right',

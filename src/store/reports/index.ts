@@ -23,6 +23,7 @@ export type TProduct = {
   id: string;
   count: number;
   liquidationPrice: number;
+  balancePrice: number;
   payments: number;
 };
 
