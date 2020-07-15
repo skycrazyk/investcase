@@ -11,12 +11,12 @@ type TProductsTable = {
 };
 
 const ProductsTable: FC<TProductsTable> = ({ editProduct, deleteProduct }) => {
-  const productsGroups = useSelector(productsSelectors.getGroups);
+  const productsSettings = useSelector(productsSelectors.getSettings);
   const productsCatalog = useSelector(productsSelectors.selectAll);
   const groupsEntities = useSelector(groupsSelectors.selectEntities);
 
   const groupedProducts = groupProducts<TProduct>(
-    productsGroups,
+    productsSettings.groups,
     groupsEntities,
     productsCatalog
   );
