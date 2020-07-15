@@ -11,8 +11,7 @@ import {
   makeDiff,
   findGroupValue,
 } from '../../utils';
-import { TGroupValue } from '../../utils/groupProducts';
-import { TDiffValue } from '../../utils/makeDiff';
+import type { TDiffValue, TGroupValue } from '../../utils';
 import {
   productsSelectors,
   TProduct as TProductsProduct,
