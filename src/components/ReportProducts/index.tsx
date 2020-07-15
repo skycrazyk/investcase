@@ -9,10 +9,10 @@ import {
   reportProductCalculations,
   reportGroupValueCalculations,
   makeDiff,
-  TDiffValue,
   findGroupValue,
 } from '../../utils';
 import { TGroupValue } from '../../utils/groupProducts';
+import { TDiffValue } from '../../utils/makeDiff';
 import {
   productsSelectors,
   TProduct as TProductsProduct,
