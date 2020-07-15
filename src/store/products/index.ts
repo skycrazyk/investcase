@@ -3,7 +3,8 @@ import {
   createEntityAdapter,
   PayloadAction,
 } from '@reduxjs/toolkit';
-import { getProducts } from '../../selectors';
+// TODO: Перенести getProducts в этот файл
+import getProducts from '../../selectors/getProducts';
 import { exchangeCurrencies } from '../reports';
 import { State } from '../index';
 

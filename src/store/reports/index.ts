@@ -5,7 +5,8 @@ import {
   PayloadAction,
 } from '@reduxjs/toolkit';
 import { State } from '../index';
-import { getReports } from '../../selectors';
+// TODO: перенести getReports в этот файл
+import getReports from '../../selectors/getReports';
 import moment from 'moment';
 
 export const dateFormat = 'YYYY-MM-DD';

@@ -16,7 +16,7 @@ const ProductsGroups: FC = () => {
       name="groups"
       initialValues={{ groups: productsSettings.groups }}
       onValuesChange={(changedValues, values) => {
-        dispatch(productsActions.setGroups(values.groups));
+        dispatch(productsActions.setSettings({ groups: values.groups }));
       }}
     >
       <Form.Item name="groups">
