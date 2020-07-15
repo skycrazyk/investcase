@@ -3,7 +3,7 @@ import Report from './components/Report';
 import Groups from './components/Groups';
 import Products from './components/Products';
 import Settings from './components/Settings';
-import SaveAndLoad from './components/SaveAndLoad';
+import Backup from './components/Backup';
 import Feedback from './components/Feedback';
 import NotFound from './components/NotFound';
 
@@ -39,9 +39,9 @@ export default {
     component: Settings,
     name: 'Настройки',
   },
-  saveAndLoad: {
-    path: '/saveandload',
-    component: SaveAndLoad,
+  backup: {
+    path: '/backup',
+    component: Backup,
     name: 'Сохранение и загрузка',
   },
   notFound: {
