@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button } from 'antd';
+import { Button, Input, Space } from 'antd';
 import { download, loadfile } from '../../utils';
 import PageHeader from '../PageHeader';
 import getDownloadData, {
@@ -53,7 +53,9 @@ const Backup: FC = () => {
       <h2>Сохранение</h2>
       <p>Сохранение данных на ваш компьютер</p>
       <p>
-        <Button onClick={onSave}>Скачать</Button>
+        <Button type="primary" onClick={onSave}>
+          Скачать
+        </Button>
       </p>
       <h2>Загрузка</h2>
       <form
@@ -63,13 +65,15 @@ const Backup: FC = () => {
         method="post"
       >
         <fieldset>
-          <input type="file" id="fileinput" />
-          <input
-            type="button"
-            id="btnLoad"
-            value="Load"
-            onClick={() => loadfile('fileinput', onLoad)}
-          />
+          <Space>
+            <Input type="file" id="fileinput" />
+            <Button
+              type="primary"
+              onClick={() => loadfile('fileinput', onLoad)}
+            >
+              Загрузить
+            </Button>
+          </Space>
         </fieldset>
       </form>
     </>
