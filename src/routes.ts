@@ -42,7 +42,7 @@ export default {
   backup: {
     path: '/backup',
     component: Backup,
-    name: 'Сохранение и загрузка',
+    name: 'Экспорт / Импорт',
   },
   notFound: {
     path: '*',
