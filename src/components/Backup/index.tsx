@@ -23,9 +23,28 @@ const Backup: FC = () => {
   };
 
   const onLoad = (data: TDownloadData) => {
+    /**
+     * Инструменты
+     */
     dispatch(productsActions.setAll(data.products));
+
+    /**
+     * Группы
+     */
     dispatch(groupsActions.setAll(data.groups));
+
+    /**
+     * Отчеты
+     */
     dispatch(reportsActions.setAll(data.reports));
+
+    // Сбрасываем некотрые настройки
+    dispatch(
+      reportsActions.setSettings({
+        compareReportId: undefined,
+        groups: undefined,
+      })
+    );
   };
 
   return (
