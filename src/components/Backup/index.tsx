@@ -32,9 +32,15 @@ const Backup: FC = () => {
         method="post"
       >
         <fieldset>
-          <h2>Json File</h2>
           <input type="file" id="fileinput" />
-          <input type="button" id="btnLoad" value="Load" onClick={loadfile} />
+          <input
+            type="button"
+            id="btnLoad"
+            value="Load"
+            onClick={() =>
+              loadfile('fileinput', (data: any) => console.log(data))
+            }
+          />
         </fieldset>
       </form>
     </>

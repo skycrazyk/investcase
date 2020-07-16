@@ -1,12 +1,15 @@
-export default function loadFile() {
-  let input: HTMLInputElement | null, file, fr;
-
+export default function loadFile<T = any>(
+  fileInputId: string,
+  onLoad: (data: T) => void
+) {
   if (typeof window.FileReader !== 'function') {
     alert("The file API isn't supported on this browser yet.");
     return;
   }
 
-  input = document.getElementById('fileinput') as HTMLInputElement;
+  const input: HTMLInputElement | null = document.getElementById(
+    fileInputId
+  ) as HTMLInputElement;
 
   if (!input) {
     alert("Um, couldn't find the fileinput element.");
@@ -17,15 +20,15 @@ export default function loadFile() {
   } else if (!input.files[0]) {
     alert("Please select a file before clicking 'Load'");
   } else {
-    file = input.files[0];
-    fr = new FileReader();
+    const file = input.files[0];
+    const fr = new FileReader();
     fr.onload = receivedText;
     fr.readAsText(file);
   }
 
   function receivedText(e: any) {
-    let lines = e.target.result;
-    const newArr = JSON.parse(lines);
-    console.log(newArr);
+    const lines = e.target.result;
+    const data = JSON.parse(lines);
+    onLoad(data);
   }
 }
