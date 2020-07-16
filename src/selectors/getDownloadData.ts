@@ -3,7 +3,7 @@ import { productsSelectors } from '../store/products';
 import { groupsSelectors } from '../store/groups';
 import { reportsSelectors } from '../store/reports';
 
-export default createSelector(
+const getDownloadData = createSelector(
   productsSelectors.selectAll,
   groupsSelectors.selectAll,
   reportsSelectors.selectAll,
@@ -15,3 +15,7 @@ export default createSelector(
     };
   }
 );
+
+export type TDownloadData = ReturnType<typeof getDownloadData>;
+
+export default getDownloadData;

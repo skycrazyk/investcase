@@ -1,11 +1,17 @@
 import React, { FC } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'antd';
 import { download, loadfile } from '../../utils';
 import PageHeader from '../PageHeader';
-import getDownloadData from '../../selectors/getDownloadData';
+import getDownloadData, {
+  TDownloadData,
+} from '../../selectors/getDownloadData';
+import { productsActions } from '../../store/products';
+import { groupsActions } from '../../store/groups';
+import { reportsActions } from '../../store/reports';
 
 const Backup: FC = () => {
+  const dispatch = useDispatch();
   const backupData = useSelector(getDownloadData);
 
   const onSave = () => {
@@ -14,6 +20,12 @@ const Backup: FC = () => {
       'investcase.json',
       'text/plain'
     );
+  };
+
+  const onLoad = (data: TDownloadData) => {
+    dispatch(productsActions.setAll(data.products));
+    dispatch(groupsActions.setAll(data.groups));
+    dispatch(reportsActions.setAll(data.reports));
   };
 
   return (
@@ -37,9 +49,7 @@ const Backup: FC = () => {
             type="button"
             id="btnLoad"
             value="Load"
-            onClick={() =>
-              loadfile('fileinput', (data: any) => console.log(data))
-            }
+            onClick={() => loadfile('fileinput', onLoad)}
           />
         </fieldset>
       </form>

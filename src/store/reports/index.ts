@@ -67,6 +67,8 @@ const slice = createSlice({
     addOne: reportsAdapter.addOne,
     updateOne: reportsAdapter.updateOne,
     removeOne: reportsAdapter.removeOne,
+    setAll: reportsAdapter.setAll,
+    // TODO: удалить setGroups. Использовать setSettings
     setGroups: (state, action: PayloadAction<TReportGroups>) => {
       state.settings.groups = action.payload;
     },
