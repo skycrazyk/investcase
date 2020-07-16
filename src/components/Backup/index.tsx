@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Input, Space, message } from 'antd';
+import { Button, Input, Space, message, Popconfirm } from 'antd';
+import { UploadOutlined, DownloadOutlined } from '@ant-design/icons';
 import { download, loadfile } from '../../utils';
 import PageHeader from '../PageHeader';
 import getDownloadData, {
@@ -31,7 +32,7 @@ const Backup: FC = () => {
     // Сбрасываем некотрые настройки
     dispatch(
       productsActions.setSettings({
-        groups: undefined,
+        groups: [],
       })
     );
 
@@ -49,7 +50,7 @@ const Backup: FC = () => {
     dispatch(
       reportsActions.setSettings({
         compareReportId: undefined,
-        groups: undefined,
+        groups: [],
       })
     );
 
@@ -64,7 +65,7 @@ const Backup: FC = () => {
       <p>Экспорт данных на ваш компьютер</p>
       <p>
         <Button type="primary" onClick={onExport}>
-          Скачать
+          <DownloadOutlined /> Скачать
         </Button>
       </p>
       <h2>Импорт</h2>
@@ -77,13 +78,18 @@ const Backup: FC = () => {
       >
         <fieldset>
           <Space>
-            <Input type="file" id="fileinput" />
-            <Button
-              type="primary"
-              onClick={() => loadfile('fileinput', onImport)}
+            <Input type="file" id="fileinput" accept=".json" />
+            <Popconfirm
+              title="При загрузке файла, текущее состояние будет потеряно. Продолжить?"
+              onConfirm={() => loadfile('fileinput', onImport)}
             >
-              Загрузить
-            </Button>
+              <Button
+                type="primary"
+                // onClick={}
+              >
+                <UploadOutlined /> Загрузить
+              </Button>
+            </Popconfirm>
           </Space>
         </fieldset>
       </form>
