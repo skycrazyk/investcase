@@ -83,10 +83,7 @@ const Backup: FC = () => {
               title="При загрузке файла, текущее состояние будет потеряно. Продолжить?"
               onConfirm={() => loadfile('fileinput', onImport)}
             >
-              <Button
-                type="primary"
-                // onClick={}
-              >
+              <Button type="primary">
                 <UploadOutlined /> Загрузить
               </Button>
             </Popconfirm>
