@@ -3,7 +3,8 @@ import {
   createEntityAdapter,
   PayloadAction,
 } from '@reduxjs/toolkit';
-import { getProducts } from '../../selectors';
+// TODO: Перенести getProducts в этот файл
+import getProducts from '../../selectors/getProducts';
 import { exchangeCurrencies } from '../reports';
 import { State } from '../index';
 
@@ -24,23 +25,31 @@ export type TProduct = {
   };
 };
 
+export type TSettings = {
+  groups: TProductsGroups;
+};
+
 const productsAdapter = createEntityAdapter<TProduct>();
 
 const slice = createSlice({
   name: 'products',
   initialState: productsAdapter.getInitialState<{
-    // TODO: settings.groups
-    groups: TProductsGroups;
+    settings: TSettings;
   }>({
-    groups: [],
+    settings: {
+      groups: [],
+    },
   }),
   reducers: {
     setAll: productsAdapter.setAll,
     addOne: productsAdapter.addOne,
     updateOne: productsAdapter.updateOne,
     removeOne: productsAdapter.removeOne,
-    setGroups: (state, action: PayloadAction<TProductsGroups>) => {
-      state.groups = action.payload;
+    setSettings: (state, action: PayloadAction<Partial<TSettings>>) => {
+      state.settings = {
+        ...state.settings,
+        ...action.payload,
+      };
     },
   },
 });
@@ -49,7 +58,7 @@ const { actions, reducer } = slice;
 
 const selectors = {
   ...productsAdapter.getSelectors(getProducts),
-  getGroups: (state: State) => state.products.groups,
+  getSettings: (state: State) => state.products.settings,
 };
 
 export {

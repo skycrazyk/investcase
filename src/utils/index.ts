@@ -10,3 +10,5 @@ export { default as makeDiff, dirMap as diffDirMap } from './makeDiff';
 export type { TDiffValue } from './makeDiff';
 export { default as reportGroupValueCalculations } from './reportGroupValueCalculations';
 export { default as findGroupValue } from './findGroupValue';
+export { default as download } from './download';
+export { default as loadfile } from './loadfile';

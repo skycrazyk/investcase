@@ -31,7 +31,7 @@ const Products: FC = () => {
   };
 
   const onGroupsFilterChanged = (changedValues: Store, values: Store) => {
-    dispatch(productsActions.setGroups(values.groups));
+    dispatch(productsActions.setSettings({ groups: values.groups }));
   };
 
   return (
@@ -45,7 +45,7 @@ const Products: FC = () => {
       />
       <GroupsFilter
         onChange={onGroupsFilterChanged}
-        groupsSelector={productsSelectors.getGroups}
+        groupsSelector={(state) => productsSelectors.getSettings(state).groups}
       />
       <ProductsTable editProduct={editProduct} deleteProduct={deleteProduct} />
       <Product

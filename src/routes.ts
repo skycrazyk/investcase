@@ -3,6 +3,7 @@ import Report from './components/Report';
 import Groups from './components/Groups';
 import Products from './components/Products';
 import Settings from './components/Settings';
+import Backup from './components/Backup';
 import Feedback from './components/Feedback';
 import NotFound from './components/NotFound';
 
@@ -13,16 +14,11 @@ export default {
     path: '/profitAnalysis',
     name: 'Анализ доходности',
   },
-  // Таблица. При нажатии на "Добавить" создается пустой отчет и открывается на редактирование
-  // с переходом на конкретный роут
   reports: {
     path: '/reports',
     component: Reports,
     name: 'Отчеты',
   },
-  // 1. На странице отчет отображается список продуктов
-  // и графики "Диверсификация по ... всем доступным группировкам"
-  // 2. Добавление продукта в модальном окне
   report: {
     path: '/reports/:id',
     component: Report,
@@ -33,7 +29,6 @@ export default {
     component: Groups,
     name: 'Группы',
   },
-  // Дополнительная доходность по продукту
   products: {
     path: '/products',
     component: Products,
@@ -43,6 +38,11 @@ export default {
     path: '/settings',
     component: Settings,
     name: 'Настройки',
+  },
+  backup: {
+    path: '/backup',
+    component: Backup,
+    name: 'Экспорт / Импорт',
   },
   notFound: {
     path: '*',

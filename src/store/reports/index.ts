@@ -5,7 +5,8 @@ import {
   PayloadAction,
 } from '@reduxjs/toolkit';
 import { State } from '../index';
-import { getReports } from '../../selectors';
+// TODO: перенести getReports в этот файл
+import getReports from '../../selectors/getReports';
 import moment from 'moment';
 
 export const dateFormat = 'YYYY-MM-DD';
@@ -66,6 +67,8 @@ const slice = createSlice({
     addOne: reportsAdapter.addOne,
     updateOne: reportsAdapter.updateOne,
     removeOne: reportsAdapter.removeOne,
+    setAll: reportsAdapter.setAll,
+    // TODO: удалить setGroups. Использовать setSettings
     setGroups: (state, action: PayloadAction<TReportGroups>) => {
       state.settings.groups = action.payload;
     },
