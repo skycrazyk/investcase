@@ -28,6 +28,13 @@ const Backup: FC = () => {
      */
     dispatch(productsActions.setAll(data.products));
 
+    // Сбрасываем некотрые настройки
+    dispatch(
+      productsActions.setSettings({
+        groups: undefined,
+      })
+    );
+
     /**
      * Группы
      */
