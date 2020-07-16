@@ -9,5 +9,3 @@ export default function download(
   a.download = fileName;
   a.click();
 }
-
-// download(jsonData, 'json.txt', 'text/plain');
