@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Input, Space } from 'antd';
+import { Button, Input, Space, message } from 'antd';
 import { download, loadfile } from '../../utils';
 import PageHeader from '../PageHeader';
 import getDownloadData, {
@@ -14,7 +14,7 @@ const Backup: FC = () => {
   const dispatch = useDispatch();
   const backupData = useSelector(getDownloadData);
 
-  const onSave = () => {
+  const onExport = () => {
     download(
       JSON.stringify(backupData, null, 2),
       'investcase.json',
@@ -22,7 +22,7 @@ const Backup: FC = () => {
     );
   };
 
-  const onLoad = (data: TDownloadData) => {
+  const onImport = (data: TDownloadData) => {
     /**
      * Инструменты
      */
@@ -52,19 +52,23 @@ const Backup: FC = () => {
         groups: undefined,
       })
     );
+
+    // TODO: добавить проверку данных перед вызовом очереди экшенов
+    message.success('Данные загружены');
   };
 
   return (
     <>
       <PageHeader />
-      <h2>Сохранение</h2>
-      <p>Сохранение данных на ваш компьютер</p>
+      <h2>Экспорт</h2>
+      <p>Экспорт данных на ваш компьютер</p>
       <p>
-        <Button type="primary" onClick={onSave}>
+        <Button type="primary" onClick={onExport}>
           Скачать
         </Button>
       </p>
-      <h2>Загрузка</h2>
+      <h2>Импорт</h2>
+      <p>Импорт данных с вашего компьютера</p>
       <form
         id="jsonFile"
         name="jsonFile"
@@ -76,7 +80,7 @@ const Backup: FC = () => {
             <Input type="file" id="fileinput" />
             <Button
               type="primary"
-              onClick={() => loadfile('fileinput', onLoad)}
+              onClick={() => loadfile('fileinput', onImport)}
             >
               Загрузить
             </Button>
