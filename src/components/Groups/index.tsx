@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useState } from 'react';
-import { Button, Space, Table, List } from 'antd';
+import { Button, Space, Table, List, message } from 'antd';
 import { nanoid } from '@reduxjs/toolkit';
 import { useSelector, useDispatch } from 'react-redux';
 import {
@@ -26,8 +26,13 @@ const Groups: FC = () => {
     editModal.show();
   };
 
-  const deleteGroup = (id: string) => {
-    dispatch(groupsActions.removeOne(id));
+  const deleteGroup = async (id: string) => {
+    try {
+      await dispatch(groupsActions.removeOne(id));
+      message.success('Группа успешно удалена');
+    } catch (e) {
+      message.error(e.message);
+    }
   };
 
   const columns = [

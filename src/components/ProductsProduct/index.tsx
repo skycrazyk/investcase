@@ -14,7 +14,7 @@ type ProductProps = {
   initialValues?: Partial<TProduct>;
 };
 
-const Product: FC<ProductProps> = ({
+const ProductsProduct: FC<ProductProps> = ({
   visible,
   onCancel,
   onOk,
@@ -47,8 +47,6 @@ const Product: FC<ProductProps> = ({
               'id',
               'groups',
             ]);
-
-            console.log(values);
 
             onOk(values);
           })
@@ -96,15 +94,16 @@ const Product: FC<ProductProps> = ({
           </Select>
         </Form.Item>
 
+        {groupsCatalog.length && <h2>Группы</h2>}
+
         {groupsCatalog.map((group) => {
           return (
             <Form.Item
               label={group.name}
               name={['groups', group.id]}
               fieldKey={['groups', group.id]}
-              // rules={[rules.reuired]}
             >
-              <Select placeholder={group.name}>
+              <Select placeholder={group.name} allowClear>
                 {group.values.map((groupValue) => (
                   <Select.Option key={groupValue.id} value={groupValue.id}>
                     {groupValue.name}
@@ -119,4 +118,4 @@ const Product: FC<ProductProps> = ({
   );
 };
 
-export default Product;
+export default ProductsProduct;
