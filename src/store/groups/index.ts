@@ -1,5 +1,7 @@
 import { createSlice, createEntityAdapter } from '@reduxjs/toolkit';
 import { getGroups } from '../../selectors';
+import { productsSelectors, TProduct } from '../products';
+import { Store } from '../index';
 
 export type TValue = {
   id: string;
@@ -32,7 +34,37 @@ const slice = createSlice({
   },
 });
 
-const { actions, reducer } = slice;
+const { reducer } = slice;
+
+const removeOne = (groupId: string) => async (
+  dispatch: Store['dispatch'],
+  getState: Store['getState']
+) => {
+  const products = productsSelectors.selectAll(getState());
+
+  const productsWithCurrGroup = products.reduce<TProduct[]>((acc, product) => {
+    if (product.groups?.[groupId] !== undefined) {
+      acc.push(product);
+    }
+
+    return acc;
+  }, []);
+
+  if (productsWithCurrGroup.length) {
+    throw new Error(
+      `Не могу удалить. Группа используется в следующих инструментах: ${productsWithCurrGroup
+        .map((p) => p.name)
+        .join(', ')}`
+    );
+  } else {
+    dispatch(slice.actions.removeOne(groupId));
+  }
+};
+
+const actions = {
+  ...slice.actions,
+  removeOne,
+};
 
 const selectors = groupsAdapter.getSelectors(getGroups);
 

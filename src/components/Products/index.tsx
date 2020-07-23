@@ -10,7 +10,7 @@ import {
 } from '../../store/products';
 import { useModalActions } from '../../hooks';
 import PageHeader from '../PageHeader';
-import Product from '../Product';
+import ProductsProduct from '../ProductsProduct';
 import ProductsTable from '../ProductsTable';
 import GroupsFilter from '../GroupsFilter';
 
@@ -48,7 +48,7 @@ const Products: FC = () => {
         groupsSelector={(state) => productsSelectors.getSettings(state).groups}
       />
       <ProductsTable editProduct={editProduct} deleteProduct={deleteProduct} />
-      <Product
+      <ProductsProduct
         initialValues={{ id: nanoid() }}
         title="Создание продукта"
         visible={createModal.visible}
@@ -58,7 +58,7 @@ const Products: FC = () => {
           createModal.hide();
         }, [])}
       />
-      <Product
+      <ProductsProduct
         initialValues={editableProduct}
         title="Редактирование продукта"
         visible={editModal.visible}
