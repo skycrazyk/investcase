@@ -6,12 +6,6 @@ import { Store } from '../index';
 export type TValue = {
   id: string;
   name: string;
-  // Дополнительные поля для значения
-  // fields?: {
-  //   id: string;
-  //   name: string;
-  //   type: 'string' | 'number';
-  // }[];
 };
 
 export type TGroup = {

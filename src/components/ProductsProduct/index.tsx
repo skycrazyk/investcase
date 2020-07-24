@@ -21,7 +21,6 @@ const ProductsProduct: FC<ProductProps> = ({
   title,
   initialValues,
 }) => {
-  // const groupsCatalogEntities = useSelector(groupsSelectors.selectEntities);
   const groupsCatalog = useSelector(groupsSelectors.selectAll);
   const [form] = Form.useForm();
 
