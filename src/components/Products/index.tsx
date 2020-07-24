@@ -1,5 +1,5 @@
 import React, { FC, useCallback, useState } from 'react';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { Store } from 'antd/lib/form/interface';
 import { nanoid } from '@reduxjs/toolkit';
 import { useSelector, useDispatch } from 'react-redux';
@@ -26,8 +26,13 @@ const Products: FC = () => {
     editModal.show();
   };
 
-  const deleteProduct = (id: string) => {
-    dispatch(productsActions.removeOne(id));
+  const deleteProduct = async (id: string) => {
+    try {
+      await dispatch(productsActions.removeOne(id));
+      message.success('Инструмент удалён');
+    } catch (e) {
+      message.error(e.message);
+    }
   };
 
   const onGroupsFilterChanged = (changedValues: Store, values: Store) => {

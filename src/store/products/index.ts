@@ -5,8 +5,8 @@ import {
 } from '@reduxjs/toolkit';
 // TODO: Перенести getProducts в этот файл
 import getProducts from '../../selectors/getProducts';
-import { exchangeCurrencies } from '../reports';
-import { State } from '../index';
+import { exchangeCurrencies, reportsSelectors, TReport } from '../reports';
+import { State, Store } from '../index';
 
 export const productCurrencies = {
   rub: 'rub',
@@ -54,11 +54,43 @@ const slice = createSlice({
   },
 });
 
-const { actions, reducer } = slice;
+const { reducer } = slice;
 
 const selectors = {
   ...productsAdapter.getSelectors(getProducts),
   getSettings: (state: State) => state.products.settings,
+};
+
+const removeOne = (productId: string) => async (
+  dispatch: Store['dispatch'],
+  getState: Store['getState']
+) => {
+  const reports = reportsSelectors.selectAll(getState());
+
+  const reportsWithCurrProduct = reports.reduce<TReport[]>((acc, report) => {
+    const hasCurrProduct = report.products.find((p) => p.id === productId);
+
+    if (hasCurrProduct) {
+      acc.push(report);
+    }
+
+    return acc;
+  }, []);
+
+  if (reportsWithCurrProduct.length) {
+    throw new Error(
+      `Не могу удалить. Инструмент используется в следующих отчетах: ${reportsWithCurrProduct
+        .map((r) => r.date)
+        .join(', ')}`
+    );
+  } else {
+    dispatch(slice.actions.removeOne(productId));
+  }
+};
+
+const actions = {
+  ...slice.actions,
+  removeOne,
 };
 
 export {
