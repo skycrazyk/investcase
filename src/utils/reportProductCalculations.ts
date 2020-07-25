@@ -1,9 +1,7 @@
-// import { Dictionary } from '@reduxjs/toolkit';
 import { TProduct, productCurrencies } from '../store/products';
 import { TProduct as TReportProduct, TRate } from '../store/reports';
 
 type TReportProductCalculationsProps = {
-  // productsEntities: Dictionary<TProduct>; // Каталог продуктов
   catalogProduct: TProduct;
   reportProduct: TReportProduct; // Продукт для которого расчеты
   reportRate: TRate; // Курсы отчета
@@ -12,7 +10,9 @@ type TReportProductCalculationsProps = {
 
 type TReportProductCalculationsResult = {
   totalPriceInProductCurrency: number;
+  totalPriceInProductCurrencyWithPayments: number; // TODO: возможно не нужно
   totalPriceInBaseCurrency: number;
+  totalPriceInBaseCurrencyWithPayments: number; // TODO: возможно не нужно
   percentInCase: number;
 };
 
@@ -25,27 +25,27 @@ export default function reportProductCalculations({
   reportRate,
   totalCasePriceOnePercent,
 }: TReportProductCalculationsProps): TReportProductCalculationsResult {
-  // const catalogProduct = productsEntities[reportProduct.id];
-
-  // if (!catalogProduct) {
-  //   throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
-  // }
-
   const totalPriceInProductCurrency =
-    reportProduct.liquidationPrice * reportProduct.count +
-    (reportProduct.payments || 0);
+    reportProduct.liquidationPrice * reportProduct.count;
+
+  const totalPriceInProductCurrencyWithPayments =
+    totalPriceInProductCurrency + (reportProduct.payments || 0);
 
   let totalPriceInBaseCurrency = totalPriceInProductCurrency;
+  let totalPriceInBaseCurrencyWithPayments = totalPriceInProductCurrencyWithPayments;
 
   if (catalogProduct.currency !== productCurrencies.rub) {
     totalPriceInBaseCurrency *= reportRate[catalogProduct.currency];
+    totalPriceInBaseCurrencyWithPayments *= reportRate[catalogProduct.currency];
   }
 
   const percentInCase = totalPriceInBaseCurrency / totalCasePriceOnePercent;
 
   return {
     totalPriceInProductCurrency,
+    totalPriceInProductCurrencyWithPayments,
     totalPriceInBaseCurrency,
+    totalPriceInBaseCurrencyWithPayments,
     percentInCase,
   };
 }

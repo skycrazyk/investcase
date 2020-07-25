@@ -20,6 +20,7 @@ import PageHeader from '../PageHeader';
 import ReportProduct from '../ReportProduct';
 import ReportProducts from '../ReportProducts';
 import ReportSettings from '../ReportSettings';
+import ReportSummary from '../ReportSummary';
 
 const hidrate = (report: ReturnType<typeof reportsSelectors.selectById>) => {
   return (
@@ -165,7 +166,7 @@ const Report: FC = () => {
     editModal.show();
   };
 
-  return (
+  return report ? (
     <>
       <PageHeader
         extra={[
@@ -180,6 +181,7 @@ const Report: FC = () => {
         ]}
       />
       <ReportSettings />
+      <ReportSummary report={report} />
       <Form.Provider
         onFormFinish={(name, { values, forms }) => {
           if (name === formsNames.createProduct) {
@@ -297,7 +299,7 @@ const Report: FC = () => {
         />
       </Form.Provider>
     </>
-  );
+  ) : null;
 };
 
 export default Report;
