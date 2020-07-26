@@ -10,9 +10,9 @@ type TReportProductCalculationsProps = {
 
 type TReportProductCalculationsResult = {
   totalPriceInProductCurrency: number;
-  totalPriceInProductCurrencyWithPayments: number; // TODO: возможно не нужно
   totalPriceInBaseCurrency: number;
-  totalPriceInBaseCurrencyWithPayments: number; // TODO: возможно не нужно
+  profitInProductCurrency: number;
+  profitInBaseCurrency: number;
   percentInCase: number;
 };
 
@@ -28,24 +28,26 @@ export default function reportProductCalculations({
   const totalPriceInProductCurrency =
     reportProduct.liquidationPrice * reportProduct.count;
 
-  const totalPriceInProductCurrencyWithPayments =
-    totalPriceInProductCurrency + (reportProduct.payments || 0);
+  const profitInProductCurrency =
+    reportProduct.liquidationPrice -
+    reportProduct.balancePrice +
+    (reportProduct.payments || 0);
 
   let totalPriceInBaseCurrency = totalPriceInProductCurrency;
-  let totalPriceInBaseCurrencyWithPayments = totalPriceInProductCurrencyWithPayments;
+  let profitInBaseCurrency = profitInProductCurrency;
 
   if (catalogProduct.currency !== productCurrencies.rub) {
     totalPriceInBaseCurrency *= reportRate[catalogProduct.currency];
-    totalPriceInBaseCurrencyWithPayments *= reportRate[catalogProduct.currency];
+    profitInBaseCurrency *= reportRate[catalogProduct.currency];
   }
 
   const percentInCase = totalPriceInBaseCurrency / totalCasePriceOnePercent;
 
   return {
     totalPriceInProductCurrency,
-    totalPriceInProductCurrencyWithPayments,
     totalPriceInBaseCurrency,
-    totalPriceInBaseCurrencyWithPayments,
+    profitInProductCurrency,
+    profitInBaseCurrency,
     percentInCase,
   };
 }
