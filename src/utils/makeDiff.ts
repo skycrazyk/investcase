@@ -27,7 +27,7 @@ export default function makeDiff(
   const dir = raw > 0 ? 'gt' : raw < 0 ? 'lt' : 'eq';
   const value = `${dirMap[dir]}${formatter(Math.abs(raw))}`;
   const onePercent = currentValue / 100;
-  const rawPercent = raw / onePercent;
+  const rawPercent = onePercent !== 0 ? raw / onePercent : 0;
   const percent = `${dirMap[dir]}${format.percent()(Math.abs(rawPercent))}`;
   const longValue = `${value} (${percent})`;
   const fullValue = `${formatter(currentValue)} / ${longValue}`;
