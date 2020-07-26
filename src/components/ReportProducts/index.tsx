@@ -228,11 +228,6 @@ const ReportProducts: FC<TReportTable> = ({
               compareProductCalculations.profitInProductCurrency,
               format.currency(catalogProduct.currency)
             ),
-            // diffProfitInProductCurrency: makeDiff(
-            //   profitInProductCurrency,
-            //   compareProductCalculations.profitInProductCurrency,
-            //   format.currency(catalogProduct.currency)
-            // ),
           }),
       };
     }
