@@ -1,10 +1,12 @@
 import { Dictionary } from '@reduxjs/toolkit';
 import { TProduct, productCurrencies } from '../store/products';
 import { TProduct as TReportProduct, TRate } from '../store/reports';
+import reportProductOwnCalculations from './reportProductOwnCalculations';
 
 type TReportCalculationsResult = {
-  totalCasePrice: number;
-  totalCasePriceOnePercent: number;
+  totalCasePrice: number; // Размер портфеля
+  totalCasePriceOnePercent: number; // Стоимость одного процента
+  // profit: number; // Доход
 };
 
 type TReportCalculationsProps = {
@@ -25,15 +27,13 @@ export default function reportCalculations({
       throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
     }
 
-    const totalPriceInProductCurrency =
-      reportProduct.liquidationPrice * reportProduct.count +
-      (reportProduct.payments || 0);
+    const productOwnCalculations = reportProductOwnCalculations({
+      catalogProduct,
+      reportProduct,
+      reportRate,
+    });
 
-    if (catalogProduct.currency !== productCurrencies.rub) {
-      acc += totalPriceInProductCurrency * reportRate[catalogProduct.currency];
-    } else {
-      acc += totalPriceInProductCurrency;
-    }
+    acc += productOwnCalculations.totalPriceInBaseCurrency;
 
     return acc;
   }, 0);

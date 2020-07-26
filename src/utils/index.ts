@@ -5,6 +5,7 @@ export { default as groupProducts } from './groupProducts';
 export type { TGroupValue } from './groupProducts';
 export { default as format } from './format';
 export { default as reportProductCalculations } from './reportProductCalculations';
+export { default as reportProductOwnCalculations } from './reportProductOwnCalculations';
 export { default as reportCalculations } from './reportCalculations';
 export { default as makeDiff, dirMap as diffDirMap } from './makeDiff';
 export type { TDiffValue } from './makeDiff';

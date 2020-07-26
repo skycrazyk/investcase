@@ -1,23 +1,18 @@
-import { TProduct, productCurrencies } from '../store/products';
-import { TProduct as TReportProduct, TRate } from '../store/reports';
+import reportProductOwnCalculations, {
+  TReportProductOwnCalculationsProps,
+  TReportProductOwnCalculationsResult,
+} from './reportProductOwnCalculations';
 
-type TReportProductCalculationsProps = {
-  catalogProduct: TProduct;
-  reportProduct: TReportProduct; // Продукт для которого расчеты
-  reportRate: TRate; // Курсы отчета
+type TReportProductCalculationsProps = TReportProductOwnCalculationsProps & {
   totalCasePriceOnePercent: number; // Стоимость одного процента портфеля
 };
 
-type TReportProductCalculationsResult = {
-  totalPriceInProductCurrency: number;
-  totalPriceInBaseCurrency: number;
-  profitInProductCurrency: number;
-  profitInBaseCurrency: number;
+type TReportProductCalculationsResult = TReportProductOwnCalculationsResult & {
   percentInCase: number;
 };
 
 /**
- * Расчет дополнительных показателей продукта в отчете
+ * Расчет дополнительных показателей продукта в отчете включая процент в портфеле
  */
 export default function reportProductCalculations({
   catalogProduct,
@@ -25,29 +20,17 @@ export default function reportProductCalculations({
   reportRate,
   totalCasePriceOnePercent,
 }: TReportProductCalculationsProps): TReportProductCalculationsResult {
-  const totalPriceInProductCurrency =
-    reportProduct.liquidationPrice * reportProduct.count;
+  const ownCalculations = reportProductOwnCalculations({
+    catalogProduct,
+    reportProduct,
+    reportRate,
+  });
 
-  const profitInProductCurrency =
-    reportProduct.liquidationPrice -
-    reportProduct.balancePrice +
-    (reportProduct.payments || 0);
-
-  let totalPriceInBaseCurrency = totalPriceInProductCurrency;
-  let profitInBaseCurrency = profitInProductCurrency;
-
-  if (catalogProduct.currency !== productCurrencies.rub) {
-    totalPriceInBaseCurrency *= reportRate[catalogProduct.currency];
-    profitInBaseCurrency *= reportRate[catalogProduct.currency];
-  }
-
-  const percentInCase = totalPriceInBaseCurrency / totalCasePriceOnePercent;
+  const percentInCase =
+    ownCalculations.totalPriceInBaseCurrency / totalCasePriceOnePercent;
 
   return {
-    totalPriceInProductCurrency,
-    totalPriceInBaseCurrency,
-    profitInProductCurrency,
-    profitInBaseCurrency,
+    ...ownCalculations,
     percentInCase,
   };
 }

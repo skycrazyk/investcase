@@ -1,12 +1,10 @@
 import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
-import { Row, Col, Typography } from 'antd';
+import { Row, Col } from 'antd';
 import { reportCalculations, format } from '../../utils';
 import { productsSelectors } from '../../store/products';
 import { TReport } from '../../store/reports';
 import style from './style.module.css';
-
-const { Title } = Typography;
 
 type TReportSummary = {
   report: TReport;
@@ -31,6 +29,10 @@ const ReportSummary: FC<TReportSummary> = ({ report }) => {
       </Col>
       <Col>
         <div>Кол-во инструментов</div>
+        <div className={style.value}>{report.products.length}</div>
+      </Col>
+      <Col>
+        <div>Доход</div>
         <div className={style.value}>{report.products.length}</div>
       </Col>
     </Row>
