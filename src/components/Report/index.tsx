@@ -114,9 +114,16 @@ const Report: FC = () => {
   const editModal = useModalActions();
   const productsCatalog = useSelector(productsSelectors.selectAll);
   const [editableProduct, setEditableProduct] = useState<any>();
+  const reportSettings = useSelector(reportsSelectors.getSettings);
 
+  /* Текущий отчет */
   const report = useSelector((state: State) =>
     reportsSelectors.selectById(state, routeParams.id)
+  );
+
+  /* Отчет для сравнения */
+  const compareReport = useSelector((state: State) =>
+    reportsSelectors.selectById(state, reportSettings.compareReportId || '')
   );
 
   const productsCatalogForCreate = useProductsCatalogForCreate(
@@ -181,7 +188,7 @@ const Report: FC = () => {
         ]}
       />
       <ReportSettings />
-      <ReportSummary report={report} />
+      <ReportSummary report={report} compareReport={compareReport} />
       <Form.Provider
         onFormFinish={(name, { values, forms }) => {
           if (name === formsNames.createProduct) {
@@ -263,6 +270,7 @@ const Report: FC = () => {
                   editProduct={editProduct}
                   reportProducts={products}
                   reportRate={rate}
+                  compareReport={compareReport}
                 />
               );
             }}

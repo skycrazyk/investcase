@@ -22,8 +22,8 @@ import {
   reportsSelectors,
   TProduct as TReportProducts,
   TRate as TReportRate,
+  TReport,
 } from '../../store/reports';
-import { State } from '../../store';
 import { TGroupNodeValue } from 'src/utils/groupProducts';
 
 type TComboCompareReportProduct = TProductsProduct &
@@ -50,6 +50,7 @@ type TReportTable = {
   deleteProduct: (id: string) => void;
   reportProducts: TReportProducts[];
   reportRate: TReportRate;
+  compareReport: TReport | undefined;
 };
 
 const ReportProducts: FC<TReportTable> = ({
@@ -57,15 +58,11 @@ const ReportProducts: FC<TReportTable> = ({
   deleteProduct,
   reportProducts,
   reportRate,
+  compareReport,
 }) => {
   const productsEntities = useSelector(productsSelectors.selectEntities);
   const reportSettings = useSelector(reportsSelectors.getSettings);
   const groupsEntities = useSelector(groupsSelectors.selectEntities);
-
-  // Отчет для сравнения
-  const compareReport = useSelector((state: State) =>
-    reportsSelectors.selectById(state, reportSettings.compareReportId || '')
-  );
 
   // Общие расчеты по отчету для сравнения
   const compareReportCalculations =
