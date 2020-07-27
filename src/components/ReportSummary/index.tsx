@@ -68,7 +68,6 @@ const ReportSummary: FC<TReportSummary> = ({ report, compareReport }) => {
                 ).value
               )
             : formatCurrency(reportCalculate.profit)}
-          {/* {format.currency()(reportCalculate.profit)} */}
         </div>
       </Col>
       <Col>
