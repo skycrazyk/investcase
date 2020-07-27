@@ -6,7 +6,7 @@ import reportProductOwnCalculations from './reportProductOwnCalculations';
 type TReportCalculationsResult = {
   totalCasePrice: number; // Размер портфеля
   totalCasePriceOnePercent: number; // Стоимость одного процента
-  // profit: number; // Доход
+  profit: number; // Доход
 };
 
 type TReportCalculationsProps = {
@@ -20,28 +20,35 @@ export default function reportCalculations({
   reportRate,
   productsEntities,
 }: TReportCalculationsProps): TReportCalculationsResult {
-  const totalCasePrice = reportProducts.reduce((acc, reportProduct) => {
-    const catalogProduct = productsEntities[reportProduct.id];
+  const calculations = reportProducts.reduce<{
+    totalCasePrice: number;
+    profit: number;
+  }>(
+    (acc, reportProduct) => {
+      const catalogProduct = productsEntities[reportProduct.id];
 
-    if (!catalogProduct) {
-      throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
-    }
+      if (!catalogProduct) {
+        throw new Error('В отчете неизвестный продукт!'); // TODO: придумать как обрабатывать ошибку
+      }
 
-    const productOwnCalculations = reportProductOwnCalculations({
-      catalogProduct,
-      reportProduct,
-      reportRate,
-    });
+      const productOwnCalculations = reportProductOwnCalculations({
+        catalogProduct,
+        reportProduct,
+        reportRate,
+      });
 
-    acc += productOwnCalculations.totalPriceInBaseCurrency;
+      acc.totalCasePrice += productOwnCalculations.totalPriceInBaseCurrency;
+      acc.profit += productOwnCalculations.profitInBaseCurrency;
 
-    return acc;
-  }, 0);
+      return acc;
+    },
+    { totalCasePrice: 0, profit: 0 }
+  );
 
-  const totalCasePriceOnePercent = totalCasePrice / 100;
+  const totalCasePriceOnePercent = calculations.totalCasePrice / 100;
 
   return {
-    totalCasePrice,
+    ...calculations,
     totalCasePriceOnePercent,
   };
 }

@@ -28,12 +28,14 @@ const ReportSummary: FC<TReportSummary> = ({ report }) => {
         </div>
       </Col>
       <Col>
-        <div>Кол-во инструментов</div>
-        <div className={style.value}>{report.products.length}</div>
+        <div>Доход</div>
+        <div className={style.value}>
+          {format.currency()(reportCalculate.profit)}
+        </div>
       </Col>
       <Col>
-        <div>Доход</div>
-        <div className={style.value}>{report.products.length}</div>
+        <div>Кол-во инструментов</div>
+        <div className={style.value}>{report.products.length} шт.</div>
       </Col>
     </Row>
   );
