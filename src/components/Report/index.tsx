@@ -21,6 +21,7 @@ import ReportProduct from '../ReportProduct';
 import ReportProducts from '../ReportProducts';
 import ReportSettings from '../ReportSettings';
 import ReportSummary from '../ReportSummary';
+import ReportDiversification from '../ReportDiversification';
 
 const hidrate = (report: ReturnType<typeof reportsSelectors.selectById>) => {
   return (
@@ -189,6 +190,7 @@ const Report: FC = () => {
       />
       <ReportSettings />
       <ReportSummary report={report} compareReport={compareReport} />
+      <ReportDiversification report={report} />
       <Form.Provider
         onFormFinish={(name, { values, forms }) => {
           if (name === formsNames.createProduct) {

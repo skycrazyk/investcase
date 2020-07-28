@@ -39,7 +39,7 @@ const ReportSummary: FC<TReportSummary> = ({ report, compareReport }) => {
     });
 
   return (
-    <Row style={{ marginBottom: 24 }} gutter={[24, 24]}>
+    <Row gutter={[24, 24]}>
       <Col>
         <div>Размер портфеля</div>
         <div className={style.value}>
