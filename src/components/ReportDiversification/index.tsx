@@ -1,8 +1,10 @@
 import React, { FC } from 'react';
 import { PieChart, Pie } from 'recharts';
 import { useSelector } from 'react-redux';
-import { TReport } from '../../store/reports';
-import { groupsSelectors } from '../../store/groups';
+import { cloneDeep } from 'lodash';
+import { TReport, TProduct } from '../../store/reports';
+import { groupsSelectors, TGroup, TValue } from '../../store/groups';
+import { productsSelectors } from '../../store/products';
 
 const data01 = [
   {
@@ -38,10 +40,32 @@ type TReportDiversification = {
 
 const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
   const groups = useSelector(groupsSelectors.selectAll);
+  const productsEntities = useSelector(productsSelectors.selectEntities);
 
-  const groupsDivers = groups.map((group) => {
-    // 1. Получить все продукты для значения группы
+  const groupsDiversification = cloneDeep(groups).map((group) => {
+    const valuesWithTotal = group.values.map((value) => {
+      const productsWithValue = report.products.filter((product) => {
+        const catalogProduct = productsEntities[product.id];
+
+        if (!catalogProduct) throw Error('Неизвестный инструмент в отчёте');
+
+        if (catalogProduct.groups[group.id] === value.id) {
+          return true;
+        }
+
+        return false;
+      });
+
+      return {
+        ...value,
+        products: productsWithValue,
+      };
+    });
+
+    return { ...group, values: valuesWithTotal };
   });
+
+  console.log(groupsDiversification);
 
   return (
     <PieChart width={250} height={250}>
