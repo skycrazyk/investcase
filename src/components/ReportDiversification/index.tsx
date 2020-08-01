@@ -135,7 +135,27 @@ const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
   console.log(diversification);
 
   return (
-    <PieChart width={250} height={250}>
+    <div>
+      {diversification.map((group) => {
+        return (
+          <>
+            <h3>{group.name}</h3>
+            <PieChart width={250} height={250}>
+              <Pie
+                data={group.values}
+                dataKey="percentInCase"
+                nameKey="percentInCase"
+                cx="50%"
+                cy="50%"
+                outerRadius={100}
+                innerRadius={60}
+                label
+              />
+            </PieChart>
+          </>
+        );
+      })}
+      {/* <PieChart width={250} height={250}>
       <Pie
         data={data01}
         dataKey="value"
@@ -145,7 +165,8 @@ const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
         outerRadius={100}
         fill="#8884d8"
       />
-    </PieChart>
+    </PieChart> */}
+    </div>
   );
 };
 
