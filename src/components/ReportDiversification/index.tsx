@@ -5,7 +5,11 @@ import { cloneDeep } from 'lodash';
 import { TReport, TProduct } from '../../store/reports';
 import { groupsSelectors } from '../../store/groups';
 import { productsSelectors } from '../../store/products';
-import { reportProductOwnCalculations } from '../../utils';
+import {
+  reportProductOwnCalculations,
+  reportCalculations,
+  reportGroupValueCalculations,
+} from '../../utils';
 
 const data01 = [
   {
@@ -48,6 +52,12 @@ type TGroupValue = {
 const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
   const groups = useSelector(groupsSelectors.selectAll);
   const productsEntities = useSelector(productsSelectors.selectEntities);
+
+  const reportCalculated = reportCalculations({
+    reportProducts: report.products,
+    reportRate: report.rate,
+    productsEntities,
+  });
 
   const diversification = cloneDeep(groups).map((group) => {
     const groupValues: TGroupValue[] = group.values.map((value) => {
@@ -108,8 +118,13 @@ const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
         };
       });
 
+      const calculatedGroupValue = reportGroupValueCalculations({
+        products: productsCalculated,
+        totalCasePriceOnePercent: reportCalculated.totalCasePriceOnePercent,
+      });
+
       return {
-        ...value,
+        ...calculatedGroupValue,
         products: productsCalculated,
       };
     });
