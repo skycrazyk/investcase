@@ -3,8 +3,9 @@ import { PieChart, Pie } from 'recharts';
 import { useSelector } from 'react-redux';
 import { cloneDeep } from 'lodash';
 import { TReport, TProduct } from '../../store/reports';
-import { groupsSelectors, TGroup, TValue } from '../../store/groups';
+import { groupsSelectors } from '../../store/groups';
 import { productsSelectors } from '../../store/products';
+import { reportProductOwnCalculations } from '../../utils';
 
 const data01 = [
   {
@@ -38,13 +39,19 @@ type TReportDiversification = {
   // compareReport: TReport | undefined;
 };
 
+type TGroupValue = {
+  name: string | undefined; // undefined в случае если есть продукты без значения в группе
+  id: string | undefined;
+  products: TProduct[];
+};
+
 const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
   const groups = useSelector(groupsSelectors.selectAll);
   const productsEntities = useSelector(productsSelectors.selectEntities);
 
-  const groupsDiversification = cloneDeep(groups).map((group) => {
-    const valuesWithTotal = group.values.map((value) => {
-      const productsWithValue = report.products.filter((product) => {
+  const diversification = cloneDeep(groups).map((group) => {
+    const groupValues: TGroupValue[] = group.values.map((value) => {
+      const productsForValue = report.products.filter((product) => {
         const catalogProduct = productsEntities[product.id];
 
         if (!catalogProduct) throw Error('Неизвестный инструмент в отчёте');
@@ -58,14 +65,59 @@ const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
 
       return {
         ...value,
-        products: productsWithValue,
+        products: productsForValue,
       };
     });
 
-    return { ...group, values: valuesWithTotal };
+    const ungroupedProducts = report.products.filter((product) => {
+      const catalogProduct = productsEntities[product.id];
+
+      if (!catalogProduct) throw Error('Неизвестный инструмент в отчёте');
+
+      if (catalogProduct.groups[group.id]) {
+        return false;
+      }
+
+      return true;
+    });
+
+    if (ungroupedProducts.length) {
+      groupValues.push({
+        id: undefined,
+        name: undefined,
+        products: ungroupedProducts,
+      });
+    }
+
+    const groupValuesCalculated = groupValues.map((value) => {
+      const productsCalculated = value.products.map((product) => {
+        const catalogProduct = productsEntities[product.id];
+
+        if (!catalogProduct) throw Error('Неизвестный инструмент в отчёте');
+
+        const calculations = reportProductOwnCalculations({
+          catalogProduct,
+          reportProduct: product,
+          reportRate: report.rate,
+        });
+
+        return {
+          ...product,
+          ...calculations,
+          ...catalogProduct,
+        };
+      });
+
+      return {
+        ...value,
+        products: productsCalculated,
+      };
+    });
+
+    return { ...group, values: groupValuesCalculated };
   });
 
-  console.log(groupsDiversification);
+  console.log(diversification);
 
   return (
     <PieChart width={250} height={250}>

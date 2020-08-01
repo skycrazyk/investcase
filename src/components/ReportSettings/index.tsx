@@ -31,12 +31,12 @@ const ReportSettings: FC = () => {
           initialValues={settings}
           onValuesChange={onSettingsChange}
         >
-          <Form.Item name="groups" label="Группировка продуктов">
+          <Form.Item name="groups" label="Группировка">
             <Select
               mode="multiple"
               placeholder="Выберите группы"
               allowClear
-              style={{ minWidth: 140 }}
+              style={{ minWidth: 200 }}
             >
               {groupsCatalog.map((group) => (
                 <Select.Option key={group.id} value={group.id}>
@@ -45,7 +45,7 @@ const ReportSettings: FC = () => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item name="compareReportId" label="Отчет для сравнения">
+          <Form.Item name="compareReportId" label="Сравнить с">
             <Select placeholder="Выберите отчет" allowClear>
               {reports
                 .filter((report) => report.id !== routeParams.id)
