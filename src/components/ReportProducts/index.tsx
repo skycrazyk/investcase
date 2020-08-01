@@ -284,7 +284,7 @@ const ReportProducts: FC<TReportTable> = ({
         dataIndex: ['value', 'productsCount'],
       },
       {
-        title: 'Общая стоимость',
+        title: 'Сумма',
         align: 'right',
         width: 150,
         dataIndex: ['value', 'totalPrice'],
@@ -293,7 +293,7 @@ const ReportProducts: FC<TReportTable> = ({
       ...(compareReport
         ? ([
             {
-              title: 'Доход',
+              title: 'Сумма сравнит.',
               key: 'earn',
               align: 'right',
               width: 150,
@@ -307,7 +307,7 @@ const ReportProducts: FC<TReportTable> = ({
       ...(compareReport
         ? ([
             {
-              title: 'Доход (%)',
+              title: 'Сумма сравнит. (%)',
               key: 'earn',
               align: 'right',
               width: 150,
@@ -327,7 +327,7 @@ const ReportProducts: FC<TReportTable> = ({
     ],
     productColums: (product) => [
       {
-        title: 'Название продукта',
+        title: 'Инструмент',
         dataIndex: 'name',
         key: 'name',
         width: 280,
