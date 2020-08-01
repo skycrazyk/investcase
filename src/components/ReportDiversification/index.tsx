@@ -74,6 +74,7 @@ const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
   });
 
   const diversification = cloneDeep(groups).map((group) => {
+    // Значения группы с инструментами
     const groupValues: TGroupValue[] = group.values.map((value) => {
       const productsForValue = report.products.filter((product) => {
         const catalogProduct = productsEntities[product.id];
@@ -93,6 +94,7 @@ const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
       };
     });
 
+    // Инструменты без значения в текущей группе
     const ungroupedProducts = report.products.filter((product) => {
       const catalogProduct = productsEntities[product.id];
 
@@ -114,7 +116,9 @@ const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
     }
 
     const groupValuesCalculated = groupValues
+      // Обогощаем подгруппы и инструменты расчётами
       .map((value) => {
+        // Инструменты с расчетами
         const productsCalculated = value.products.map((product) => {
           const catalogProduct = productsEntities[product.id];
 
@@ -133,6 +137,7 @@ const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
           };
         });
 
+        // Подгруппы с расчетами
         const calculatedGroupValue = reportGroupValueCalculations({
           products: productsCalculated,
           totalCasePriceOnePercent: reportCalculated.totalCasePriceOnePercent,
@@ -144,6 +149,7 @@ const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
           products: productsCalculated,
         };
       })
+      //
       .filter((value) => value.percentInCase !== 0);
 
     return { ...group, values: groupValuesCalculated };
