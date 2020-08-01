@@ -78,36 +78,38 @@ const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
       });
     }
 
-    const groupValuesCalculated = groupValues.map((value) => {
-      const productsCalculated = value.products.map((product) => {
-        const catalogProduct = productsEntities[product.id];
+    const groupValuesCalculated = groupValues
+      .map((value) => {
+        const productsCalculated = value.products.map((product) => {
+          const catalogProduct = productsEntities[product.id];
 
-        if (!catalogProduct) throw Error('Неизвестный инструмент в отчёте');
+          if (!catalogProduct) throw Error('Неизвестный инструмент в отчёте');
 
-        const calculations = reportProductOwnCalculations({
-          catalogProduct,
-          reportProduct: product,
-          reportRate: report.rate,
+          const calculations = reportProductOwnCalculations({
+            catalogProduct,
+            reportProduct: product,
+            reportRate: report.rate,
+          });
+
+          return {
+            ...product,
+            ...calculations,
+            ...catalogProduct,
+          };
+        });
+
+        const calculatedGroupValue = reportGroupValueCalculations({
+          products: productsCalculated,
+          totalCasePriceOnePercent: reportCalculated.totalCasePriceOnePercent,
         });
 
         return {
-          ...product,
-          ...calculations,
-          ...catalogProduct,
+          ...value,
+          ...calculatedGroupValue,
+          products: productsCalculated,
         };
-      });
-
-      const calculatedGroupValue = reportGroupValueCalculations({
-        products: productsCalculated,
-        totalCasePriceOnePercent: reportCalculated.totalCasePriceOnePercent,
-      });
-
-      return {
-        ...value,
-        ...calculatedGroupValue,
-        products: productsCalculated,
-      };
-    });
+      })
+      .filter((value) => value.percentInCase !== 0);
 
     return { ...group, values: groupValuesCalculated };
   });
