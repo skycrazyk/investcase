@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
-import { PieChart, Pie } from 'recharts';
+import { PieChart, Pie, Tooltip, PieLabelRenderProps } from 'recharts';
 import { useSelector } from 'react-redux';
 import { cloneDeep } from 'lodash';
+import { Row, Col } from 'antd';
 import { TReport, TProduct } from '../../store/reports';
 import { groupsSelectors } from '../../store/groups';
 import { productsSelectors } from '../../store/products';
@@ -9,34 +10,8 @@ import {
   reportProductOwnCalculations,
   reportCalculations,
   reportGroupValueCalculations,
+  format,
 } from '../../utils';
-
-const data01 = [
-  {
-    name: 'Group A',
-    value: 400,
-  },
-  {
-    name: 'Group B',
-    value: 300,
-  },
-  {
-    name: 'Group C',
-    value: 300,
-  },
-  {
-    name: 'Group D',
-    value: 200,
-  },
-  {
-    name: 'Group E',
-    value: 278,
-  },
-  {
-    name: 'Group F',
-    value: 189,
-  },
-];
 
 type TReportDiversification = {
   report: TReport;
@@ -47,6 +22,10 @@ type TGroupValue = {
   name: string | undefined; // undefined в случае если есть продукты без значения в группе
   id: string | undefined;
   products: TProduct[];
+};
+
+const renderLabel = (props: PieLabelRenderProps) => {
+  return format.percent()(props.value);
 };
 
 const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
@@ -124,6 +103,7 @@ const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
       });
 
       return {
+        ...value,
         ...calculatedGroupValue,
         products: productsCalculated,
       };
@@ -135,38 +115,30 @@ const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
   console.log(diversification);
 
   return (
-    <div>
+    <Row gutter={[48, 24]}>
       {diversification.map((group) => {
         return (
-          <>
-            <h3>{group.name}</h3>
-            <PieChart width={250} height={250}>
+          <Col>
+            <h3 style={{ textAlign: 'center' }}>{group.name}</h3>
+            <PieChart width={300} height={250}>
               <Pie
+                isAnimationActive={false}
                 data={group.values}
                 dataKey="percentInCase"
-                nameKey="percentInCase"
+                nameKey="name"
                 cx="50%"
                 cy="50%"
-                outerRadius={100}
-                innerRadius={60}
-                label
+                outerRadius={80}
+                innerRadius={50}
+                label={renderLabel}
+                labelLine
               />
+              <Tooltip />
             </PieChart>
-          </>
+          </Col>
         );
       })}
-      {/* <PieChart width={250} height={250}>
-      <Pie
-        data={data01}
-        dataKey="value"
-        nameKey="name"
-        cx="50%"
-        cy="50%"
-        outerRadius={100}
-        fill="#8884d8"
-      />
-    </PieChart> */}
-    </div>
+    </Row>
   );
 };
 
