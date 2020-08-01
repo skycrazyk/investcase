@@ -1,5 +1,11 @@
 import React, { FC } from 'react';
-import { PieChart, Pie, Tooltip, PieLabelRenderProps } from 'recharts';
+import {
+  PieChart,
+  Pie,
+  Tooltip,
+  PieLabelRenderProps,
+  TooltipProps,
+} from 'recharts';
 import { useSelector } from 'react-redux';
 import { cloneDeep } from 'lodash';
 import { Row, Col } from 'antd';
@@ -12,6 +18,8 @@ import {
   reportGroupValueCalculations,
   format,
 } from '../../utils';
+
+import style from './style.module.css';
 
 type TReportDiversification = {
   report: TReport;
@@ -26,6 +34,33 @@ type TGroupValue = {
 
 const renderLabel = (props: PieLabelRenderProps) => {
   return format.percent()(props.value);
+};
+
+const renderLabelContent = (props: TooltipProps) => {
+  if (!props.payload?.length) return null;
+
+  const [data] = props.payload;
+
+  return (
+    <div className={style.tooltip}>
+      <table>
+        <tbody>
+          <tr>
+            <td>Название: </td>
+            <td>{data.payload.id ? data.name : 'Без значения'}</td>
+          </tr>
+          <tr>
+            <td>Сумма: </td>
+            <td>{format.currency()(data.payload.totalPrice as number)}</td>
+          </tr>
+          <tr>
+            <td>Сумма (%): </td>
+            <td>{format.percent()(data.value as number)}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
 };
 
 const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
@@ -114,14 +149,12 @@ const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
     return { ...group, values: groupValuesCalculated };
   });
 
-  console.log(diversification);
-
   return (
     <Row gutter={[48, 24]}>
       {diversification.map((group) => {
         return (
           <Col>
-            <h3 style={{ textAlign: 'center' }}>{group.name}</h3>
+            <h3 className={style.title}>{group.name}</h3>
             <PieChart width={300} height={250}>
               <Pie
                 isAnimationActive={false}
@@ -135,7 +168,7 @@ const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
                 label={renderLabel}
                 labelLine
               />
-              <Tooltip />
+              <Tooltip content={renderLabelContent} />
             </PieChart>
           </Col>
         );
