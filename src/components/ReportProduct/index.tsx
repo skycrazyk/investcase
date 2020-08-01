@@ -112,7 +112,7 @@ const ReportProduct: React.FC<ReportProductProps> = ({
           name="balancePrice"
           rules={[rules.reuired]}
         >
-          <InputNumber placeholder="0" style={{ width: 150 }} min={1} />
+          <InputNumber placeholder="0" style={{ width: 150 }} min={0} />
         </Form.Item>
 
         <Form.Item
@@ -120,11 +120,11 @@ const ReportProduct: React.FC<ReportProductProps> = ({
           name="liquidationPrice"
           rules={[rules.reuired]}
         >
-          <InputNumber placeholder="0" style={{ width: 150 }} min={1} />
+          <InputNumber placeholder="0" style={{ width: 150 }} min={0} />
         </Form.Item>
 
         <Form.Item name="payments" label="Дополнительные начисления">
-          <InputNumber placeholder="0" style={{ width: 150 }} min={1} />
+          <InputNumber placeholder="0" style={{ width: 150 }} min={0} />
         </Form.Item>
       </Form>
     </Modal>

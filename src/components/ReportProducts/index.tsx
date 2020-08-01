@@ -22,14 +22,16 @@ import {
   reportsSelectors,
   TProduct as TReportProducts,
   TRate as TReportRate,
+  TReport,
 } from '../../store/reports';
-import { State } from '../../store';
 import { TGroupNodeValue } from 'src/utils/groupProducts';
 
 type TComboCompareReportProduct = TProductsProduct &
   TReportProducts & {
     totalPriceInProductCurrency: number;
     totalPriceInBaseCurrency: number;
+    profitInBaseCurrency: number;
+    profitInProductCurrency: number;
     percentInCase: number;
   };
 
@@ -40,6 +42,7 @@ type TComboReportProduct = TComboCompareReportProduct & {
   diffTotalPriceInProductCurrency?: TDiffValue;
   diffTotalPriceInBaseCurrency?: TDiffValue;
   diffPercentInCase?: TDiffValue;
+  diffProfitInProductCurrency?: TDiffValue;
 };
 
 type TReportTable = {
@@ -47,6 +50,7 @@ type TReportTable = {
   deleteProduct: (id: string) => void;
   reportProducts: TReportProducts[];
   reportRate: TReportRate;
+  compareReport: TReport | undefined;
 };
 
 const ReportProducts: FC<TReportTable> = ({
@@ -54,15 +58,11 @@ const ReportProducts: FC<TReportTable> = ({
   deleteProduct,
   reportProducts,
   reportRate,
+  compareReport,
 }) => {
   const productsEntities = useSelector(productsSelectors.selectEntities);
   const reportSettings = useSelector(reportsSelectors.getSettings);
   const groupsEntities = useSelector(groupsSelectors.selectEntities);
-
-  // Отчет для сравнения
-  const compareReport = useSelector((state: State) =>
-    reportsSelectors.selectById(state, reportSettings.compareReportId || '')
-  );
 
   // Общие расчеты по отчету для сравнения
   const compareReportCalculations =
@@ -89,6 +89,8 @@ const ReportProducts: FC<TReportTable> = ({
       const {
         totalPriceInProductCurrency,
         totalPriceInBaseCurrency,
+        profitInBaseCurrency,
+        profitInProductCurrency,
         percentInCase,
       } = reportProductCalculations({
         catalogProduct,
@@ -103,6 +105,8 @@ const ReportProducts: FC<TReportTable> = ({
         ...catalogProduct,
         totalPriceInProductCurrency,
         totalPriceInBaseCurrency,
+        profitInBaseCurrency,
+        profitInProductCurrency,
         percentInCase,
       };
     });
@@ -158,6 +162,8 @@ const ReportProducts: FC<TReportTable> = ({
       const {
         totalPriceInProductCurrency,
         totalPriceInBaseCurrency,
+        profitInBaseCurrency,
+        profitInProductCurrency,
         percentInCase,
       } = reportProductCalculations({
         catalogProduct,
@@ -187,6 +193,8 @@ const ReportProducts: FC<TReportTable> = ({
         ...catalogProduct,
         totalPriceInProductCurrency,
         totalPriceInBaseCurrency,
+        profitInBaseCurrency,
+        profitInProductCurrency,
         percentInCase,
         ...(compareProductCalculations &&
           compareProduct && {
@@ -211,6 +219,11 @@ const ReportProducts: FC<TReportTable> = ({
             diffPercentInCase: makeDiff(
               percentInCase,
               compareProductCalculations.percentInCase
+            ),
+            diffProfitInProductCurrency: makeDiff(
+              profitInProductCurrency,
+              compareProductCalculations.profitInProductCurrency,
+              format.currency(catalogProduct.currency)
             ),
           }),
       };
@@ -261,25 +274,29 @@ const ReportProducts: FC<TReportTable> = ({
     groupColumns: (groupedProducts) => [
       {
         title: groupedProducts.group.name,
+        width: 280,
         dataIndex: ['value', 'name'],
       },
       {
-        title: 'Кол-во инструментов',
+        title: 'Количество',
         align: 'right',
+        width: 100,
         dataIndex: ['value', 'productsCount'],
       },
       {
-        title: 'Общая стоимость',
+        title: 'Сумма',
         align: 'right',
+        width: 150,
         dataIndex: ['value', 'totalPrice'],
         render: (totalPrice: number) => format.currency('RUB')(totalPrice),
       },
       ...(compareReport
         ? ([
             {
-              title: 'Доход',
+              title: 'Сумма сравнит.',
               key: 'earn',
               align: 'right',
+              width: 150,
               render: (
                 value: any,
                 record: TGroupNodeValue<TComboReportProduct>
@@ -290,9 +307,10 @@ const ReportProducts: FC<TReportTable> = ({
       ...(compareReport
         ? ([
             {
-              title: 'Доход (%)',
+              title: 'Сумма сравнит. (%)',
               key: 'earn',
               align: 'right',
+              width: 150,
               render: (
                 value: any,
                 record: TGroupNodeValue<TComboReportProduct>
@@ -309,20 +327,23 @@ const ReportProducts: FC<TReportTable> = ({
     ],
     productColums: (product) => [
       {
-        title: 'Название продукта',
+        title: 'Инструмент',
         dataIndex: 'name',
         key: 'name',
+        width: 280,
       },
       {
         title: 'Тикер',
         dataIndex: 'ticker',
         key: 'ticker',
+        width: 100,
       },
       {
         title: 'Валюта',
         dataIndex: 'currency',
         key: 'currency',
         render: (currency: string) => currency.toUpperCase(),
+        width: 100,
       },
       {
         title: 'Количество',
@@ -330,12 +351,14 @@ const ReportProducts: FC<TReportTable> = ({
         key: 'count',
         align: 'right',
         render: (count: number) => format.number()(count),
+        width: 100,
       },
       {
         title: 'Баланс. стоимость',
         dataIndex: 'balancePrice',
         key: 'balancePrice',
         align: 'right',
+        width: 150,
         render: (balancePrice: number, record: TComboReportProduct) =>
           format.currency(record.currency)(balancePrice),
       },
@@ -344,22 +367,16 @@ const ReportProducts: FC<TReportTable> = ({
         dataIndex: 'liquidationPrice',
         key: 'liquidationPrice',
         align: 'right',
+        width: 150,
         render: (liquidationPrice: number, record: TComboReportProduct) =>
           format.currency(record.currency)(liquidationPrice),
       },
       {
-        title: 'Доп. начисления',
-        dataIndex: 'payments',
-        key: 'payments',
-        align: 'right',
-        render: (payments: number, record: TComboReportProduct) =>
-          format.currency(record.currency)(payments ?? 0),
-      },
-      {
-        title: 'Общая стоимость',
+        title: 'Сумма',
         dataIndex: 'totalPriceInProductCurrency',
         key: 'totalPriceInProductCurrency',
         align: 'right',
+        width: 150,
         render: (
           totalPriceInProductCurrency: number,
           record: TComboReportProduct
@@ -368,9 +385,10 @@ const ReportProducts: FC<TReportTable> = ({
       ...(compareReport
         ? ([
             {
-              title: 'Доход',
-              key: 'earn',
+              title: 'Сумма сравнит.',
+              key: 'totalPriceCompare',
               align: 'right',
+              width: 150,
               render: (value: any, record: TComboReportProduct) =>
                 record.diffTotalPriceInProductCurrency?.value,
             },
@@ -379,9 +397,10 @@ const ReportProducts: FC<TReportTable> = ({
       ...(compareReport
         ? ([
             {
-              title: 'Доход (%)',
-              key: 'earn',
+              title: 'Сумма сравнит. (%)',
+              key: 'totalPriceComparePercent',
               align: 'right',
+              width: 100,
               render: (value: any, record: TComboReportProduct) =>
                 record.diffTotalPriceInProductCurrency?.percent,
             },
@@ -392,8 +411,53 @@ const ReportProducts: FC<TReportTable> = ({
         dataIndex: 'percentInCase',
         key: 'percentInCase',
         align: 'right',
+        width: 100,
         render: (percentInCase: number) => format.percent()(percentInCase),
       },
+      {
+        title: 'Доп. начисления',
+        dataIndex: 'payments',
+        key: 'payments',
+        align: 'right',
+        width: 150,
+        render: (payments: number, record: TComboReportProduct) =>
+          format.currency(record.currency)(payments ?? 0),
+      },
+      {
+        title: 'Доход',
+        dataIndex: 'profitInProductCurrency',
+        key: 'profitInProductCurrency',
+        align: 'right',
+        width: 150,
+        render: (
+          profitInProductCurrency: number,
+          record: TComboReportProduct
+        ) => format.currency(record.currency)(profitInProductCurrency ?? 0),
+      },
+      ...(compareReport
+        ? ([
+            {
+              title: 'Доход сравнит.',
+              key: 'profitInProductCurrencyCompare',
+              align: 'right',
+              width: 150,
+              render: (value: any, record: TComboReportProduct) =>
+                record.diffProfitInProductCurrency?.value,
+            },
+          ] as const)
+        : []),
+      ...(compareReport
+        ? ([
+            {
+              title: 'Доход сравнит. (%)',
+              key: 'profitInProductCurrencyCompare',
+              align: 'right',
+              width: 150,
+              render: (value: any, record: TComboReportProduct) =>
+                record.diffProfitInProductCurrency?.percent,
+            },
+          ] as const)
+        : []),
       {
         title: 'Действия',
         key: 'action',

@@ -20,6 +20,8 @@ import PageHeader from '../PageHeader';
 import ReportProduct from '../ReportProduct';
 import ReportProducts from '../ReportProducts';
 import ReportSettings from '../ReportSettings';
+import ReportSummary from '../ReportSummary';
+import ReportDiversification from '../ReportDiversification';
 
 const hidrate = (report: ReturnType<typeof reportsSelectors.selectById>) => {
   return (
@@ -113,9 +115,16 @@ const Report: FC = () => {
   const editModal = useModalActions();
   const productsCatalog = useSelector(productsSelectors.selectAll);
   const [editableProduct, setEditableProduct] = useState<any>();
+  const reportSettings = useSelector(reportsSelectors.getSettings);
 
+  /* Текущий отчет */
   const report = useSelector((state: State) =>
     reportsSelectors.selectById(state, routeParams.id)
+  );
+
+  /* Отчет для сравнения */
+  const compareReport = useSelector((state: State) =>
+    reportsSelectors.selectById(state, reportSettings.compareReportId || '')
   );
 
   const productsCatalogForCreate = useProductsCatalogForCreate(
@@ -165,7 +174,7 @@ const Report: FC = () => {
     editModal.show();
   };
 
-  return (
+  return report ? (
     <>
       <PageHeader
         extra={[
@@ -180,6 +189,8 @@ const Report: FC = () => {
         ]}
       />
       <ReportSettings />
+      <ReportSummary report={report} compareReport={compareReport} />
+      <ReportDiversification report={report} />
       <Form.Provider
         onFormFinish={(name, { values, forms }) => {
           if (name === formsNames.createProduct) {
@@ -261,6 +272,7 @@ const Report: FC = () => {
                   editProduct={editProduct}
                   reportProducts={products}
                   reportRate={rate}
+                  compareReport={compareReport}
                 />
               );
             }}
@@ -297,7 +309,7 @@ const Report: FC = () => {
         />
       </Form.Provider>
     </>
-  );
+  ) : null;
 };
 
 export default Report;
