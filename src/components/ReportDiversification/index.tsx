@@ -161,7 +161,7 @@ const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
         return (
           <Col>
             <h3 className={style.title}>{group.name}</h3>
-            <PieChart width={300} height={250}>
+            <PieChart width={340} height={250}>
               <Pie
                 isAnimationActive={false}
                 data={group.values}
