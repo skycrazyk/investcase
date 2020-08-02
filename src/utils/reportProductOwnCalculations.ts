@@ -26,8 +26,8 @@ export default function reportProductCalculations({
     reportProduct.liquidationPrice * reportProduct.count;
 
   const profitInProductCurrency =
-    reportProduct.liquidationPrice -
-    reportProduct.balancePrice +
+    (reportProduct.liquidationPrice - reportProduct.balancePrice) *
+      reportProduct.count +
     (reportProduct.payments || 0);
 
   let totalPriceInBaseCurrency = totalPriceInProductCurrency;
