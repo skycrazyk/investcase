@@ -63,7 +63,7 @@ const config: webpack.Configuration = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      title: 'secret',
+      title: 'Investcase',
       template: './src/index.ejs',
     }),
   ],
