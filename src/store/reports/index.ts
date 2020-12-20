@@ -13,6 +13,7 @@ export const dateFormat = 'YYYY-MM-DD';
 
 export const exchangeCurrencies = {
   usd: 'usd',
+  eur: 'eur',
 } as const;
 
 export const productCurrencies = {

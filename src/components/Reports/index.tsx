@@ -31,7 +31,7 @@ const Reports: FC = () => {
         id,
         date: moment().format(dateFormat),
         // TODO: Запрашивать актуальный курс из https://currencylayer.com/documentation
-        rate: lastReport ? lastReport.rate : { usd: 70 },
+        rate: lastReport ? lastReport.rate : { usd: 70, eur: 88 },
         products: lastReport ? lastReport.products : [],
       })
     );
