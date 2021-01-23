@@ -165,6 +165,7 @@ const Report: FC = () => {
     const index = currentProducts.findIndex((item) => item.id === id);
     currentProducts.splice(index, 1);
     form.setFieldsValue({ products: currentProducts });
+    form.submit();
   };
 
   const editProduct = (id: string) => {
@@ -176,18 +177,7 @@ const Report: FC = () => {
 
   return report ? (
     <>
-      <PageHeader
-        extra={[
-          <Button
-            htmlType="submit"
-            type="primary"
-            key="1"
-            onClick={form.submit}
-          >
-            Сохранить
-          </Button>,
-        ]}
-      />
+      <PageHeader />
       <ReportSettings />
       <ReportSummary report={report} compareReport={compareReport} />
       <ReportDiversification report={report} />
@@ -202,6 +192,7 @@ const Report: FC = () => {
             });
 
             createModal.hide();
+            form.submit();
           }
 
           if (name === formsNames.editProduct) {
@@ -219,6 +210,7 @@ const Report: FC = () => {
             });
 
             editModal.hide();
+            form.submit();
           }
         }}
       >
@@ -228,6 +220,7 @@ const Report: FC = () => {
           initialValues={formAdapter.hidrate(report)}
           onFinishFailed={onFinishFailed}
           onFinish={onFinish}
+          onValuesChange={onFinish}
           layout="vertical"
         >
           <Space size="large">

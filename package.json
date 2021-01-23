@@ -32,7 +32,8 @@
     "react-hot-loader": "^4.13.0",
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
-    "recharts": "^1.8.5"
+    "recharts": "^1.8.5",
+    "redux-undo": "^1.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
