@@ -1,6 +1,6 @@
 import { Dictionary } from '@reduxjs/toolkit';
-import { TProduct, productCurrencies } from '../store/products';
-import { TProduct as TReportProduct, TRate } from '../store/reports';
+import { TProduct } from '../store/products';
+import { TProduct as TReportProduct, TRate } from '../store/reports/types';
 import reportProductOwnCalculations from './reportProductOwnCalculations';
 
 type TReportCalculationsResult = {

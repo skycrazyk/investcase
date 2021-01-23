@@ -2,11 +2,8 @@ import { useEffect } from 'react';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormInstance } from 'antd/lib/form';
-import {
-  reportsActions,
-  reportsSelectors,
-  TReport,
-} from '../../../store/reports';
+import { reportsActions, reportsSelectors } from '../../../store/reports';
+import type { TReport } from '../../../store/reports/types';
 import { State } from '../../../store';
 
 export default function useInitComparePeriod(
@@ -17,7 +14,7 @@ export default function useInitComparePeriod(
   const dispatch = useDispatch();
 
   const currentReport = useSelector((state: State) =>
-    reportsSelectors.selectById(state, currentReportId)
+    reportsSelectors.selectReportById(state, currentReportId)
   );
 
   // Устанавливаем период для сравнения

@@ -5,7 +5,8 @@ import {
 } from '@reduxjs/toolkit';
 // TODO: Перенести getProducts в этот файл
 import getProducts from '../../selectors/getProducts';
-import { exchangeCurrencies, reportsSelectors, TReport } from '../reports';
+import { reportsSelectors } from '../reports';
+import { exchangeCurrencies, TReport } from '../reports/types';
 import { State, Store } from '../index';
 
 export const productCurrencies = {
@@ -65,7 +66,7 @@ const removeOne = (productId: string) => async (
   dispatch: Store['dispatch'],
   getState: Store['getState']
 ) => {
-  const reports = reportsSelectors.selectAll(getState());
+  const reports = reportsSelectors.selectAllReports(getState());
 
   const reportsWithCurrProduct = reports.reduce<TReport[]>((acc, report) => {
     const hasCurrProduct = report.products.find((p) => p.id === productId);

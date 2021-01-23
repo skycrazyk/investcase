@@ -6,7 +6,7 @@ import { reportsSelectors } from '../store/reports';
 const getDownloadData = createSelector(
   productsSelectors.selectAll,
   groupsSelectors.selectAll,
-  reportsSelectors.selectAll,
+  reportsSelectors.selectAllReports,
   (products, groups, reports) => {
     return {
       products,

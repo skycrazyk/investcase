@@ -1,4 +1,4 @@
-import { TProduct as TReportProduct } from '../store/reports';
+import type { TProduct as TReportProduct } from '../store/reports/types';
 
 type TProduct = TReportProduct & { totalPriceInBaseCurrency: number };
 

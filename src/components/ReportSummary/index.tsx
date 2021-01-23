@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { Row, Col } from 'antd';
 import { reportCalculations, format, makeDiff } from '../../utils';
 import { productsSelectors } from '../../store/products';
-import { TReport } from '../../store/reports';
+import type { TReport } from '../../store/reports/types';
 import style from './style.module.css';
 
 type TReportSummary = {

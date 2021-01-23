@@ -9,7 +9,7 @@ import {
 import { useSelector } from 'react-redux';
 import { cloneDeep } from 'lodash';
 import { Row, Col } from 'antd';
-import { TReport, TProduct } from '../../store/reports';
+import type { TReport, TProduct } from '../../store/reports/types';
 import { groupsSelectors } from '../../store/groups';
 import { productsSelectors } from '../../store/products';
 import {

@@ -8,8 +8,8 @@ import {
   reportsSelectors,
   reportsActions,
   dateFormat,
-  TReport,
 } from '../../store/reports';
+import type { TReport } from '../../store/reports/types';
 import routes from '../../routes';
 import PageHeader from '../PageHeader';
 

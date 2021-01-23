@@ -1,5 +1,5 @@
 import { TProduct, productCurrencies } from '../store/products';
-import { TProduct as TReportProduct, TRate } from '../store/reports';
+import type { TProduct as TReportProduct, TRate } from '../store/reports/types';
 
 export type TReportProductOwnCalculationsProps = {
   catalogProduct: TProduct;

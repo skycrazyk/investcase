@@ -1,3 +1,3 @@
 import { State } from '../store';
 
-export default (state: State) => state.reports;
+export default (state: State) => state.reports.present;

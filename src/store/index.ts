@@ -1,8 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { merge } from 'lodash';
+import undoable, { includeAction } from 'redux-undo';
 import groups from './groups';
-import reports, { initialState } from './reports';
+import reports, { initialState, reportsActions } from './reports';
+// import * as reportsActions from './reports/actions';
 import products from './products';
+import { config } from '../utils';
+import { ActionTypes } from './ActionTypes';
 
 const localStorageGroups = localStorage.getItem('groups');
 const localStorageReports = localStorage.getItem('reports');
@@ -16,7 +20,13 @@ const productsPreloaded =
 const store = configureStore({
   reducer: {
     groups,
-    reports,
+    reports: undoable(reports, {
+      limit: config.undoLimit,
+      undoType: ActionTypes.reportsUndo,
+      redoType: ActionTypes.reportsRedo,
+      clearHistoryType: ActionTypes.reportsCrearHistory,
+      filter: includeAction([reportsActions.updateOne.type]),
+    }),
     products,
   },
   preloadedState: {

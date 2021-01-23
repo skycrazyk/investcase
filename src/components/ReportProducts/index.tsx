@@ -18,12 +18,12 @@ import {
   productCurrencies,
 } from '../../store/products';
 import { groupsSelectors } from '../../store/groups';
-import {
-  reportsSelectors,
+import { reportsSelectors } from '../../store/reports';
+import type {
   TProduct as TReportProducts,
   TRate as TReportRate,
   TReport,
-} from '../../store/reports';
+} from '../../store/reports/types';
 import { TGroupNodeValue } from 'src/utils/groupProducts';
 
 type TComboCompareReportProduct = TProductsProduct &

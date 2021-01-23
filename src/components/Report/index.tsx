@@ -5,13 +5,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { isEqual } from 'lodash';
 import { FormInstance } from 'antd/lib/form';
 import moment from 'moment';
-import {
-  reportsSelectors,
-  exchangeCurrencies,
-  reportsActions,
-  TProduct,
-  TRate,
-} from '../../store/reports';
+import { reportsSelectors, reportsActions } from '../../store/reports';
+import { TProduct, TRate, exchangeCurrencies } from '../../store/reports/types';
 import { State } from '../../store';
 import { productsSelectors } from '../../store/products';
 import { rules } from '../../utils';
@@ -23,7 +18,9 @@ import ReportSettings from '../ReportSettings';
 import ReportSummary from '../ReportSummary';
 import ReportDiversification from '../ReportDiversification';
 
-const hidrate = (report: ReturnType<typeof reportsSelectors.selectById>) => {
+const hidrate = (
+  report: ReturnType<typeof reportsSelectors.selectReportById>
+) => {
   return (
     report && {
       ...report,
@@ -119,12 +116,15 @@ const Report: FC = () => {
 
   /* Текущий отчет */
   const report = useSelector((state: State) =>
-    reportsSelectors.selectById(state, routeParams.id)
+    reportsSelectors.selectReportById(state, routeParams.id)
   );
 
   /* Отчет для сравнения */
   const compareReport = useSelector((state: State) =>
-    reportsSelectors.selectById(state, reportSettings.compareReportId || '')
+    reportsSelectors.selectReportById(
+      state,
+      reportSettings.compareReportId || ''
+    )
   );
 
   const productsCatalogForCreate = useProductsCatalogForCreate(
@@ -177,7 +177,28 @@ const Report: FC = () => {
 
   return report ? (
     <>
-      <PageHeader />
+      <PageHeader
+        extra={
+          <>
+            <Button
+              onClick={async () => {
+                await dispatch(reportsActions.undo());
+                form.resetFields();
+              }}
+            >
+              Undo
+            </Button>
+            <Button
+              onClick={async () => {
+                await dispatch(reportsActions.redo());
+                form.resetFields();
+              }}
+            >
+              Redo
+            </Button>
+          </>
+        }
+      />
       <ReportSettings />
       <ReportSummary report={report} compareReport={compareReport} />
       <ReportDiversification report={report} />

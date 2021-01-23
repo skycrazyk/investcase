@@ -13,3 +13,4 @@ export { default as reportGroupValueCalculations } from './reportGroupValueCalcu
 export { default as findGroupValue } from './findGroupValue';
 export { default as download } from './download';
 export { default as loadfile } from './loadfile';
+export { default as config } from './config';

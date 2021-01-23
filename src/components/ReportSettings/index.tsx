@@ -13,7 +13,7 @@ const ReportSettings: FC = () => {
   const routeParams = useParams<{ id: string }>();
   const groupsCatalog = useSelector(groupsSelectors.selectAll);
   const settings = useSelector(reportsSelectors.getSettings);
-  const reports = useSelector(reportsSelectors.selectAll);
+  const reports = useSelector(reportsSelectors.selectAllReports);
 
   const onSettingsChange = (changedValues: Store, values: Store) => {
     dispatch(reportsActions.setSettings(values));
