@@ -3,7 +3,6 @@ import { merge } from 'lodash';
 import undoable, { includeAction } from 'redux-undo';
 import groups from './groups';
 import reports, { initialState, reportsActions } from './reports';
-// import * as reportsActions from './reports/actions';
 import products from './products';
 import { config } from '../utils';
 import { ActionTypes } from './ActionTypes';
@@ -25,7 +24,7 @@ const store = configureStore({
       undoType: ActionTypes.reportsUndo,
       redoType: ActionTypes.reportsRedo,
       clearHistoryType: ActionTypes.reportsCrearHistory,
-      filter: includeAction([reportsActions.updateOne.type]),
+      filter: includeAction([reportsActions.updateOne.type, reportsActions.removeOne.type]),
     }),
     products,
   },

@@ -1,8 +1,9 @@
 import React, { FC, useState, useEffect } from 'react';
 import { Button, Form, DatePicker, InputNumber, Space } from 'antd';
+import { UndoOutlined, RedoOutlined } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { isEqual } from 'lodash';
+import { isEqual, omit } from 'lodash';
 import { FormInstance } from 'antd/lib/form';
 import moment from 'moment';
 import { reportsSelectors, reportsActions } from '../../store/reports';
@@ -144,6 +145,10 @@ const Report: FC = () => {
     const values = form.getFieldsValue(['products', 'rate', 'date']);
     const resolvedValues = formAdapter.serialize(values);
 
+    if(isEqual(omit(report, ['id']), resolvedValues)) {
+      return;
+    }
+
     dispatch(
       reportsActions.updateOne({
         id: routeParams.id,
@@ -181,21 +186,21 @@ const Report: FC = () => {
         extra={
           <>
             <Button
+              icon={<UndoOutlined />}
+              type="text"
               onClick={async () => {
                 await dispatch(reportsActions.undo());
                 form.resetFields();
               }}
-            >
-              Undo
-            </Button>
+            />
             <Button
+              icon={<RedoOutlined />}
+              type="text"
               onClick={async () => {
                 await dispatch(reportsActions.redo());
                 form.resetFields();
               }}
-            >
-              Redo
-            </Button>
+            />
           </>
         }
       />
