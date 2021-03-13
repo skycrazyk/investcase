@@ -159,7 +159,7 @@ const ReportDiversification: FC<TReportDiversification> = ({ report }) => {
     <Row gutter={[48, 24]}>
       {diversification.map((group) => {
         return (
-          <Col>
+          <Col key={group.id}>
             <h3 className={style.title}>{group.name}</h3>
             <PieChart width={340} height={250}>
               <Pie
