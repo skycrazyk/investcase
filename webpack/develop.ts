@@ -6,7 +6,7 @@ const developConfig: webpack.Configuration = ((config: typeof commonConfig) => {
   config.mode = 'development';
 
   // source map
-  config.devtool = 'inline-source-map';
+  config.devtool = 'eval-source-map';
 
   // dev server
   config.devServer = {

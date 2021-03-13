@@ -14,6 +14,7 @@ export const dateFormat = 'YYYY-MM-DD';
 export const exchangeCurrencies = {
   usd: 'usd',
   eur: 'eur',
+  chf: 'chf',
 } as const;
 
 export const productCurrencies = {

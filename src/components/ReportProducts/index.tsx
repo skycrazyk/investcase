@@ -331,6 +331,9 @@ const ReportProducts: FC<TReportTable> = ({
         dataIndex: 'name',
         key: 'name',
         width: 280,
+        render: (text: any, product: TComboReportProduct) => {
+          return <a onClick={() => editProduct(product.id)}>{product.name}</a>;
+        },
       },
       {
         title: 'Тикер',
